@@ -1,9 +1,9 @@
 import { NextPage } from 'next';
 
+import { linkList } from '@/components/common/Header';
 import Layout from '@/components/common/Layout';
 import { Routes } from '@/lib/data/routes';
 import Link from 'next/link';
-import { linkList } from '@/components/common/Header';
 
 // URL配列を作成する関数
 const getUrls = () => {
@@ -26,19 +26,17 @@ const Home: NextPage = () => {
       noTitleTemplate={true}
       isTopPage={true}
     >
-      <div className="relative mt-14">
-        <div className="mx-12 mt-40 border-b-4">
-          Links
-          {linkList.map((link, index) => (
-            <Link
-              href={link.link}
-              key={index}
-              className="mx-12 mb-12 mt-6 flex rounded-md border bg-yellow-100 px-3 py-2"
-            >
-              {link.name}
-            </Link>
-          ))}
-        </div>
+      <div className="mx-12 mt-16 border-b-4 flex flex-col justify-center">
+        <p className="mb-4">ホーム</p>
+        {linkList.map((link, index) => (
+          <Link
+            href={link.link}
+            key={index}
+            className="mx-12 w-auto mb-4 mt-4 flex rounded-md border bg-yellow-100 px-8 py-4"
+          >
+            {link.name}
+          </Link>
+        ))}
       </div>
     </Layout>
   );

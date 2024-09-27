@@ -24,11 +24,11 @@ export const linkList = [
     link: '/teachingReport/showTeachingReport',
   },
   {
-    name: '予約',
+    name: '授業予定確認・変更',
     link: '/booking',
   },
   {
-    name: 'SignIn',
+    name: 'ログイン',
     link: '/signin',
   },
 ];

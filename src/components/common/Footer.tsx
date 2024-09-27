@@ -8,7 +8,7 @@ const footerRouteList = ['test', 'test', 'test'];
 
 const Footer = (): JSX.Element => {
   return (
-    <footer className="bg-theme-dark py-14 text-white sm:py-20">
+    <footer className="bg-theme-dark py-14 !w-screen text-white sm:py-20">
       <div className="mb-10 flex justify-center">
         <Link href={Routes.INDEX.url}>
           <Image src="/lp/util/logo_android.png" width={32} height={32} alt="プライム" />
@@ -19,9 +19,10 @@ const Footer = (): JSX.Element => {
         <ul className="flex flex-col flex-wrap items-center justify-center gap-6 px-6 md:flex-row md:items-start">
           {footerRouteList.map((key) => (
             <li key={key}>
-              <Link href="#" className="block text-sm duration-300 hover:opacity-70 md:text-base">
-                title
-              </Link>
+              <Link
+                href="#"
+                className="block text-sm duration-300 hover:opacity-70 md:text-base"
+              ></Link>
             </li>
           ))}
         </ul>
