@@ -37,7 +37,10 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   const toast = useToast();
 
   const handleEmailChange = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('user is null');
+      return;
+    }
     await updateUserEmail(user.uid);
   };
 
