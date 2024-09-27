@@ -247,7 +247,7 @@ const Days = (props: Props) => {
       <div className="grid grid-cols-7 border-l border-t border-black">{days}</div>
       {isOpenSetClassModal && (
         <div className="flex flex-col">
-          <div className="fixed left-40 top-28 z-30 mx-auto mb-4">
+          <div className="fixed lg:left-40 top-28 z-30 mx-auto mb-4">
             <ButtonOriginal
               variant="error-secondary"
               label="×"

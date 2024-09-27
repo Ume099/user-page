@@ -27,7 +27,6 @@ const ChangeYearAndMonthModal = (props: Props) => {
   return (
     <>
       <div className="px-auto max-w-sm lg:max-w-4xl">
-        <div className="mt-[148px]"></div>
         <div className="fixed top-[60px] z-10 h-screen w-screen bg-gray-700 opacity-90">
           <div className="mt-12 px-6">
             <div className="flex gap-x-10">

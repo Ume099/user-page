@@ -353,8 +353,8 @@ export default function Booking() {
       <div>
         <div className="">
           {!isOpenSetmonthAndYearOnDisplayModal ? (
-            <div className="flex gap-4">
-              <div className="mt7u-[52px] pl-12">
+            <div className="gap-4">
+              <div className="mt-[52px] pl-12">
                 <Button
                   onClick={handleOpenSetmonthAndYearOnDisplayModal}
                   variant="primary"
@@ -363,6 +363,7 @@ export default function Booking() {
                   Icon={GoTriangleDown}
                 />
               </div>
+              <div className="mt-5"></div>
               <BookingInfoBefChg
                 label={
                   checkIsClassBefChangeExists()
@@ -370,7 +371,7 @@ export default function Booking() {
                     : ''
                 }
               />
-              <p className="flex items-center"> ⇒</p>
+              <p className="flex items-center justify-center !text-center"> ↓</p>
               <BookingInfoBefChg
                 label={
                   checkIsClassAftChangeExists()
@@ -378,6 +379,7 @@ export default function Booking() {
                     : ''
                 }
               />
+              <div className="mb-4"></div>
               <div className="grid grid-cols-1 gap-y-4">
                 <ButtonOriginal
                   onClick={() => handleSaveChange()}

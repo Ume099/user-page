@@ -236,7 +236,7 @@ const ClassSelectModalModal = (props: Props) => {
   return (
     <>
       {/* 透過背景のみ */}
-      <div className="fixed left-0 top-14 z-10 flex h-screen w-screen items-center justify-center bg-gray-600 opacity-90"></div>
+      <div className="fixed left-0 top-14 z-10 flex h-screen w-screen items-center justify-center bg-gray-800 opacity-[0.95]"></div>
 
       {/* ボタンなど */}
       <div className="fixed left-0 top-14 z-10 flex h-screen w-screen items-center justify-center">
