@@ -1,0 +1,41 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier",
+    "plugin:tailwindcss/recommended"
+  ],
+  "plugins": ["@typescript-eslint", "import", "unused-imports", "tailwindcss"],
+  "rules": {
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-page-custom-font": "off",
+    "semi": "error",
+    "no-console": "error",
+    "no-var": "error",
+    "sort-imports": 0,
+    "no-unused-vars": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "warn",
+    "@typescript-eslint/no-misused-promises": "off",
+
+    "import/order": "off", // インポート順序のエラーを無効にする
+    "import/no-unresolved": "off", // モジュール解決エラーを無効にする
+    "@typescript-eslint/no-unused-vars": "off", // 未使用変数の警告を無効にする
+    "react/react-in-jsx-scope": "off", // Reactのインポートエラーを無効にする
+    "unused-imports/no-unused-imports": "error",
+    "unused-imports/no-unused-vars": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "tailwindcss/classnames-order": "warn",
+    "tailwindcss/no-custom-classname": "warn",
+    "tailwindcss/no-contradicting-classname": "error"
+  }
+}
