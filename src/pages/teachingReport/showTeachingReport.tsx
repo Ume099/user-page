@@ -89,34 +89,36 @@ const ShowTeachingReport: NextPage = () => {
   }, [templateError]);
 
   return (
-    <div className="mx-12 mt-24 max-w-4xl items-center">
-      {/* ユーザーデータの表示 */}
-      <div className="mt-6">
-        <h2 className="font-bold">指導報告書</h2>
+    <AuthGuard>
+      <div className="mx-12 mt-24 max-w-4xl items-center">
+        {/* ユーザーデータの表示 */}
+        <div className="mt-6">
+          <h2 className="font-bold">指導報告書</h2>
 
-        <div className="mt-4 font-bold">指導報告書の内容</div>
-        <div className="border p-2">
-          {/* reportListの表示 */}
-          {reportList.length > 0 ? (
-            reportList.map((report) => (
-              <div key={report.id} className="border-b py-2">
-                <p className="font-bold">〇授業時間</p>
-                <p className="mb-4">{report.classTime || ''}</p>
-                <p className="mb-4">{report.rikaido || ''}</p>
-                <p className="font-bold">〇ステージ</p>
-                <p className="mb-4">{report.stage}</p>
-                <p className="font-bold">〇内容</p>
-                <p className="mb-4">{report.topic}</p>
-                <p className="font-bold">授業の詳細</p>
-                <p className="mb-4">{report.detail}</p>
-              </div>
-            ))
-          ) : (
-            <p>報告書はありません。</p>
-          )}
+          <div className="mt-4 font-bold">指導報告書の内容</div>
+          <div className="border p-2">
+            {/* reportListの表示 */}
+            {reportList.length > 0 ? (
+              reportList.map((report) => (
+                <div key={report.id} className="border-b py-2">
+                  <p className="font-bold">〇授業時間</p>
+                  <p className="mb-4">{report.classTime || ''}</p>
+                  <p className="mb-4">{report.rikaido || ''}</p>
+                  <p className="font-bold">〇ステージ</p>
+                  <p className="mb-4">{report.stage}</p>
+                  <p className="font-bold">〇内容</p>
+                  <p className="mb-4">{report.topic}</p>
+                  <p className="font-bold">授業の詳細</p>
+                  <p className="mb-4">{report.detail}</p>
+                </div>
+              ))
+            ) : (
+              <p>報告書はありません。</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 };
 
