@@ -1,3 +1,4 @@
+import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';

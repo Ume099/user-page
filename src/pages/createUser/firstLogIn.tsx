@@ -65,7 +65,7 @@ export const Page = (): JSX.Element => {
   };
 
   return (
-    <>
+    <div>
       {!userInfo.isSignedIn ? (
         <div className="py-12">
           <h2 className="text-center text-4xl font-bold">サインイン(初回ログイン)</h2>
@@ -86,7 +86,7 @@ export const Page = (): JSX.Element => {
       ) : (
         <MailAndPassChangeDialog />
       )}
-    </>
+    </div>
   );
 };
 
