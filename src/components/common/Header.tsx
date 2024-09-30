@@ -20,7 +20,7 @@ export const linkList = [
     link: '/',
   },
   {
-    name: '指導報告書閲覧',
+    name: '指導報告書',
     link: '/teachingReport/showTeachingReport',
   },
   {
@@ -30,6 +30,10 @@ export const linkList = [
   {
     name: 'ログイン',
     link: '/signin',
+  },
+  {
+    name: '請求書',
+    link: '/invoice',
   },
 ];
 
@@ -78,12 +82,12 @@ const Header: React.FC = () => {
   };
 
   // dbからユーザー情報を取得する関数
-  const getUserIsFirstTime = async () => {
+  const getUserIsFirstTime = async (year: number, month: number) => {
     let isError = false;
     let result: boolean;
     try {
       const res = await axios.get(
-        `/api/fetchFireStore?collectionName=students&docId=${userInfo.uid || ''}`,
+        `/api/fetchFireStore?collectionName=invoice&docId=${userInfo.uid || ''}`,
       );
       console.log('getUserInfo', res.data.isFirstTime.booleanValue);
       result = res.data.isFirstTime.booleanValue;
