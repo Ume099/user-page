@@ -129,7 +129,7 @@ const TeachingExample: NextPage = () => {
   const fullName = '弓指璃乃佳';
 
   // TODO: 以下を変える
-  if (userInfo.uid === '') {
+  if (userInfo.uid !== '') {
     return (
       <AuthGuard>
         <div className="mt-24 max-w-4xl items-center w-full p-2">
