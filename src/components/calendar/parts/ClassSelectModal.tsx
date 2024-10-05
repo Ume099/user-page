@@ -109,7 +109,7 @@ const ClassSelectModalModal = (props: Props) => {
     }
     // 土曜日ならi を2こずらす
     let className = classNameList[i + 2];
-    
+
     // clNameをclass1, class2などに復元する
     if (CLASS_LIST.length === 5) {
       classNameList[i + 2];
@@ -234,7 +234,7 @@ const ClassSelectModalModal = (props: Props) => {
   };
 
   return (
-    <>
+    <div>
       {/* 透過背景のみ */}
       <div className="fixed left-0 top-14 z-10 flex h-screen w-screen items-center justify-center bg-gray-800 opacity-[0.95]"></div>
 
@@ -261,7 +261,7 @@ const ClassSelectModalModal = (props: Props) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
