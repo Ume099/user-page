@@ -32,8 +32,8 @@ const ClassSelectModalModal = (props: Props) => {
       class3: bookedClassInfoListObj.class3.includes(uid),
       class4: bookedClassInfoListObj.class4.includes(uid),
       class5: bookedClassInfoListObj.class5.includes(uid),
-      class6: bookedClassInfoListObj.class6.includes(uid),
-      class7: bookedClassInfoListObj.class7.includes(uid),
+      // class6: bookedClassInfoListObj.class6.includes(uid),
+      // class7: bookedClassInfoListObj.class7.includes(uid),
     };
     return obj;
   };
@@ -109,7 +109,7 @@ const ClassSelectModalModal = (props: Props) => {
     }
     // 土曜日ならi を2こずらす
     let className = classNameList[i + 2];
-    console.log(CLASS_LIST.length);
+    
     // clNameをclass1, class2などに復元する
     if (CLASS_LIST.length === 5) {
       classNameList[i + 2];
@@ -139,13 +139,13 @@ const ClassSelectModalModal = (props: Props) => {
         isBooked = BookedClass.class5;
         break;
 
-      case 'class6':
-        isBooked = BookedClass.class6;
-        break;
+      // case 'class6':
+      //   isBooked = BookedClass.class6;
+      //   break;
 
-      case 'class7':
-        isBooked = BookedClass.class7;
-        break;
+      // case 'class7':
+      //   isBooked = BookedClass.class7;
+      //   break;
     }
 
     // 振替元として設定しているかどうかを確認する関数

@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.8.2",
+    "@chakra-ui/react": "^2.10.1",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@hookform/error-message": "^2.0.1",
@@ -64,7 +64,6 @@
     "remark-rehype": "^10.1.0",
     "remark-slug": "^7.0.1",
     "remark-toc": "^9.0.0",
-    "saas": "^1.0.0",
     "sass": "^1.62.1",
     "styled-components": "^6.1.11",
     "swr": "^2.2.5",
