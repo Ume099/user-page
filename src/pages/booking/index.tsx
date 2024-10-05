@@ -350,8 +350,8 @@ export default function Booking() {
   return (
     // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
-      <div>
-        <div className="">
+      <div className="w-full">
+        <div className="w-full">
           {!isOpenSetmonthAndYearOnDisplayModal ? (
             <div className="gap-4">
               <div className="mt-[52px] pl-12">

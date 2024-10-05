@@ -1,8 +1,13 @@
+import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
+import InvoiceCardFurikomi from '@/components/invoice/InvoiceCardFurikomi';
+import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
+import { formatInvoiceList, FormatInvoiceListReturn } from '@/lib/invoice';
 import { TeachingReportTemplateInputType } from '@/lib/teachingReport';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
@@ -45,6 +50,7 @@ const DEFAULT_REPORT_OBJ: ReportObj = {
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const TeachingExample: NextPage = () => {
+  const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn[] | []>([]);
   const {
     register,
     watch,
@@ -102,98 +108,42 @@ const TeachingExample: NextPage = () => {
     }
   };
 
-  // 提出の関数
-  const onSubmit = () => {
-    if (!watch('stage') || !watch('date')) {
-      toast({
-        title: '必要事項を選択してください。',
-        status: 'error',
-        position: 'top',
-      });
-      return;
-    }
-    createTeachingReport(getPostData());
-    reset();
+  const get2DNum = (number: number) => {
+    return ('0' + number).slice(-2);
   };
 
-  // エラーハンドリング
-  if (templateError) {
-    console.log('Error fetching template data:', templateError);
-  }
-  console.log('users', users);
-
-  if (usersError) {
-    console.log('Error fetching users:', usersError);
-  }
-  const fullName = '弓指璃乃佳';
+  // fetchする関数
+  const getInvoice = async (year: number, month: number, uid: string) => {
+    try {
+      const response = await axios.get('/api/fetchFireStore', {
+        params: {
+          collectionName: 'invoice',
+          docId: `${uid}_${String(year).slice(-2)}_${get2DNum(month)}`,
+        },
+      });
+      setInvoiceInfo((prev) => [...prev, formatInvoiceList(response.data)]);
+    } catch (error) {
+      console.log(error);
+    }
+    console.log(invoiceInfo);
+  };
 
   return (
-    <div className="mt-24 max-w-4xl items-center w-full p-2">
-      {/* ユーザーデータの表示 */}
-      <div className="border w-full h-full px-4 lg:p-10">
-        <div className="flex border-primary rounded border my-10 py-4 items-center text-center">
-          <p className="text-4xl mx-auto">請求書</p>
-        </div>
-        <div className="flex justify-end w-full">
-          <p className="inline-block">2024年09月30日</p>
-        </div>
-        <div className="flex text-l font-bold underline">
-          生徒氏名：　<span>弓指璃乃佳　</span>
-          <span> 様</span>
-        </div>
-        <div className="flex justify-between gap-x-5">
-          <div className="">
-            <div className="mt-4 border-primary lg:pr-40 rounded border p-2">
-              下記の通りご請求申し上げます。
-            </div>
-            <p className="mt-4 text-sm lg:text-l font-bold underline">ご請求金額：　8,800　円</p>
-            <div className="mt-4 border-primary rounded border p-2">
-              【口座情報】
-              <br /> 西日本シティ銀行
-              <br />
-              大橋駅前支店[735]
-              <br />
-              普通
-              <br />
-              3034698 ｽﾐ ﾄｼﾔ
-            </div>
-          </div>
-          <div>
-            <div className="flex w-full justify-end h-full">
-              <div className="border-primary rounded border mt-4 p-1">
-                コードアドベンチャー福岡姪浜校 <br />
-                〒819-0005 <br /> 福岡市西区内浜1-3-29 <br /> レンタルスペースM's Kitchen内 <br />
-                TEL：080-7620-5760 <br /> Mail：ca.osumitsuki@gmail.com
-              </div>
-            </div>
-          </div>
-        </div>
-        <p className="inline-block mt-4">
-          お支払期限：　<span className="font-bold">2024年10月5日(土)</span>
-        </p>
-        <div className="ml-10 mt-4">
-          <p>お支払い方法：</p>
-          <p className="font-bold">銀行振込</p>
-          <div>
-            <div className="grid-cols-3 gap grid border-b">
-              <p className="mx-4">項目</p>
-              <p className="mx-4">詳細</p>
-              <p className="mx-4">値段</p>
-            </div>
-            <div className="mt-4 mx-4 grid-cols-3 gap grid">
-              <div>授業料</div>
-              <div className="text-sm mx-4 text-start">プログラミング（通常コース）</div>
-              <div className="flex shrink-0">
-                <p>8,000円</p>
-              </div>
-            </div>
-            <div className="mt-4 flex justify-end mr-10 font-bold underline mb-10">
-              合計：　￥8,800
-            </div>
-          </div>
+    <AuthGuard>
+      <div>
+        {/* 月を設定するボタン */}
+        <ButtonOriginal label="test" onClick={() => getInvoice(2024, 9, '2o5zqr777wbv')} />
+        <div>
+          <ul>
+            {invoiceInfo.map((invoice, index) => (
+              <li key={index}>
+                <InvoiceCardFurikomi invoice={invoice} />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 };
 

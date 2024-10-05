@@ -130,8 +130,10 @@ const Days = (props: Props) => {
 
   // openDay_年_月のドキュメントすべてを取得するAPI
   const getAllDocs = async () => {
+    console.log('uid', userInfo.uid);
+    console.log('uid', userInfo.userName);
     try {
-      const response = await axios.get('api/fetchCollection', {
+      const response = await axios.get('/api/fetchCollection', {
         params: { collectionName: collectionNameInMemo },
       });
 
@@ -213,7 +215,7 @@ const Days = (props: Props) => {
       >
         {!isPast && isOpenDay ? (
           // 開校日 && 基本曜日と一致している日のボタンはprime, 開校日 && 一致していない日はsecondary
-          <>
+          <div>
             <ButtonOriginal
               variant={
                 checkIsSetAsAftChange(day) || bookedDay.includes(day)
@@ -231,11 +233,11 @@ const Days = (props: Props) => {
               }
               label={String(day)}
             />
-          </>
+          </div>
         ) : (
-          <>
+          <div>
             <div>{day}</div>
-          </>
+          </div>
         )}
       </div>,
     );
@@ -243,11 +245,11 @@ const Days = (props: Props) => {
 
   // JSX
   return (
-    <>
+    <div>
       <div className="grid grid-cols-7 border-l border-t border-black">{days}</div>
       {isOpenSetClassModal && (
         <div className="flex flex-col">
-          <div className="fixed lg:left-40 top-28 z-30 mx-auto mb-4">
+          <div className="fixed top-28 z-30 mx-auto mb-4 lg:left-40">
             <ButtonOriginal
               variant="error-secondary"
               label="×"
@@ -266,7 +268,7 @@ const Days = (props: Props) => {
           />
         </div>
       )}
-    </>
+    </div>
   );
 };
 
