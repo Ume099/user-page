@@ -118,3 +118,48 @@ export type InvoiceInput = {
   dueDate: string;
   items: ItemReturn;
 };
+
+export type InvoiceListAll = {
+  id: string;
+  date: string;
+  uid: string;
+  isCkecked: boolean;
+  mail: string;
+  totalPrice: number | string;
+  isPublished: boolean;
+  dueDate: string;
+  fullName: string;
+  TEL: string;
+  payment: string | null;
+  placeName: string;
+  items: { komoku: string; price: number; detail: string }[] | null;
+}[];
+
+// データをFormatInvoiceListReturn型に変換する関数
+export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoiceListReturn {
+  return invoiceList.map((invoice) => {
+    // totalPriceが空文字列の場合は0として扱う
+    const totalPrice =
+      typeof invoice.totalPrice === 'string' && invoice.totalPrice === ''
+        ? 0
+        : Number(invoice.totalPrice);
+
+    // paymentがnullの場合、デフォルト値として"未設定"を入れる
+    const payment = invoice.payment || '未設定';
+
+    // itemsがnullの場合は空配列にする
+    const items: ItemReturn = invoice.items ? invoice.items : [];
+
+    return {
+      fullName: invoice.fullName,
+      placeName: invoice.placeName,
+      date: invoice.date,
+      TEL: invoice.TEL,
+      mail: invoice.mail,
+      totalPrice: totalPrice,
+      payment: payment,
+      dueDate: invoice.dueDate,
+      items: items,
+    };
+  });
+}

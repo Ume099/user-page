@@ -43,7 +43,9 @@ const InvoiceCardFurikomi = (props: Props) => {
             <div className="mt-4 border-primary lg:pr-40 rounded border p-2">
               下記の通りご請求申し上げます。
             </div>
-            <p className="mt-4 text-sm lg:text-l font-bold underline">ご請求金額：　8,800　円</p>
+            <p className="mt-4 text-sm lg:text-l font-bold underline">
+              ご請求金額：　{totalPrice || 0}　円
+            </p>
             <div className="mt-4 border-primary rounded border p-2">
               【口座情報】
               <br /> 西日本シティ銀行
