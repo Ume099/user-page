@@ -1,4 +1,4 @@
-import { FormatInvoiceListReturn } from '@/lib/invoice';
+import { FormatInvoice } from '@/lib/invoice';
 import ItemCard from './parts/ItemCard';
 
 type ReportObj = {
@@ -14,15 +14,13 @@ const DEFAULT_REPORT_OBJ: ReportObj = {
 };
 
 type Props = {
-  invoice: FormatInvoiceListReturn;
+  invoice: FormatInvoice;
 };
 
 const InvoiceCardFurikomi = (props: Props) => {
   const { invoice } = props;
 
-  const totalPrice = invoice.item.reduce((sum: number, currentItem) => {
-    return sum + Number(currentItem.price);
-  }, 0);
+  const totalPrice = invoice.totalPrice;
 
   return (
     <div className="max-w-4xl items-center w-full p-2">
@@ -78,7 +76,7 @@ const InvoiceCardFurikomi = (props: Props) => {
             <p>お支払い方法：</p>
             <p className="font-bold">銀行振込</p>
           </div>
-          <ItemCard items={invoice.item} />
+          <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />
         </div>
       </div>
     </div>
