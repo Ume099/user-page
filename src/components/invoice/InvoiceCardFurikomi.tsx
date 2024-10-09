@@ -24,6 +24,7 @@ const InvoiceCardFurikomi = (props: Props) => {
 
   return (
     <div className="max-w-4xl items-center w-full p-2">
+      {invoice.isPublished}
       {/* ユーザーデータの表示 */}
       <div className="border w-full h-full px-4 lg:p-10">
         <div className="flex border-primary rounded border my-10 py-4 items-center text-center">

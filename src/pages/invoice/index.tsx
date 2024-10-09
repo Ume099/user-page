@@ -2,11 +2,13 @@ import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 import InvoiceCardFurikomi from '@/components/invoice/InvoiceCardFurikomi';
 import YearDropdown from '@/components/invoice/parts/YearDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
+import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { formatInvoiceList, FormatInvoiceListReturn } from '@/lib/invoice';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 
 type UserData = {
   uid: string;
@@ -23,6 +25,8 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 const TeachingExample: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<Number>(thisYear);
+
+  const [userInfo] = useRecoilState<UserInfo>(userInfoState);
   const toast = useToast();
 
   // 請求書のデータをfetchする関数
@@ -45,7 +49,7 @@ const TeachingExample: NextPage = () => {
     <AuthGuard>
       <div>
         {/* 月を設定するボタン */}
-        <ButtonOriginal label="test" onClick={() => getInvoice('KZlzeAudgBVPawzaQuT7zo4BLCH3')} />
+        <ButtonOriginal label="test" onClick={() => getInvoice(userInfo.uid)} />
         <YearDropdown setYear={setYear} />
         <div>
           <ul>

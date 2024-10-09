@@ -48,7 +48,7 @@ export type Item = {
 export type Data = {
   date: string;
   uid: string;
-  isCkecked: boolean;
+  isChecked: boolean;
   mail: string;
   totalPrice: number;
   isPublished: boolean;
@@ -76,7 +76,7 @@ export type FormatInvoice = {
   TEL: string;
   mail: string;
   totalPrice: number;
-  note?: string;
+  isPublished: boolean;
   payment: string;
   dueDate: string;
   items: ItemReturn;
@@ -94,7 +94,7 @@ export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => 
     TEL: invoice.data.TEL,
     mail: invoice.data.mail,
     totalPrice: invoice.data.totalPrice,
-    note: invoice.data.isPublished ? 'Published' : 'Not Published', // 任意のフィールドを使用
+    isPublished: invoice.data.isPublished ? true : false, // 任意のフィールドを使用
     payment: invoice.data.payment || 'Unpaid', // paymentがnullの場合、'Unpaid'と表示
     dueDate: invoice.data.dueDate,
     items: invoice.data.items?.map((item: any) => ({
@@ -113,7 +113,7 @@ export type InvoiceInput = {
   TEL?: string;
   mail?: string;
   totalPrice: number;
-  note?: string;
+  isPublished?: string;
   payment: string;
   dueDate: string;
   items: ItemReturn;
@@ -123,7 +123,7 @@ export type InvoiceListAll = {
   id: string;
   date: string;
   uid: string;
-  isCkecked: boolean;
+  isChecked: boolean;
   mail: string;
   totalPrice: number | string;
   isPublished: boolean;
@@ -157,6 +157,8 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
       TEL: invoice.TEL,
       mail: invoice.mail,
       totalPrice: totalPrice,
+      isPublished: invoice.isPublished,
+      isChecked: invoice.isChecked,
       payment: payment,
       dueDate: invoice.dueDate,
       items: items,
