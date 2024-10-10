@@ -7,7 +7,7 @@ import { formatInvoiceList, FormatInvoiceListReturn } from '@/lib/invoice';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
 type UserData = {
@@ -25,6 +25,7 @@ const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 const TeachingExample: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<Number>(thisYear);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
   const toast = useToast();
@@ -40,17 +41,35 @@ const TeachingExample: NextPage = () => {
       });
       console.log(response.data);
       setInvoiceInfo(formatInvoiceList(response.data));
+      if (response) {
+        toast({ title: '請求書を取得しました', status: 'success', position: 'top-right' });
+      }
     } catch (error) {
+      if (!isFirstLoad) {
+        toast({ title: '請求書が存在しません。', status: 'error', position: 'top-right' });
+      }
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    getInvoice(userInfo.uid);
+    setIsFirstLoad(false);
+  }, [year]);
 
   return (
     <AuthGuard>
       <div>
         {/* 月を設定するボタン */}
-        <ButtonOriginal label="test" onClick={() => getInvoice(userInfo.uid)} />
         <YearDropdown setYear={setYear} />
+        {!invoiceInfo.length && (
+          <ButtonOriginal
+            className="w-full my-4"
+            variant="primary"
+            label="請求書情報を取得"
+            onClick={() => getInvoice(userInfo.uid)}
+          />
+        )}
         <div>
           <ul>
             {invoiceInfo.map((invoice, index) => (
