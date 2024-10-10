@@ -35,29 +35,25 @@ const DEFAULT_REPORT_OBJ: ReportObj = {
 };
 
 type Props = {
+  totalPrice: number;
   items: ItemReturn;
 };
 
 const ItemCard = (props: Props) => {
-  const { items } = props;
-
-  const totalPrice = items.reduce((sum: number, currentItem) => {
-    return sum + Number(currentItem.price);
-  }, 0);
+  const { items, totalPrice } = props;
 
   return (
     <>
       {items.map((item) => (
         <div>
-          <div className="grid-cols-3 gap grid border-b">
+          <div className="grid-cols-3 gap grid border-b"></div>
+          <div className="mt-4 mx-4 grid-cols-3 gap grid">
             <p className="mx-4">項目</p>
             <p className="mx-4">詳細</p>
             <p className="mx-4">値段</p>
-          </div>
-          <div className="mt-4 mx-4 grid-cols-3 gap grid">
             <div>{item.komoku}</div>
             <div className="text-sm mx-4 text-start">{item.detail}</div>
-            <div className="flex shrink-0">
+            <div className="flex pl-8 items-start shrink-0">
               <p>{Number(item.price).toLocaleString()}円</p>
             </div>
           </div>

@@ -15,12 +15,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // Firestoreのクエリを使用して、dateフィールドがdocIdで始まるものを取得
     const collectionRef = db.collection(String(collectionName));
-
-    // `docId` で始まるドキュメントを検索
     const querySnapshot = await collectionRef
-      .where('__name__', '>=', String(docId))
-      .where('__name__', '<', String(docId) + '\uf8ff') // `\uf8ff` は最大のunicode文字で、部分一致を実現
+      .where('date', '>=', String(docId)) // docId以上のものを取得
+      .where('date', '<', String(docId) + '\uf8ff') // docIdで始まるもののみを取得
       .get();
 
     if (querySnapshot.empty) {
@@ -28,15 +27,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return;
     }
 
-    // 取得したドキュメントを配列に変換
-    const documents = querySnapshot.docs.map((doc) => ({
+    // 取得したドキュメントを配列に格納して返す
+    const results = querySnapshot.docs.map((doc) => ({
       id: doc.id,
-      data: doc.data(),
+      ...doc.data(),
     }));
 
-    res.status(200).json(documents);
+    res.status(200).json(results);
   } catch (error: any) {
-    console.error('ドキュメントの取得に失敗しました:', error);
+    console.error('Failed to fetch documents:', error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 }
