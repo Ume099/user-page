@@ -69,6 +69,7 @@ export type Invoice = {
 // Invoiceの配列型定義
 export type InvoiceList = Invoice[];
 export type FormatInvoice = {
+  uid: string;
   fullName: string;
   placeName: string;
   date: string;
@@ -77,6 +78,7 @@ export type FormatInvoice = {
   mail: string;
   totalPrice: number;
   isPublished: boolean;
+  isChecked: boolean;
   payment: string;
   dueDate: string;
   items: ItemReturn;
@@ -87,6 +89,7 @@ export type FormatInvoiceListReturn = FormatInvoice[];
 // 変換関数の実装
 export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => {
   return obj.map((invoice) => ({
+    uid: invoice.data.uid,
     fullName: invoice.data.fullName,
     placeName: invoice.data.placeName,
     date: invoice.data.date,
@@ -94,7 +97,8 @@ export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => 
     TEL: invoice.data.TEL,
     mail: invoice.data.mail,
     totalPrice: invoice.data.totalPrice,
-    isPublished: invoice.data.isPublished ? true : false, // 任意のフィールドを使用
+    isPublished: invoice.data.isPublished ?? false, // 任意のフィールドを使用
+    isChecked: invoice.data.isPublished ?? false, // 任意のフィールドを使用
     payment: invoice.data.payment || 'Unpaid', // paymentがnullの場合、'Unpaid'と表示
     dueDate: invoice.data.dueDate,
     items: invoice.data.items?.map((item: any) => ({
@@ -151,6 +155,7 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
     const items: ItemReturn = invoice.items ? invoice.items : [];
 
     return {
+      uid: invoice.uid,
       fullName: invoice.fullName,
       placeName: invoice.placeName,
       date: invoice.date,

@@ -1,80 +1,58 @@
-import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
-import InvoiceCardFurikomi from '@/components/invoice/InvoiceCardFurikomi';
-import YearDropdown from '@/components/invoice/parts/YearDropdown';
+import InvoiceCardFurikomiAll from '@/components/invoice/InvoiceCardFurikomiAll';
+import YearAndMonthDropdown from '@/components/invoice/parts/YearAndMonthDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { formatInvoiceListAll, FormatInvoiceListReturn } from '@/lib/invoice';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
-import { useState } from 'react';
-
-type ReportObj = {
-  stageName: string;
-  topic: string;
-  detail: string;
-};
-
-type TeachingReportData = {
-  studentUid: string;
-  date: Date;
-  classTime: string;
-  stage: string;
-  topic: string;
-  detail: string;
-  studentName: string;
-  writer: string;
-  writerUid: string;
-  rikaido: string;
-  comment: string;
-  isPublished: boolean;
-};
-
-type UserData = {
-  uid: string;
-  name?: string;
-  email?: string;
-  displayName?: string;
-};
-
-const DEFAULT_REPORT_OBJ: ReportObj = {
-  stageName: '',
-  topic: '',
-  detail: '',
-};
+import { useEffect, useState } from 'react';
 
 const thisYear = new Date().getFullYear();
+const thisMonth = new Date().getMonth();
 const TeachingExample: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<number>(thisYear);
+  const [month, setMonth] = useState<number>(thisMonth + 1);
   const toast = useToast();
 
   // fetchする関数
-  const getInvoice = async (year: number) => {
+  const getInvoice = async () => {
     try {
       const response = await axios.get('/api/invoice/fetchInvoiceAll', {
         params: {
           collectionName: 'invoice',
-          docId: `${year}`,
+          docId: `${year}_${('0' + month).slice(-2)}`,
         },
       });
       console.log(response.data);
       setInvoiceInfo(formatInvoiceListAll(response.data));
     } catch (error) {
+      toast({ title: `エラーが発生しました。${error}`, status: 'error' });
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    getInvoice();
+  }, [year, month]);
+
   return (
     <AuthGuard>
-      <div>
+      <div className="ml-8">
         {/* 月を設定するボタン */}
-        <ButtonOriginal label="test" onClick={() => getInvoice(year)} />
-        <YearDropdown setYear={setYear} />
-        <div>
+        <YearAndMonthDropdown setMonth={setMonth} setYear={setYear} />
+        {/* <div className="mt-8">
+          <label>↓すべてチェック</label>
+        </div>
+        <ToggleSwitchCheckAll
+          isDefaultChecked={false}
+          uidList={invoiceInfo.map((invoice) => `${invoice.uid}_${invoice.date}`)}
+        /> */}
+        <div className="mt-4">
           <ul>
             {invoiceInfo.map((invoice, index) => (
               <li key={index}>
-                <InvoiceCardFurikomi invoice={invoice} />
+                <InvoiceCardFurikomiAll defaultOpen={false} invoice={invoice} />
               </li>
             ))}
           </ul>

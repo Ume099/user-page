@@ -1,19 +1,67 @@
 import { FormatInvoice } from '@/lib/invoice';
+import { useState } from 'react';
+import ButtonOriginal from '../common/parts/ButtonOriginal';
 import ItemCard from './parts/ItemCard';
+import ToggleSwitchCheck from './parts/ToggleSwitchCheck';
+import ToggleSwitchPublish from './parts/ToggleSwitchPublish';
 
 type Props = {
   invoice: FormatInvoice;
+  defaultOpen: boolean;
 };
 
-const InvoiceCardFurikomi = (props: Props) => {
-  const { invoice } = props;
+const InvoiceCardFurikomiAll = (props: Props) => {
+  const { invoice, defaultOpen = false } = props;
+
+  const [open, setOpen] = useState(defaultOpen);
 
   const totalPrice = invoice.totalPrice;
 
   return (
     <div className="max-w-4xl items-center w-full p-2">
-      {invoice.isPublished && invoice.isChecked && (
+      {!open ? (
+        <div className="flex justify-center mt-4">
+          <div className=" border p-4 rounded-lg w-60 flex justify-start">
+            <div className="pt-2">
+              <div className="flex">
+                <label htmlFor={`${invoice.uid}_${invoice.date}`}>チェック→</label>
+                <ToggleSwitchCheck
+                  isDefaultChecked={invoice.isChecked}
+                  id={`${invoice.uid}_${invoice.date}`}
+                />
+                <label htmlFor={`${invoice.uid}_${invoice.date}`}>公開→</label>
+                <ToggleSwitchPublish
+                  isDefaultPublished={invoice.isPublished}
+                  id={`${invoice.uid}_${invoice.date}`}
+                />
+              </div>
+              <ButtonOriginal onClick={() => setOpen((prev) => !prev)} label="詳細" />
+              <div className="font-bold text-2xl mt-2">{invoice.fullName}</div>
+              <ul className="flex">
+                {invoice.items.map((item, index) => (
+                  <li key={index}>
+                    {item.komoku}
+                    {invoice.items[index + 1] && <span className="mr-2">,</span>}
+                  </li>
+                ))}
+              </ul>
+              <div className="flex gap-x-2">
+                <p>{invoice.totalPrice}</p>
+                <span>円</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div className="border w-full h-full px-4 lg:p-10">
+          <ButtonOriginal onClick={() => setOpen((prev) => !prev)} label="閉じる" />{' '}
+          <ToggleSwitchCheck
+            isDefaultChecked={invoice.isChecked}
+            id={`${invoice.uid}_${invoice.date}`}
+          />
+          <label htmlFor={`${invoice.uid}_${invoice.date}`}>
+            ⇑確認したらチェックをお願いします。
+          </label>
           <div className="flex border-primary rounded border my-10 py-4 items-center text-center">
             <p className="text-4xl mx-auto">請求書</p>
           </div>
@@ -70,9 +118,8 @@ const InvoiceCardFurikomi = (props: Props) => {
           </div>
         </div>
       )}
-      {/* ユーザーデータの表示 */}
     </div>
   );
 };
 
-export default InvoiceCardFurikomi;
+export default InvoiceCardFurikomiAll;
