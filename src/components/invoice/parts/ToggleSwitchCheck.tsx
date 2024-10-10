@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
@@ -17,6 +18,7 @@ const ToggleSwitchCheck = (props: ToggleProps): JSX.Element => {
     upDateIsChecked(!isChecked);
     setIsChecked((prev) => !prev);
   };
+  const toast = useToast();
 
   const upDateIsChecked = async (isChecked: boolean) => {
     const res = await fetch('/api/invoice/updateIsChecked', {
@@ -28,7 +30,13 @@ const ToggleSwitchCheck = (props: ToggleProps): JSX.Element => {
     });
 
     const data = await res.json();
-    console.log(data);
+    if (data) {
+      toast({
+        title: isChecked ? 'チェックを反映しました。' : 'チェックを外しました。',
+        status: isChecked ? 'success' : 'warning',
+        position: 'top-right',
+      });
+    }
   };
 
   return (
