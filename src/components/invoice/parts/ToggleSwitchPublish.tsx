@@ -1,5 +1,9 @@
+import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
+import { InvoiceMailParams } from '@/lib/type/invoice';
+import { getEmailByUid } from '@/lib/util/getUserInfo';
 import { useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
+import { useRecoilState } from 'recoil';
 
 type ToggleProps = {
   label?: string;
@@ -7,15 +11,44 @@ type ToggleProps = {
   register?: UseFormRegisterReturn<any>;
   id: string;
   isDefaultPublished: boolean;
+  date: string;
+  uid: string;
 };
 
 const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
-  const { label, className, register, id, isDefaultPublished } = props;
+  const { label, className, register, id, isDefaultPublished, date, uid } = props;
   const [isPublished, setIsPublished] = useState(isDefaultPublished);
+  const [userInfo] = useRecoilState<UserInfo>(userInfoState);
 
-  const handleToggleIsPublished = () => {
-    upDateIsPublished(!isPublished);
-    setIsPublished((prev) => !prev);
+  const mailSender = async () => {
+    const email = await getEmailByUid(uid);
+
+    const year = Number(date.split('-')[0]);
+    const month = Number(date.split('-')[1]);
+    const data: InvoiceMailParams = {
+      name: userInfo.userName || '',
+      sendTo: email || '',
+      year,
+      month,
+    };
+    console.log('メール送信', data);
+
+    const res = await fetch('api/invoice/sendMail', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json, text/plain',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (res.status === 200) console.log('メール送信成功');
+  };
+
+  const handleToggleIsPublished = async () => {
+    await upDateIsPublished(true);
+    setIsPublished(true);
+    await mailSender();
   };
 
   const upDateIsPublished = async (isPublished: boolean) => {

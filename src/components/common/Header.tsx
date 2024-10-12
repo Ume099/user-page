@@ -52,6 +52,7 @@ const Header: React.FC = () => {
           uid: user.uid,
           isSignedIn: true,
           userName: user.displayName,
+          email: user.email,
           isFirstTime: false,
         });
         setLoginMessage('としてログイン中');
