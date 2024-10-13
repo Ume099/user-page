@@ -4,7 +4,7 @@ import Input from '@/components/common/parts/Input';
 import Select from '@/components/common/parts/Select';
 import SettingHeading from '@/components/common/parts/SettingHeading';
 import { InvoiceInput } from '@/lib/invoice';
-import { useToast } from '@chakra-ui/react';
+import { toast } from 'react-toastify'; 
 import axios from 'axios';
 import { FirebaseError } from 'firebase/app';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,6 @@ export const Page = () => {
   const [users, setUsers] = useState<UserData[]>([]);
   const [isFetchUser, setIsFetchUser] = useState<boolean>(false);
 
-  const toast = useToast();
   const {
     register,
     handleSubmit,
@@ -47,11 +46,7 @@ export const Page = () => {
     } catch (e) {
       setError(true);
       if (e instanceof FirebaseError) {
-        toast({
-          title: 'エラーが発生しました。' + String(e),
-          status: 'error',
-          position: 'top',
-        });
+        toast.error(`エラーが発生しました。${String(e)}`);
       }
     } finally {
       if (error) {

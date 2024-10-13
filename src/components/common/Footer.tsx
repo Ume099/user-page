@@ -8,7 +8,7 @@ const footerRouteList = ['test', 'test', 'test'];
 
 const Footer = (): JSX.Element => {
   return (
-    <footer className="bg-theme-dark py-14 !w-screen text-white sm:py-20">
+    <footer className="!w-screen bg-theme-dark py-14 text-white sm:py-20">
       <div className="mb-10 flex justify-center">
         <Link href={Routes.INDEX.url}>
           <Image src="/lp/util/logo_android.png" width={32} height={32} alt="プライム" />

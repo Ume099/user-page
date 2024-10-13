@@ -9,10 +9,10 @@ import { bookingChangeState } from '@/hooks/atom/bookingChange';
 import { bookingChangeInfoState, BookingChangeInfoState } from '@/hooks/atom/bookingChangeInfo';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { getClassName } from '@/lib/SeatMap';
-import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { GoTriangleDown } from 'react-icons/go';
+import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 
 const MONTH_NAME: string[] = [
@@ -173,8 +173,6 @@ export default function Booking() {
     }
   };
 
-  const toast = useToast();
-
   function isPast10PMOfPreviousDay(year: number, month: number, day: number) {
     // Get the current date and time
     const now = new Date();
@@ -200,23 +198,17 @@ export default function Booking() {
         bookingChange.dayBefChange,
       )
     ) {
-      toast({
-        title: '前日の午後10時を過ぎているため、予定を変更できません。',
-        status: 'error',
-        position: 'top',
-      });
+      toast.error('前日の午後10時を過ぎているため、予定を変更できません。');
       return;
     }
     if (!checkIsClassBefChangeExists() || !checkIsAftChangeInfoExists()) {
-      toast({
-        title: !checkIsClassAftChangeExists()
+      toast.error(
+        !checkIsClassAftChangeExists()
           ? !checkIsClassBefChangeExists()
             ? '振替元の曜日を選択して下さい。'
             : '振替先の曜日を選択してください。'
           : '',
-        status: 'error',
-        position: 'top',
-      });
+      );
       return;
     }
     let isError: boolean = false;

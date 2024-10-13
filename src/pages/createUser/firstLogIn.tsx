@@ -1,4 +1,4 @@
-import { Button, chakra, useToast } from '@chakra-ui/react';
+import { toast } from 'react-toastify';
 
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { useRecoilState } from 'recoil';
@@ -12,7 +12,6 @@ import { FormEvent, useState } from 'react';
 export const Page = (): JSX.Element => {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
   const uid = searchParams.get('uid');
@@ -28,19 +27,10 @@ export const Page = (): JSX.Element => {
     try {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, mail, uid);
-      toast({
-        title: 'ログインしました。',
-        status: 'success',
-        position: 'top',
-      });
+      toast.success('ログインしました。');
       //TODO: ログイン後のページに遷移の処理を書く
     } catch (e) {
-      toast({
-        title: 'エラーが発生しました。管理者に問い合わせてください。',
-        status: 'error',
-        position: 'top',
-      });
-
+      toast.error('エラーが発生しました。管理者に問い合わせてください。');
       console.log(e);
     } finally {
       setIsLoading(false);
@@ -67,21 +57,36 @@ export const Page = (): JSX.Element => {
   return (
     <div>
       {!userInfo.isSignedIn ? (
-        <div className="py-12">
-          <h2 className="text-center text-4xl font-bold">サインイン(初回ログイン)</h2>
-          <chakra.form onSubmit={handleSubmit}>
-            <div className="flex w-full flex-col items-center justify-center gap-y-2">
-              <Button className="mt-8 !h-24 w-48 " type="submit" isLoading={isLoading}>
-                ログイン
-              </Button>
-              <div className="mt-4 flex">
-                <p>二回目以降のサインインは</p>
-                <a className="ml-2 font-bold underline" href="/signin">
-                  こちら
-                </a>
-              </div>
+        <div style={{ padding: '3rem 0' }}>
+          <h2 style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 'bold' }}>
+            サインイン(初回ログイン)
+          </h2>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <button
+              type="submit"
+              disabled={isLoading}
+              style={{ marginTop: '2rem', height: '6rem', width: '12rem' }}
+            >
+              {isLoading ? 'ログイン中...' : 'ログイン'}
+            </button>
+            <div style={{ marginTop: '1rem', display: 'flex' }}>
+              <p>二回目以降のサインインは</p>
+              <a
+                style={{ marginLeft: '0.5rem', fontWeight: 'bold', textDecoration: 'underline' }}
+                href="/signin"
+              >
+                こちら
+              </a>
             </div>
-          </chakra.form>
+          </form>
         </div>
       ) : (
         <MailAndPassChangeDialog />

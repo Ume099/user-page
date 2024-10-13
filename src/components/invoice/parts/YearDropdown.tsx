@@ -25,9 +25,9 @@ const YearDropdown = (props: Props) => {
   };
 
   return (
-    <div className="text-2xl ml-16">
+    <div className="ml-16 text-2xl">
       <select
-        className="border rounded-lg mr-2"
+        className="mr-2 rounded-lg border"
         id="year"
         value={selectedYear ?? ''}
         onChange={handleChange}
