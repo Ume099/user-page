@@ -5,6 +5,7 @@ export type UserInfo = {
   uid: string;
   isSignedIn: boolean;
   userName: string | null;
+  email?: string | null;
   isFirstTime: boolean;
 };
 
@@ -14,6 +15,7 @@ export const userInfoState = atom<UserInfo>({
     uid: '',
     isSignedIn: false,
     userName: '',
+    email: '',
     isFirstTime: false,
   },
 });

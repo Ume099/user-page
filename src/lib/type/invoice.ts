@@ -5,12 +5,11 @@ export type ReqBody<T> = {
 };
 
 // お問い合わせページ用の API が受け取るパラメータ
-export type ContactFormParam = {
+export type InvoiceMailParams = {
   name: string;
-  email: string;
-  message: string;
-  tel?: string;
-  company?: string;
+  sendTo: string;
+  year: number;
+  month: number;
 };
 
 // お問い合わせページ用の API が受け取るパラメータ
@@ -19,16 +18,5 @@ export type PartnerContactFormParam = {
   email: string;
   tel: string;
   company: string;
-  body?: string;
-};
-
-// LP のフォーム用 API が受け取るパラメータ
-export type LPFormParam = {
-  name: string;
-  email: string;
-  tel: string;
-  company: string;
-  business?: string;
-  howDidYouKnow: string[];
   body?: string;
 };

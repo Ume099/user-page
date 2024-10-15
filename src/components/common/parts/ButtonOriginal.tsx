@@ -25,16 +25,16 @@ const ButtonOriginal = (props: ButtonProps): JSX.Element => {
     variant === 'primary'
       ? 'border-primary bg-primary text-white disabled:border-theme-medium disabled:bg-theme-medium'
       : variant === 'secondary'
-      ? 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium'
-      : variant === 'error'
-      ? 'border-error bg-error text-white disabled:border-theme-medium disabled:bg-theme-medium'
-      : variant === 'error-secondary'
-      ? 'border-error bg-white text-error disabled:border-theme-medium disabled:text-theme-medium'
-      : variant === 'text'
-      ? `border-transparent bg-transparent text-primary hover:border-theme-light hover:bg-theme-light disabled:border-transparent disabled:bg-transparent disabled:text-theme-medium ${
-          loading ? '!bg-theme-light' : ''
-        }`
-      : '';
+        ? 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium'
+        : variant === 'error'
+          ? 'border-error bg-error text-white disabled:border-theme-medium disabled:bg-theme-medium'
+          : variant === 'error-secondary'
+            ? 'border-error bg-white text-error disabled:border-theme-medium disabled:text-theme-medium'
+            : variant === 'text'
+              ? `border-transparent bg-transparent text-primary hover:border-theme-light hover:bg-theme-light disabled:border-transparent disabled:bg-transparent disabled:text-theme-medium ${
+                  loading ? '!bg-theme-light' : ''
+                }`
+              : '';
 
   // Component
   return (

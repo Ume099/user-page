@@ -2,7 +2,6 @@ import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { UserData } from '@/lib/userSettings';
 import { LinkNameList, urls } from '@/pages';
-import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import {
   EmailAuthProvider,
@@ -14,8 +13,8 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import PageListAfterSignIn from './parts/PageListAfterSignIn';
+import { toast } from 'react-toastify'; // 変更
 
-// emailがメアドとして使用可能かどうかを判定するコード
 const isValidEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
@@ -25,7 +24,6 @@ const linkList = urls.map((url, index) => {
   return { text: LinkNameList[index], link: url };
 });
 
-// データフェッチ用の fetcher 関数
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 type Status = 'email' | 'password' | 'done';
@@ -42,8 +40,6 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
-
-  const toast = useToast();
 
   useEffect(() => {
     setPassword(userInfo.uid);
@@ -62,7 +58,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     setLoading(true);
     let error = false;
     if (!isValidEmail(email)) {
-      toast({ title: '正しいメールアドレスを入力して下さい。', status: 'warning' });
+      toast.warning('正しいメールアドレスを入力して下さい。');
       setLoading(false);
       return;
     }
@@ -72,18 +68,16 @@ const MailAndPassChangeDialog = (): JSX.Element => {
         uid,
         newEmail: email || '',
       });
-      await mutate(); // データの更新後に再フェッチ
+      await mutate();
     } catch (e) {
       error = true;
       console.error(e);
-      toast({ title: 'メールアドレスの登録に失敗しました。', status: 'error' });
+      toast.error('メールアドレスの登録に失敗しました。');
     } finally {
       if (!error) {
         setEmail(String(user?.email || ''));
         useStatus('password');
-        console.log(error);
-
-        toast({ title: '新しいメールアドレスを登録しました。', status: 'success' });
+        toast.success('新しいメールアドレスを登録しました。');
       }
       setLoading(false);
     }
@@ -104,16 +98,14 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       setMessage(e.message);
     }
     if (!error) {
-      console.log(error);
-      useStatus('password');
+      useStatus('done');
     }
   };
 
-  if ('email' == status) {
+  if (status === 'email') {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
-          {/* メールアドレス変更モーダル */}
           <h1 className="mb-4 font-bold text-primary">メールアドレスを設定してください。</h1>
           <div className="mb-4">
             <label className="mb-2 block font-bold text-primary-dark">新しいメールアドレス</label>
@@ -130,17 +122,16 @@ const MailAndPassChangeDialog = (): JSX.Element => {
               loading={loading}
             />
           </div>
-
           {message && <p className="text-red-500">{message}</p>}
         </div>
       </div>
     );
   }
-  if ('password' == status) {
+
+  if (status === 'password') {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
-          {/* パスワード設定画面 */}
           <h1 className="mb-4 font-bold text-primary">新しいパスワードを設定してください。</h1>
           <div className="mb-4">
             <label className="mb-2 block font-bold text-primary-dark">現在のパスワード</label>
@@ -151,7 +142,6 @@ const MailAndPassChangeDialog = (): JSX.Element => {
               className="w-full rounded-md border-2 border-gray-300 px-3 py-2"
             />
           </div>
-
           <div className="mb-4">
             <label className="mb-2 block font-bold text-primary-dark">新しいパスワード</label>
             <input
@@ -166,18 +156,17 @@ const MailAndPassChangeDialog = (): JSX.Element => {
               onClick={handlePasswordChange}
             />
           </div>
-
           {message && <p className="text-red-500">{message}</p>}
         </div>
       </div>
     );
   }
 
-  if ('done' == status) {
+  if (status === 'done') {
     return <PageListAfterSignIn linkList={linkList} />;
   }
 
-  return(<div>問題が発生しました。管理者に問い合わせてください。</div>)
+  return <div>問題が発生しました。管理者に問い合わせてください。</div>;
 };
 
 export default MailAndPassChangeDialog;
