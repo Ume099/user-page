@@ -117,6 +117,9 @@ const InvoiceCardFurikomiAll = (props: Props) => {
               <p className="font-bold">銀行振込</p>
             </div>
             <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />
+            <div className="mb-10 mr-10 mt-4 flex justify-end font-bold underline">
+              合計：　￥{invoice.totalPrice.toLocaleString()}
+            </div>
           </div>
         </div>
       )}
