@@ -11,10 +11,10 @@ import {
   TeachingReportTemplateInputType,
   TIME_OPTION_LIST,
 } from '@/lib/teachingReport';
-import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify'; // 変更
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 
@@ -55,7 +55,7 @@ const DEFAULT_REPORT_OBJ: ReportObj = {
 // fetcher関数を定義
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const TeachingExample: NextPage = () => {
+const Page: NextPage = () => {
   const {
     register,
     watch,
@@ -64,7 +64,6 @@ const TeachingExample: NextPage = () => {
     formState: { errors },
   } = useForm<TeachingReportTemplateInputType>();
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
-  const toast = useToast();
   const stage = watch('stage');
 
   // useSWRを使ってテンプレートデータをフェッチ
@@ -99,28 +98,25 @@ const TeachingExample: NextPage = () => {
 
   const createTeachingReport = async (data: TeachingReportData) => {
     try {
-      // エンドポイントに POST リクエストを送信
       const response = await axios.post('/api/teachingReport/createReport', data);
 
       if (response.status === 201) {
-        return { success: true, message: response.data.message };
+        toast.success(response.data.message);
+        return { success: true };
       } else {
-        return { success: false, message: response.data.message };
+        toast.error(response.data.message);
+        return { success: false };
       }
     } catch (error: any) {
       console.error('Error while creating document:', error);
-      return { success: false, message: 'An error occurred while creating the document.' };
+      toast.error('An error occurred while creating the document.');
+      return { success: false };
     }
   };
 
-  // 提出の関数
   const onSubmit = () => {
     if (!watch('stage') || !watch('date')) {
-      toast({
-        title: '必要事項を選択してください。',
-        status: 'error',
-        position: 'top',
-      });
+      toast.error('必要事項を選択してください。');
       return;
     }
     createTeachingReport(getPostData());
@@ -139,8 +135,6 @@ const TeachingExample: NextPage = () => {
 
   return (
     <div className="mx-12 mt-24 max-w-4xl items-center">
-      {/* ユーザーデータの表示 */}
-
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="mt-6">
           <DatePicker label="授業日時" register={register('date')} />
@@ -163,7 +157,6 @@ const TeachingExample: NextPage = () => {
             <p>ユーザー情報を取得しています...</p>
           )}
         </div>
-        {/* 報告するステージの選択ボタン */}
         <p className="h-8">選択してください。</p>
         <Select<string> optionList={stageList} className="w-full" register={register('stage')} />
 
@@ -204,4 +197,4 @@ const TeachingExample: NextPage = () => {
   );
 };
 
-export default TeachingExample;
+export default Page;

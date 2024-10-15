@@ -2,18 +2,18 @@ import InvoiceCardFurikomiAll from '@/components/invoice/InvoiceCardFurikomiAll'
 import YearAndMonthDropdown from '@/components/invoice/parts/YearAndMonthDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { formatInvoiceListAll, FormatInvoiceListReturn } from '@/lib/invoice';
-import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify'; // 変更
 
 const thisYear = new Date().getFullYear();
 const thisMonth = new Date().getMonth();
+
 const TeachingExample: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<number>(thisYear);
   const [month, setMonth] = useState<number>(thisMonth + 1);
-  const toast = useToast();
 
   // fetchする関数
   const getInvoice = async () => {
@@ -27,7 +27,7 @@ const TeachingExample: NextPage = () => {
       console.log(response.data);
       setInvoiceInfo(formatInvoiceListAll(response.data));
     } catch (error) {
-      toast({ title: `エラーが発生しました。${error}`, status: 'error' });
+      toast.error(`エラーが発生しました。${error}`);
       console.log(error);
     }
   };
@@ -41,13 +41,6 @@ const TeachingExample: NextPage = () => {
       <div className="ml-8">
         {/* 月を設定するボタン */}
         <YearAndMonthDropdown setMonth={setMonth} setYear={setYear} />
-        {/* <div className="mt-8">
-          <label>↓すべてチェック</label>
-        </div>
-        <ToggleSwitchCheckAll
-          isDefaultChecked={false}
-          uidList={invoiceInfo.map((invoice) => `${invoice.uid}_${invoice.date}`)}
-        /> */}
         <div className="mt-4">
           <ul>
             {invoiceInfo.map((invoice, index) => (

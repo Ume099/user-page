@@ -1,6 +1,6 @@
-import { useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 type ToggleProps = {
   label?: string;
@@ -13,7 +13,6 @@ type ToggleProps = {
 const ToggleSwitchCheckAll = (props: ToggleProps): JSX.Element => {
   const { label, className, register, isDefaultChecked = false, uidList } = props;
   const [isChecked, setIsChecked] = useState(isDefaultChecked);
-  const toast = useToast();
 
   const handleToggle = async () => {
     setIsChecked((prev) => !prev);
@@ -33,10 +32,10 @@ const ToggleSwitchCheckAll = (props: ToggleProps): JSX.Element => {
       const data = await res.json();
       console.log(data);
       if (data) {
-        toast({ title: 'チェックを反映しました。', status: 'success' });
+        toast.success('チェックを反映しました。');
       }
     } catch (error) {
-      toast({ title: `エラーが発生しました。${error}`, status: 'error' });
+      toast.error(`エラーが発生しました。${error}`);
     }
   };
 

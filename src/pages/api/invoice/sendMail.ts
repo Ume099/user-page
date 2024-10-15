@@ -2,13 +2,15 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createTransport } from 'nodemailer';
 import { Options } from 'nodemailer/lib/mailer';
 
-import { ContactFormParam, ReqBody } from '@/lib/type/contact';
+import { InvoiceMailParams, ReqBody } from '@/lib/type/invoice';
 import { __log } from '@/lib/util/log';
 
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const reqBody = req.body as ReqBody<ContactFormParam>;
+  const reqBody = req.body as ReqBody<InvoiceMailParams>;
 
   const data = reqBody.body;
+
+  console.log(data);
 
   // 改行のエスケープシーケンス(\n)を <br> に置換
   // const htmlBody = data.message.replace(/\n/g, '<br>');
@@ -28,16 +30,21 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
   // 管理人に送るお問い合わせメッセージ通知メール
   const toHostMailData: Options = {
     from: process.env.MAIL_SENDER,
-    to: 'bykawa099@gmail.com',
-    replyTo: 'bykawa099@gmail.com',
-    subject: `【プライム】${'data.name'}様：お問い合わせフォーム`,
+    to: data.sendTo,
+    replyTo: process.env.MAIL_SENDER,
+    subject: `【コードアドベンチャー姪浜校】請求書発行のお知らせ(${data.year}年${data.month}月 分)`,
     html: `
-      <p>プライムお問い合わせページのフォームよりお問い合わせがありました。</p>
-      <p>名前*:<br>${'data.name'}</p>
-      <p>メールアドレス*:<br>${'data.email'}</p>
-      <p>電話番号*:<br>${'data.tel'}</p>
-      <p>会社名・事業者名*:<br>${'data.message'}</p>
-      <p>詳しいお問い合わせ内容*:<br>${'data.message'}</p>
+      <p></p>
+      <p>お世話になっております。コードアドベンチャー姪浜校です。</p>
+      <br/>
+      <p>${data.year}年${data.month}月の請求書発行のご連絡です。</p>
+      <br/>
+      <a href="alt-prime/invoice">発行された請求書はこちらからご確認いただけます。（ログインが必要です）</a>
+      <br/>
+      <p>引き続きよろしくお願いいたします。</p>
+      <br/>
+      <br/>
+      <p>コードアドベンチャー姪浜校</p>
     `,
   };
 

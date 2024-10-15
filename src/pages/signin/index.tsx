@@ -1,109 +1,96 @@
-import {
-  Box,
-  Button,
-  Center,
-  chakra,
-  Container,
-  FormControl,
-  FormLabel,
-  Grid,
-  Heading,
-  Input,
-  Spacer,
-  useToast,
-} from '@chakra-ui/react';
-
-import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
-import { LinkNameList, urls } from '@/pages';
 import { useRecoilState } from 'recoil';
 
+import MailAndPassChangeDialog from '@/components/common/MailAndPassChangeDialog';
+import axios from 'axios';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useSearchParams } from 'next/navigation';
 import { FormEvent, useState } from 'react';
+import { toast } from 'react-toastify';
 
-const linkList = urls.map((url, index) => {
-  return { text: LinkNameList[index], link: url };
-});
-
-export const Page = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+export const Page = (): JSX.Element => {
+  const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
+  const uid = searchParams.get('uid');
+  const mail = searchParams.get('dummyMail')?.replace('___', '+');
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    if (!uid || !mail) {
+      return; //何もしない
+    }
+    getUserIsFirstTime();
     setIsLoading(true);
     e.preventDefault();
     try {
       const auth = getAuth();
-      await signInWithEmailAndPassword(auth, email, password);
-      setEmail('');
-      setPassword('');
-      toast({
-        title: 'ログインしました。',
-        status: 'success',
-        position: 'top',
-      });
+      await signInWithEmailAndPassword(auth, mail, uid);
+      toast.success('ログインしました。');
       //TODO: ログイン後のページに遷移の処理を書く
     } catch (e) {
-      toast({
-        title: 'エラーが発生しました。',
-        status: 'error',
-        position: 'top',
-      });
+      toast.error('エラーが発生しました。管理者に問い合わせてください。');
       console.log(e);
     } finally {
       setIsLoading(false);
     }
   };
 
+  // dbからユーザー情報を取得する関数
+  const getUserIsFirstTime = async () => {
+    let isError = false;
+    let result: boolean;
+    try {
+      const res = await axios.get(`/api/fetchFireStore?collectionName=students&docId=${uid || ''}`);
+      result = res.data.isFirstTime.booleanValue;
+    } catch (error) {
+      isError = true;
+      return; //何もしない
+    }
+
+    if (!isError) {
+      setUserInfo({ ...userInfo, isFirstTime: result });
+    }
+  };
+
   return (
-    <>
+    <div>
       {!userInfo.isSignedIn ? (
-        <Container py={14}>
-          <Heading>サインイン</Heading>
-          <chakra.form onSubmit={handleSubmit}>
-            <Spacer height={8} aria-hidden />
-            <Grid gap={4}>
-              <Box display={'contents'}>
-                <FormControl>
-                  <FormLabel>メールアドレス</FormLabel>
-                  <Input
-                    type={'email'}
-                    name={'email'}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>パスワード</FormLabel>
-                  <Input
-                    type={'password'}
-                    name={'password'}
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                  />
-                </FormControl>
-              </Box>
-            </Grid>
-            <Spacer height={4} aria-hidden />
-            <Center>
-              <Button type={'submit'} isLoading={isLoading}>
-                ログイン
-              </Button>
-            </Center>
-          </chakra.form>
-        </Container>
+        <div style={{ padding: '3rem 0' }}>
+          <h2 style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 'bold' }}>
+            サインイン(初回ログイン)
+          </h2>
+          <form
+            onSubmit={handleSubmit}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
+            <button
+              type="submit"
+              disabled={isLoading}
+              style={{ marginTop: '2rem', height: '6rem', width: '12rem' }}
+            >
+              {isLoading ? 'ログイン中...' : 'ログイン'}
+            </button>
+            <div style={{ marginTop: '1rem', display: 'flex' }}>
+              <p>二回目以降のサインインは</p>
+              <a
+                style={{ marginLeft: '0.5rem', fontWeight: 'bold', textDecoration: 'underline' }}
+                href="/signin"
+              >
+                こちら
+              </a>
+            </div>
+          </form>
+        </div>
       ) : (
-        <PageListAfterSignIn linkList={linkList} />
+        <MailAndPassChangeDialog />
       )}
-      ( )
-    </>
+    </div>
   );
 };
 
