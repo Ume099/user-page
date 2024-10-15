@@ -4,7 +4,7 @@ import Input from '@/components/common/parts/Input';
 import Select from '@/components/common/parts/Select';
 import SettingHeading from '@/components/common/parts/SettingHeading';
 import { InvoiceInput } from '@/lib/invoice';
-import { toast } from 'react-toastify'; 
+import { toast } from 'react-toastify';
 import axios from 'axios';
 import { FirebaseError } from 'firebase/app';
 import { useEffect, useState } from 'react';

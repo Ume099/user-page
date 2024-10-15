@@ -27,10 +27,10 @@ const CalenderButton = (props: ButtonProps): JSX.Element => {
     buttonType === 'booked'
       ? 'font-bold border-primary bg-primary text-white disabled:border-theme-medium disabled:bg-theme-medium shadow-md'
       : buttonType === 'vacant'
-      ? `border-primary bg-gray-100 text-primary disabled:border-theme-medium disabled:text-theme-medium shadow-none`
-      : buttonType === 'available'
-      ? 'shadow-md'
-      : '';
+        ? `border-primary bg-gray-100 text-primary disabled:border-theme-medium disabled:text-theme-medium shadow-none`
+        : buttonType === 'available'
+          ? 'shadow-md'
+          : '';
 
   // Component
   return (
