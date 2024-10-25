@@ -31,8 +31,8 @@ const TestButton = (props: ButtonProps): JSX.Element => {
     variant === 'primary'
       ? 'border-primary bg-primary text-white disabled:border-theme-medium disabled:bg-theme-medium'
       : variant === 'secondary'
-        ? 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium'
-        : '';
+      ? 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium'
+      : '';
 
   // Component
   return (

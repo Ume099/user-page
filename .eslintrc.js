@@ -1,4 +1,5 @@
 module.exports = {
+  plugins: ['next'],
   env: {
     browser: true,
     es2021: true,
@@ -11,7 +12,9 @@ module.exports = {
     'plugin:import/warnings',
     'plugin:import/typescript',
     'plugin:prettier/recommended',
+    'next/core-web-vitals',
   ],
+  
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
@@ -20,7 +23,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['react', '@typescript-eslint', 'import', 'prettier'],
+  plugins: ['react', '@typescript-eslint', 'import', 'prettier', 'next/core-web-vitals'],
   rules: {
     'import/order': [
       'error',

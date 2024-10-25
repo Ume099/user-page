@@ -45,7 +45,7 @@ const Days = (props: Props) => {
   // 開校日を月ごとにfetchする関数
   const getOpenDayInfo = async () => {
     try {
-      const response = await axios.get('/api/booking/fetchOpenDays', {
+      const response: any = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName: collectionNameInMemo },
       });
       const itemList: SetStateAction<any[]> = [];
@@ -94,7 +94,7 @@ const Days = (props: Props) => {
   const getClassList = async (year: number, month: number, date: number) => {
     const dayOfWeek = getDayOfWeekEng(year, month, date);
     try {
-      const response = await axios.get('api/fetchFireStore', {
+      const response: any = await axios.get('api/fetchFireStore', {
         params: { collectionName: 'classes', docId: dayOfWeek },
       });
       const res = getClassListFormatted(response.data);
@@ -106,7 +106,7 @@ const Days = (props: Props) => {
 
   const getAllDocs = async () => {
     try {
-      const response = await axios.get('/api/fetchCollection', {
+      const response: any = await axios.get('/api/fetchCollection', {
         params: { collectionName: collectionNameInMemo },
       });
       const array = getDateByUID(response.data, userInfo.uid);
@@ -119,7 +119,7 @@ const Days = (props: Props) => {
   const getBookedClassInfo = async (day: number) => {
     if (!collectionNameInMemo) return;
     try {
-      const response = await axios.get('api/booking/fetchBookedClassInfo', {
+      const response: any = await axios.get('api/booking/fetchBookedClassInfo', {
         params: { collectionName: collectionNameInMemo, docId: 'day_' + day, uid: userInfo.uid },
       });
       const resObj: any = response;

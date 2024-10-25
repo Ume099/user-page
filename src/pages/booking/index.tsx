@@ -152,7 +152,7 @@ export default function Booking() {
     isForAft: boolean,
   ) => {
     try {
-      const response = await axios.get('api/booking/fetchClassStatus', {
+      const response: any = await axios.get('api/booking/fetchClassStatus', {
         params: {
           collectionName: `openDay_${year}_${month}`,
           docId: 'day_' + day,
@@ -223,7 +223,7 @@ export default function Booking() {
     setIsSaveButtonLoading(true);
     // AtfChangeを追加
     try {
-      const response = await fetch('/api/booking/updateClassChangeInfo', {
+      const response: any = await fetch('/api/booking/updateClassChangeInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -253,7 +253,7 @@ export default function Booking() {
     );
 
     try {
-      const response = await fetch('/api/booking/updateClassChangeInfo', {
+      const response: any = await fetch('/api/booking/updateClassChangeInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

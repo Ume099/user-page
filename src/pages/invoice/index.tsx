@@ -32,7 +32,7 @@ const Page: NextPage = () => {
   // 請求書のデータをfetchする関数
   const getInvoice = async (uid: string) => {
     try {
-      const response = await axios.get('/api/invoice/fetchInvoice', {
+      const response: any = await axios.get('/api/invoice/fetchInvoice', {
         params: {
           collectionName: 'invoice',
           docId: `${uid}_${year}`,

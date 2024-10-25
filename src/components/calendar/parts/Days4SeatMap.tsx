@@ -25,7 +25,7 @@ const Days4SeatMap = (props: Props) => {
   const getOpenDayInfo = async (collectionName: string) => {
     console.log('getOpenDayInfo', collectionName);
     try {
-      const response = await axios.get('/api/booking/fetchOpenDays', {
+      const response: any = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName },
       });
       const itemList: SetStateAction<any[]> = [];

@@ -34,7 +34,7 @@ export const Page = () => {
     setIsLoading(true);
     try {
       setError(false);
-      const response = await fetch('/api/invoice/postInvoice', {
+      const response: any = await fetch('/api/invoice/postInvoice', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ export const Page = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get<UserData[]>('/api/userActions/fetchUsers');
+      const response: any = await axios.get<UserData[]>('/api/userActions/fetchUsers');
       setUsers(response.data);
       setIsFetchUser(true);
     } catch (error) {

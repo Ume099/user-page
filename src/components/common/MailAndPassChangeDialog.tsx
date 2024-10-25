@@ -10,10 +10,10 @@ import {
   updatePassword,
 } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import PageListAfterSignIn from './parts/PageListAfterSignIn';
-import { toast } from 'react-toastify'; // 変更
 
 const isValidEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -24,7 +24,8 @@ const linkList = urls.map((url, index) => {
   return { text: LinkNameList[index], link: url };
 });
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+// fetcher関数の型をPromise<UserData[]>に変更
+const fetcher = (url: string): Promise<UserData[]> => axios.get(url).then((res: any) => res.data);
 
 type Status = 'email' | 'password' | 'done';
 

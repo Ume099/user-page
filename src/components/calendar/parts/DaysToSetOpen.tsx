@@ -54,7 +54,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
     });
 
     try {
-      const response = await fetch('/api/booking/addOpenDays', {
+      const response: any = await fetch('/api/booking/addOpenDays', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ collectionName, ...dataObj }),
@@ -75,7 +75,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
     const collectionName: String = 'openDay_' + year + '_' + month;
 
     try {
-      const response = await fetch('/api/booking/deleteOpenDays', {
+      const response: any = await fetch('/api/booking/deleteOpenDays', {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
     // openDay_2024_7のような文字列を格納
     const collectionName: String = 'openDay_' + year + '_' + month;
     try {
-      const response = await axios.get('/api/booking/fetchOpenDays', {
+      const response: any = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName },
       });
       const itemList: any = [];

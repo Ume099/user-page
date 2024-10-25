@@ -18,7 +18,7 @@ const TeachingExample: NextPage = () => {
   // fetchする関数
   const getInvoice = async () => {
     try {
-      const response = await axios.get('/api/invoice/fetchInvoiceAll', {
+      const response: any = await axios.get('/api/invoice/fetchInvoiceAll', {
         params: {
           collectionName: 'invoice',
           docId: `${year}_${('0' + month).slice(-2)}`,

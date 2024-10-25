@@ -87,7 +87,7 @@ const Header: React.FC = () => {
     let isError = false;
     let result: boolean;
     try {
-      const res = await axios.get(
+      const res: any = await axios.get(
         `/api/fetchFireStore?collectionName=invoice&docId=${userInfo.uid || ''}`,
       );
       console.log('getUserInfo', res.data.isFirstTime.booleanValue);

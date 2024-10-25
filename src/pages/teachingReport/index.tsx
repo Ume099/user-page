@@ -12,7 +12,6 @@ import {
   TIME_OPTION_LIST,
 } from '@/lib/teachingReport';
 import axios from 'axios';
-import { NextPage } from 'next';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify'; // 変更
 import { useRecoilState } from 'recoil';
@@ -53,9 +52,9 @@ const DEFAULT_REPORT_OBJ: ReportObj = {
 };
 
 // fetcher関数を定義
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+const fetcher = (url: string) => axios.get(url).then((res: any) => res.data);
 
-const Page: NextPage = () => {
+const Page = () => {
   const {
     register,
     watch,
@@ -98,7 +97,7 @@ const Page: NextPage = () => {
 
   const createTeachingReport = async (data: TeachingReportData) => {
     try {
-      const response = await axios.post('/api/teachingReport/createReport', data);
+      const response: any = await axios.post('/api/teachingReport/createReport', data);
 
       if (response.status === 201) {
         toast.success(response.data.message);

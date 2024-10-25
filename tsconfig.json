@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // import 文を絶対パスで記述する。
+    "baseUrl": "./",
     "paths": {
-      "@/*": ["./src/*"] // よく使うパスにエイリアスをつける。  @/components が ./src/components
+      "@/*": ["./src/*"]
     },
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -17,8 +17,35 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true
+    "incremental": true,
+    // 型定義を追加することで、特定のエラーを抑制します。
+    "types": [
+      "node",
+      "express",
+      "body-parser",
+      "caseless",
+      "cheerio",
+      "connect",
+      "cookie",
+      "debug",
+      "express-serve-static-core",
+      "js-cookie",
+      "jsonwebtoken",
+      "nodemailer",
+      "qs",
+      "semver",
+      "serve-static",
+      "styled-components"
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/pages/blogs/posts/[slug].js", "src/components/contexts/AuthContext.js", "src/components/profile/UpdateProfiles.tsx", "src/pages/api/userActions/deleteUserFromDb.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/pages/blogs/posts/[slug].js",
+    "src/components/contexts/AuthContext.js",
+    "src/components/profile/UpdateProfiles.tsx",
+    "src/pages/api/userActions/deleteUserFromDb.ts"
+  ],
   "exclude": ["node_modules"]
 }

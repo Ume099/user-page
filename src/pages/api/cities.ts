@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // RESAS APIにリクエストを送信
-    const response = await fetch(
+    const response: any = await fetch(
       `https://opendata.resas-portal.go.jp/api/v1/cities?prefCode=${encodeURIComponent(prefCode)}`,
       {
         method: 'GET',

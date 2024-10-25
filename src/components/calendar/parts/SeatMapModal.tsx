@@ -31,7 +31,7 @@ export default function SeatMapModal({ year, month, day }: Props) {
   const fetchUsers = async () => {
     setError('');
     try {
-      const response = await axios.get<FetchUsersResponse>('/api/userActions/fetchUsers');
+      const response: any = await axios.get<FetchUsersResponse>('/api/userActions/fetchUsers');
       setUsers(response.data);
       setIsFetchUser(true);
     } catch (error) {
