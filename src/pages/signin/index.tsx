@@ -1,21 +1,6 @@
-import {
-  Box,
-  Button,
-  Center,
-  chakra,
-  Container,
-  FormControl,
-  FormLabel,
-  Grid,
-  Heading,
-  Input,
-  Spacer,
-  useToast,
-} from '@chakra-ui/react';
-
-import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { LinkNameList, urls } from '@/pages';
+import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
 import { useRecoilState } from 'recoil';
 
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
@@ -29,7 +14,6 @@ export const Page = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const toast = useToast();
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -40,18 +24,12 @@ export const Page = () => {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail('');
       setPassword('');
-      toast({
-        title: 'ログインしました。',
-        status: 'success',
-        position: 'top',
-      });
-      //TODO: ログイン後のページに遷移の処理を書く
+      // Toast or alert for success
+      alert('ログインしました。');
+      // TODO: ログイン後のページに遷移の処理を書く
     } catch (e) {
-      toast({
-        title: 'エラーが発生しました。',
-        status: 'error',
-        position: 'top',
-      });
+      // Toast or alert for error
+      alert('エラーが発生しました。');
       console.log(e);
     } finally {
       setIsLoading(false);
@@ -61,48 +39,45 @@ export const Page = () => {
   return (
     <>
       {!userInfo.isSignedIn ? (
-        <Container py={14}>
-          <Heading>サインイン</Heading>
-          <chakra.form onSubmit={handleSubmit}>
-            <Spacer height={8} aria-hidden />
-            <Grid gap={4}>
-              <Box display={'contents'}>
-                <FormControl>
-                  <FormLabel>メールアドレス</FormLabel>
-                  <Input
-                    type={'email'}
-                    name={'email'}
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                    }}
-                  />
-                </FormControl>
-                <FormControl>
-                  <FormLabel>パスワード</FormLabel>
-                  <Input
-                    type={'password'}
-                    name={'password'}
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value);
-                    }}
-                  />
-                </FormControl>
-              </Box>
-            </Grid>
-            <Spacer height={4} aria-hidden />
-            <Center>
-              <Button type={'submit'} isLoading={isLoading}>
-                ログイン
-              </Button>
-            </Center>
-          </chakra.form>
-        </Container>
+        <div className="py-14 max-w-md mx-auto">
+          <h1 className="text-2xl font-bold text-center">サインイン</h1>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">メールアドレス</label>
+              <input
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">パスワード</label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                required
+              />
+            </div>
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                className={`px-4 py-2 text-white bg-primary rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isLoading}
+              >
+                {isLoading ? 'ログイン中...' : 'ログイン'}
+              </button>
+            </div>
+          </form>
+        </div>
       ) : (
         <PageListAfterSignIn linkList={linkList} />
       )}
-      ( )
     </>
   );
 };

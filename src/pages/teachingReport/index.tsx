@@ -5,6 +5,7 @@ import SelectObject from '@/components/common/parts/SelectObject';
 import TextArea from '@/components/common/parts/TextArea';
 import ToggleSwitch from '@/components/common/parts/ToggleSwitch';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
+import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import {
   RIKAIDO_OBJ_LIST,
   stageList,
@@ -138,6 +139,7 @@ const TeachingExample: NextPage = () => {
   }
 
   return (
+    <AuthGuard>
     <div className="mx-12 mt-24 max-w-4xl items-center">
       {/* ユーザーデータの表示 */}
 
@@ -201,6 +203,7 @@ const TeachingExample: NextPage = () => {
         <input className="rounded-lg border bg-primary px-3 py-2" type="submit" />
       </form>
     </div>
+    </AuthGuard>
   );
 };
 
