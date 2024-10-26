@@ -17,13 +17,13 @@ const SideBar: React.FC = () => {
   };
 
   return (
-    <div className="">
-      <div className="md:hidden">
+    <div className="md:w-40">
+      <div className="md:hidden md:w-40">
         {!isOpen ? (
           <>
             {/* ホームボタン */}
 
-            <Link href="/" className="fixed left-4 top-4 bg-wihte z-[9999] rounded-full">
+            <Link href="/" className="fixed left-4 top-4 bg-white z-[9999] rounded-full">
               <AiFillHome className="scale-[200%]" />
             </Link>
           </>
@@ -46,7 +46,7 @@ const SideBar: React.FC = () => {
                 ))}
               </div>
               {/* ホームボタン */}
-              <Link href="/" className="fixed left-4 top-4 bg-wihte z-[9999] rounded-full">
+              <Link href="/" className="fixed left-4 top-4 bg-white z-[9999] rounded-full">
                 <AiFillHome className="scale-[200%]" />
               </Link>
             </div>

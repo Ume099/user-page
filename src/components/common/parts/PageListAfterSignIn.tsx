@@ -35,10 +35,10 @@ const PageListAfterSignIn = (props: Props): JSX.Element => {
           <h1 className="mb-4 font-bold text-primary">ログインに成功しました。</h1>
           <ul className="mb-4 grid grid-cols-1 gap-y-2 font-bold text-primary-dark">
             <li>
-              <a href="/booking">予約ページへ移動</a>
+              <a href="/teachingReport/showTeachingReport">指導報告書ページ</a>
             </li>
             <li>
-              <a href="/">ホームへ移動</a>
+              <a href="/invoice">請求書</a>
             </li>
           </ul>
           <ButtonOriginal variant="error-secondary" label="ログアウト" onClick={handleSignOut} />
