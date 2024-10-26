@@ -21,6 +21,7 @@ type FirestoreTimestamp = {
 // データオブジェクトの型
 type TeachingReport = {
   id: string;
+  date: string;
   rikaido: string;
   classTime: string;
   createdAt: FirestoreTimestamp;
@@ -39,6 +40,7 @@ const DEFAULT_REPORT_OBJ: TeachingReport[] = [
   {
     id: '',
     rikaido: '',
+    date: '',
     classTime: '',
     createdAt: { _seconds: 0, _nanoseconds: 0 },
     studentUid: '',
@@ -46,6 +48,7 @@ const DEFAULT_REPORT_OBJ: TeachingReport[] = [
     studentName: '',
     writerUid: '',
     isRead: false,
+    isPublished: false,
     topic: '',
     detail: '',
     writer: '',

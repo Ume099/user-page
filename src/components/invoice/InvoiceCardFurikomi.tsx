@@ -63,10 +63,14 @@ const InvoiceCardFurikomi = (props: Props) => {
           </p>
           <div className="mt-4">
             <div className="flex mb-4 justify-start">
-              <p>お支払い方法：</p>
-              <p className="font-bold">銀行振込</p>
+              {/* 以下のように条件を分割しないとUnpaidが表示されてしまう */}
+              <p>{invoice.payment!=="Unpaid" ?"お支払い方法：" : ""}</p>
+              <p className="font-bold">{invoice.payment!=="Unpaid" ?invoice.payment : ""}</p>
             </div>
             <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />
+            <div className="mt-4 flex justify-end mr-10 font-bold underline mb-10">
+              合計：　￥{totalPrice.toLocaleString()}
+            </div>
           </div>
         </div>
       )}

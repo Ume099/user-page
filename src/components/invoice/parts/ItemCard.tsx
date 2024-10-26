@@ -57,9 +57,6 @@ const ItemCard = (props: Props) => {
               <p>{Number(item.price).toLocaleString()}円</p>
             </div>
           </div>
-          <div className="mt-4 flex justify-end mr-10 font-bold underline mb-10">
-            合計：　￥{totalPrice.toLocaleString()}
-          </div>
         </div>
       ))}
     </>
