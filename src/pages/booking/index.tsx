@@ -350,7 +350,8 @@ export default function Booking() {
   return (
     // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
-      <div className="w-full">
+      {/* 
+      (<div className="w-full">
         <div className="w-full">
           {!isOpenSetmonthAndYearOnDisplayModal ? (
             <div className="gap-4">
@@ -406,12 +407,15 @@ export default function Booking() {
             />
           )}
         </div>
-
-        {/* カレンダー本体 */}
+        {/* カレンダー本体 
         <div className="">
           <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
           <Calendar year={yearOnDisplay} month={monthOnDisplay} />
         </div>
+      </div>
+      ) */}
+      <div className="mt-32 flex justify-center text-center">
+        予約変更をご希望の場合は公式ラインよりご連絡ください。
       </div>
     </AuthGuard>
   );
