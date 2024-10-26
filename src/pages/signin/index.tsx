@@ -1,96 +1,86 @@
-import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
-import { useRecoilState } from 'recoil';
-
-import MailAndPassChangeDialog from '@/components/common/MailAndPassChangeDialog';
-import axios from 'axios';
+import { useState, FormEvent } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { useSearchParams } from 'next/navigation';
-import { FormEvent, useState } from 'react';
-import { toast } from 'react-toastify';
+import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
+import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
+import { LinkNameList, urls } from '@/pages';
+import { useRecoilState } from 'recoil';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; // Toastのスタイル
 
-export const Page = (): JSX.Element => {
-  const searchParams = useSearchParams();
+const linkList = urls.map((url, index) => {
+  return { text: LinkNameList[index], link: url };
+});
+
+export const Page = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
-  const uid = searchParams.get('uid');
-  const mail = searchParams.get('dummyMail')?.replace('___', '+');
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    if (!uid || !mail) {
-      return; //何もしない
-    }
-    getUserIsFirstTime();
     setIsLoading(true);
     e.preventDefault();
     try {
       const auth = getAuth();
-      await signInWithEmailAndPassword(auth, mail, uid);
-      toast.success('ログインしました。');
-      //TODO: ログイン後のページに遷移の処理を書く
+      await signInWithEmailAndPassword(auth, email, password);
+      setEmail('');
+      setPassword('');
+      toast.success('ログインしました。', {
+        position: "top-center",
+      });
+      // TODO: ログイン後のページに遷移の処理を書く
     } catch (e) {
-      toast.error('エラーが発生しました。管理者に問い合わせてください。');
+      toast.error('エラーが発生しました。', {
+        position: "top-center",
+      });
       console.log(e);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // dbからユーザー情報を取得する関数
-  const getUserIsFirstTime = async () => {
-    let isError = false;
-    let result: boolean;
-    try {
-      const res = await axios.get(`/api/fetchFireStore?collectionName=students&docId=${uid || ''}`);
-      result = res.data.isFirstTime.booleanValue;
-    } catch (error) {
-      isError = true;
-      return; //何もしない
-    }
-
-    if (!isError) {
-      setUserInfo({ ...userInfo, isFirstTime: result });
-    }
-  };
-
   return (
-    <div>
+    <>
       {!userInfo.isSignedIn ? (
-        <div style={{ padding: '3rem 0' }}>
-          <h2 style={{ textAlign: 'center', fontSize: '2.5rem', fontWeight: 'bold' }}>
-            サインイン(初回ログイン)
-          </h2>
-          <form
-            onSubmit={handleSubmit}
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '0.5rem',
-            }}
-          >
-            <button
-              type="submit"
-              disabled={isLoading}
-              style={{ marginTop: '2rem', height: '6rem', width: '12rem' }}
-            >
-              {isLoading ? 'ログイン中...' : 'ログイン'}
-            </button>
-            <div style={{ marginTop: '1rem', display: 'flex' }}>
-              <p>二回目以降のサインインは</p>
-              <a
-                style={{ marginLeft: '0.5rem', fontWeight: 'bold', textDecoration: 'underline' }}
-                href="/signin"
+        <div className="container mx-auto py-14">
+          <h1 className="text-2xl font-bold">サインイン</h1>
+          <form onSubmit={handleSubmit} className="mt-8">
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">メールアドレス</label>
+              <input
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">パスワード</label>
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="block w-full border border-gray-300 rounded-md p-2 focus:ring focus:ring-blue-500"
+              />
+            </div>
+            <div className="flex justify-center mt-4">
+              <button
+                type="submit"
+                disabled={isLoading}
+                className={`px-4 py-2 text-white bg-blue-500 rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'}`}
               >
-                こちら
-              </a>
+                {isLoading ? 'ログイン中...' : 'ログイン'}
+              </button>
             </div>
           </form>
+          <ToastContainer />
         </div>
       ) : (
-        <MailAndPassChangeDialog />
+        <PageListAfterSignIn linkList={linkList} />
       )}
-    </div>
+    </>
   );
 };
 
