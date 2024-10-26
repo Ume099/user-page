@@ -29,6 +29,7 @@ type TeachingReport = {
   studentName: string;
   writerUid: string;
   isRead: boolean;
+  isPublished: boolean;
   topic: string;
   detail: string;
   writer: string;
@@ -126,20 +127,24 @@ const ShowTeachingReport: NextPage = () => {
           {/* reportListの表示 */}
           {reportList.length > 0 ? (
             reportList.map((report) => (
-              <div key={report.id} className="border-b py-2">
+              report.isPublished && 
+              (<div key={report.id} className="border-b py-2">
                 <p className="text-xl font-bold">〇授業時間</p>
-                <p className="mb-4">{report.classTime || ''}</p>
+                <div className="my-4">
+                  <p>{report.date ? report.date.replace("-", "年").replace("-", "月") + "日" : ''}</p>
+                  <p>{report.classTime || ''}</p>
+                </div>
                 <p className="mb-2 text-xl  font-bold">〇理解度</p>
                 <div className="mb-4">
                   <Image src={getStarImage(report.rikaido)} alt="pt1" width={248} height={128} />
                 </div>
                 <p className="text-xl font-bold">〇ステージ</p>
-                <p className="mb-4 text-lg">{report.stage}</p>
+                <p className="mb-4 text-lg"># {report.stage}</p>
                 <p className="text-xl font-bold">〇内容</p>
                 <p className="mb-4 text-lg">{report.topic}</p>
                 <p className="text-xl font-bold">授業の詳細</p>
                 <p className="mb-4">{report.detail}</p>
-              </div>
+              </div>)
             ))
           ) : (
             <p>報告書はありません。</p>
