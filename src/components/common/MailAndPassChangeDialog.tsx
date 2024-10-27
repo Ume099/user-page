@@ -177,7 +177,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     return <PageListAfterSignIn linkList={linkList} />;
   }
 
-  return(<div>問題が発生しました。管理者に問い合わせてください。</div>)
+  return <div>問題が発生しました。管理者に問い合わせてください。</div>;
 };
 
 export default MailAndPassChangeDialog;

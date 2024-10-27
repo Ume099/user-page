@@ -46,14 +46,14 @@ const ItemCard = (props: Props) => {
     <>
       {items.map((item) => (
         <div>
-          <div className="grid-cols-3 gap grid border-b"></div>
-          <div className="mt-4 mx-4 grid-cols-3 gap grid">
+          <div className="gap grid grid-cols-3 border-b"></div>
+          <div className="gap mx-4 mt-4 grid grid-cols-3">
             <p className="mx-4">項目</p>
             <p className="mx-4">詳細</p>
             <p className="mx-4">値段</p>
             <div>{item.komoku}</div>
-            <div className="text-sm mx-4 text-start">{item.detail}</div>
-            <div className="flex pl-8 items-start shrink-0">
+            <div className="mx-4 text-start text-sm">{item.detail}</div>
+            <div className="flex shrink-0 items-start pl-8">
               <p>{Number(item.price).toLocaleString()}円</p>
             </div>
           </div>

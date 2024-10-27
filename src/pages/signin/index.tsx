@@ -39,8 +39,8 @@ export const Page = () => {
   return (
     <>
       {!userInfo.isSignedIn ? (
-        <div className="py-14 max-w-md mx-auto">
-          <h1 className="text-2xl font-bold text-center">サインイン</h1>
+        <div className="mx-auto max-w-md py-14">
+          <h1 className="text-center text-2xl font-bold">サインイン</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium">メールアドレス</label>
@@ -49,7 +49,7 @@ export const Page = () => {
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
                 required
               />
             </div>
@@ -60,14 +60,16 @@ export const Page = () => {
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
                 required
               />
             </div>
-            <div className="flex justify-center mt-4">
+            <div className="mt-4 flex justify-center">
               <button
                 type="submit"
-                className={`px-4 py-2 text-white bg-primary rounded-md ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`rounded-md bg-primary px-4 py-2 text-white ${
+                  isLoading ? 'cursor-not-allowed opacity-50' : ''
+                }`}
                 disabled={isLoading}
               >
                 {isLoading ? 'ログイン中...' : 'ログイン'}

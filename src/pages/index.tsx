@@ -28,13 +28,13 @@ const Home: NextPage = () => {
         noTitleTemplate={true}
         isTopPage={true}
       >
-        <div className="mx-12 mt-16 border-b-4 flex flex-col justify-center">
+        <div className="mx-12 mt-16 flex flex-col justify-center border-b-4">
           <p className="mb-4">ホーム</p>
           {linkList.map((link, index) => (
             <Link
               href={link.link}
               key={index}
-              className="mx-12 w-auto mb-4 mt-4 flex rounded-md border bg-yellow-100 px-8 py-4"
+              className="mx-12 mb-4 mt-4 flex w-auto rounded-md border bg-yellow-100 px-8 py-4"
             >
               {link.name}
             </Link>

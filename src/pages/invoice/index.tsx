@@ -64,7 +64,7 @@ const TeachingExample: NextPage = () => {
         <YearDropdown setYear={setYear} />
         {!invoiceInfo.length && (
           <ButtonOriginal
-            className="w-full my-4"
+            className="my-4 w-full"
             variant="primary"
             label="請求書情報を取得"
             onClick={() => getInvoice(userInfo.uid)}
