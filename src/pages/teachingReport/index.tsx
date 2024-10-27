@@ -141,14 +141,17 @@ const TeachingExample: NextPage = () => {
   };
 
   // 提出の関数
-  const onSubmit = () => {
-    if (!watch('stage') || !watch('date')) {
+  const onSubmit = (data: TeachingReportTemplateInputType) => {
+    if (!data.stage || !data.date) {
       toast({
         title: '必要事項を選択してください。',
         status: 'error',
         position: 'top',
       });
       return;
+    }
+    if (data.isPublished) {
+      sendMail();
     }
     createTeachingReport(getPostData());
     reset();

@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createTransport } from 'nodemailer';
 import { Options } from 'nodemailer/lib/mailer';
 
-import { ContactFormParam, ReqBody } from '@/lib/type/invoice';
+import { TeachingReportMail, ReqBody } from '@/lib/type/teachingReport';
 import { __log } from '@/lib/util/log';
 
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const reqBody = req.body as ReqBody<ContactFormParam>;
+  const reqBody = req.body as ReqBody<TeachingReportMail>;
 
   const data = req.body;
 
@@ -32,9 +32,9 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
     subject: `【プログラミングスクールプライム】${data.name}`,
     html: `
       <p>お世話になっております。</p>
-      <p>プログラミングスクールプライム（CA姪浜校）です。</p>
-      <p>${data.year}年${data.month + 1}月の請求書を発行いたしました。</p>
-      <p><a href="alt-prime.com/invoice">alt-prime.com/invoices</a>よりご確認下さい。</p>
+      <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
+      <p>${data.year}年${data.month}月${data.day}日の指導報告書を公開いたしました。</p>
+      <p><a href="https://www.alt-prime.com/teachingReport/showTeachingReport">https://www.alt-prime.com/teachingReport/showTeachingReport</a>よりご確認下さい。</p>
     `,
   };
 
