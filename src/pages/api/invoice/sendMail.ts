@@ -33,7 +33,7 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
     html: `
       <p>お世話になっております。</p>
       <p>プログラミングスクールプライム（CA姪浜校）です。</p>
-      <p>${data.year}年${data.month}月の請求書を発行いたしました。</p>
+      <p>${data.year}年${data.month + 1}月の請求書を発行いたしました。</p>
       <p><a href="alt-prime.com/invoice">alt-prime.com/invoices</a>よりご確認下さい。</p>
     `,
   };
