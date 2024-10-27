@@ -48,7 +48,7 @@ const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: 'ume',
+        name: invoice.fullName,
         sendTo: invoice.mail,
         year: invoice.date.split('_')[0],
         month: invoice.date.split('_')[1],

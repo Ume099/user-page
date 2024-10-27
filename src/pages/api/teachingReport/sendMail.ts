@@ -29,7 +29,7 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
   const toHostMailData: Options = {
     from: process.env.MAIL_SENDER,
     to: data.sendTo,
-    subject: `【プログラミングスクールプライム】${data.name}様`,
+    subject: `【プログラミングスクールプライム】${data.name}`,
     html: `
       <p>お世話になっております。</p>
       <p>プログラミングスクールプライム（CA姪浜校）です。</p>
