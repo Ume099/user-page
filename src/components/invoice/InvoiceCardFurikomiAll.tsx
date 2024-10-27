@@ -31,6 +31,7 @@ const InvoiceCardFurikomiAll = (props: Props) => {
                 />
                 <label htmlFor={`${invoice.uid}_${invoice.date}`}>公開→</label>
                 <ToggleSwitchPublish
+                  invoice={invoice}
                   isDefaultPublished={invoice.isPublished}
                   id={`${invoice.uid}_${invoice.date}`}
                 />
