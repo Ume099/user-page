@@ -12,10 +12,11 @@ import {
   TeachingReportTemplateInputType,
   TIME_OPTION_LIST,
 } from '@/lib/teachingReport';
+import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { NextPage } from 'next';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 
@@ -62,6 +63,7 @@ const TeachingExample: NextPage = () => {
     watch,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<TeachingReportTemplateInputType>();
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
@@ -82,7 +84,7 @@ const TeachingExample: NextPage = () => {
 
   const getPostData = (data: TeachingReportTemplateInputType): TeachingReportData => {
     const dataObj: TeachingReportData = {
-      date: watch('date'),
+      date: data.date,
       classTime: data.classTime,
       stage: reportObj.stageName,
       topic: reportObj.topic,
@@ -93,7 +95,7 @@ const TeachingExample: NextPage = () => {
       writerUid: userInfo.uid,
       rikaido: data.rikaido,
       comment: data.comment || 'なし',
-      isPublished: false,
+      isPublished: data.isPublished,
     };
     return dataObj;
   };
@@ -115,26 +117,40 @@ const TeachingExample: NextPage = () => {
   };
 
   const sendMail = async (datas: TeachingReportTemplateInputType) => {
-    const res = await fetch('/api/teachingReport/sendMail', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: datas.studentName,
-        sendTo: 'bykawa099@gmail.com',
-        year: datas.date.toLocaleString().split('_')[0],
-        month: datas.date.toLocaleString().split('_')[1],
-      }),
-    });
+    let error = false;
+    const sendTo = await getUserEmail(datas.studentUid);
+    try {
+      const res = await fetch('/api/teachingReport/sendMail', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // name: datas.studentName,
+          sendTo,
+          year: datas.date.toLocaleString().split('-')[0],
+          month: datas.date.toLocaleString().split('-')[1],
+          day: datas.date.toLocaleString().split('-')[2],
+          stage,
+          topic: reportObj.topic,
+          detail: reportObj.detail + datas.behavior,
+        }),
+      });
+    } catch (e) {
+      error = true;
+      console.log(e);
+    }
 
-    const data = await res.json();
-
-    console.log(res.status);
-    if (data) {
+    if (!error) {
       toast({
-        title: res.status === 200 ? '発行メールを送信しました。' : 'メールの送信に失敗しました。',
-        status: res.status === 200 ? 'success' : 'warning',
+        title: '発行メールを送信しました。',
+        status: 'success',
+        position: 'top-right',
+      });
+    } else {
+      toast({
+        title: 'メールの送信に失敗しました。',
+        status: 'warning',
         position: 'top-right',
       });
     }
@@ -150,10 +166,11 @@ const TeachingExample: NextPage = () => {
       });
       return;
     }
+
     if (data.isPublished) {
       sendMail(data);
     }
-    createTeachingReport(getPostData());
+    createTeachingReport(getPostData(data));
     reset();
   };
 
@@ -173,16 +190,17 @@ const TeachingExample: NextPage = () => {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mt-6">
-            <DatePicker label="授業日時" register={register('date')} />
+            <DatePicker label="授業日時" register={register('date')} withDefaultValue />
             <Select<string>
               label="時間"
               className="w-full"
               register={register('classTime')}
               optionList={TIME_OPTION_LIST}
             />
-            <h2 className="font-bold">生徒を選択</h2>
+            <h2 className="font-bold">生徒</h2>
             {users ? (
               <SelectObject
+                selectedIndex={1}
                 register={register('studentUid')}
                 optionObjList={users.map((user) => ({
                   value: user.uid,
@@ -225,8 +243,18 @@ const TeachingExample: NextPage = () => {
               <div>ステージを選択してください。</div>
             )}
             <TextArea label="コメント" register={register('comment')} />
-
-            <ToggleSwitch defaultIsChecked label="公開" register={register('isPublished')} />
+            <Controller
+              name="isPublished"
+              control={control}
+              defaultValue={false}
+              render={({ field: { onChange, value } }) => (
+                <ToggleSwitch
+                  label="公開"
+                  isChecked={value}
+                  onChange={(e) => onChange(e.target.checked)}
+                />
+              )}
+            />
           </div>
           <input className="rounded-lg border bg-primary px-3 py-2" type="submit" />
         </form>

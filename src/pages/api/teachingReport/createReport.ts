@@ -69,7 +69,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     !studentName ||
     !writer ||
     !writerUid ||
-    !rikaido ||
     !comment
   ) {
     return res.status(400).json({ success: false, message: 'Invalid request data' });
@@ -88,7 +87,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     writerUid,
     isRead: false, // 初期値として未読に設定
     classTime,
-    rikaido,
+    rikaido: rikaido || 'null',
     comment,
     isPublished,
   };

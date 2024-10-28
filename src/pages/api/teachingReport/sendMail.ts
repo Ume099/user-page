@@ -29,12 +29,15 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
   const toHostMailData: Options = {
     from: process.env.MAIL_SENDER,
     to: data.sendTo,
-    subject: `【プログラミングスクールプライム】${data.name}`,
+    subject: `【プログラミングスクールプライム】指導報告書を公開しました。`,
     html: `
       <p>お世話になっております。</p>
       <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
       <p>${data.year}年${data.month}月${data.day}日の指導報告書を公開いたしました。</p>
-      <p><a href="https://www.alt-prime.com/teachingReport/showTeachingReport">https://www.alt-prime.com/teachingReport/showTeachingReport</a>よりご確認下さい。</p>
+      <p>【ステージ】${data.stage}</p>
+      <p>【内容】${data.topic}</p>
+      <p>【詳細】${data.detail}</p>
+      <p>詳細は<a href="https://www.alt-prime.com/teachingReport/showTeachingReport">https://www.alt-prime.com/teachingReport/showTeachingReport</a>よりご確認下さい。</p>
     `,
   };
 
