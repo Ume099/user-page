@@ -5,12 +5,12 @@ type ToggleProps = {
   label?: string;
   className?: string;
   register?: UseFormRegisterReturn<any>;
-  defaultChecked?: boolean;
+  defaultIsChecked?: boolean;
 };
 
 const ToggleSwitch = (props: ToggleProps): JSX.Element => {
-  const { label, className, register, defaultChecked = false } = props;
-  const [isChecked, setIsChecked] = useState(defaultChecked);
+  const { label, className, register, defaultIsChecked } = props;
+  const [isChecked, setIsChecked] = useState(defaultIsChecked);
 
   const handleToggle = () => {
     setIsChecked(!isChecked);

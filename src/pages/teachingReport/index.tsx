@@ -80,22 +80,22 @@ const TeachingExample: NextPage = () => {
     fetcher,
   );
 
-  const getPostData = (): TeachingReportData => {
-    const data: TeachingReportData = {
+  const getPostData = (data: TeachingReportTemplateInputType): TeachingReportData => {
+    const dataObj: TeachingReportData = {
       date: watch('date'),
-      classTime: watch('classTime'),
+      classTime: data.classTime,
       stage: reportObj.stageName,
       topic: reportObj.topic,
       detail: reportObj.detail,
-      studentUid: watch('studentUid'),
+      studentUid: data.studentUid,
       studentName: String((users && users[1].displayName) || ''),
       writer: userInfo.userName || 'なし',
       writerUid: userInfo.uid,
-      rikaido: watch('rikaido'),
-      comment: watch('comment') || 'なし',
+      rikaido: data.rikaido,
+      comment: data.comment || 'なし',
       isPublished: false,
     };
-    return data;
+    return dataObj;
   };
 
   const createTeachingReport = async (data: TeachingReportData) => {
@@ -114,17 +114,17 @@ const TeachingExample: NextPage = () => {
     }
   };
 
-  const sendMail = async () => {
+  const sendMail = async (datas: TeachingReportTemplateInputType) => {
     const res = await fetch('/api/teachingReport/sendMail', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        name: invoice.fullName,
-        sendTo: invoice.mail,
-        year: invoice.date.split('_')[0],
-        month: invoice.date.split('_')[1],
+        name: datas.studentName,
+        sendTo: 'bykawa099@gmail.com',
+        year: datas.date.toLocaleString().split('_')[0],
+        month: datas.date.toLocaleString().split('_')[1],
       }),
     });
 
@@ -151,7 +151,7 @@ const TeachingExample: NextPage = () => {
       return;
     }
     if (data.isPublished) {
-      sendMail();
+      sendMail(data);
     }
     createTeachingReport(getPostData());
     reset();
@@ -226,7 +226,7 @@ const TeachingExample: NextPage = () => {
             )}
             <TextArea label="コメント" register={register('comment')} />
 
-            <ToggleSwitch label="公開" register={register('isPublished')} />
+            <ToggleSwitch defaultIsChecked label="公開" register={register('isPublished')} />
           </div>
           <input className="rounded-lg border bg-primary px-3 py-2" type="submit" />
         </form>
