@@ -63,6 +63,8 @@ const ShowTeachingReport: NextPage = () => {
   const [reportList, setReportList] = useState<TeachingReport[]>([]);
   const toast = useToast();
 
+  const currentTime = Date.now();
+
   // useSWRを使ってテンプレートデータをフェッチ
   const { data: reportObj = DEFAULT_REPORT_OBJ, error: templateError } = useSWR<TeachingReport[]>(
     userInfo.uid
@@ -142,15 +144,20 @@ const ShowTeachingReport: NextPage = () => {
                       </p>
                       <p>{report.classTime || ''}</p>
                     </div>
-                    <p className="mb-2 text-xl  font-bold">〇理解度</p>
-                    <div className="mb-4">
-                      <Image
-                        src={getStarImage(report.rikaido)}
-                        alt="pt1"
-                        width={248}
-                        height={128}
-                      />
-                    </div>
+                    {report.rikaido !== 'null' && (
+                      <>
+                        <p className="mb-2 text-xl  font-bold">〇理解度</p>
+                        <div className="mb-4">
+                          <Image
+                            src={getStarImage(report.rikaido)}
+                            alt="pt1"
+                            width={248}
+                            height={128}
+                          />
+                        </div>
+                      </>
+                    )}
+
                     <p className="text-xl font-bold">〇ステージ</p>
                     <p className="mb-4 text-lg"># {report.stage}</p>
                     <p className="text-xl font-bold">〇内容</p>
