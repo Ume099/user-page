@@ -79,7 +79,10 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     } catch (e) {
       error = true;
       console.error(e);
-      toast({ title: 'メールアドレスの登録に失敗しました。', status: 'error' });
+      toast({
+        title: 'メールアドレスの登録に失敗しました。再度送信してください。',
+        status: 'error',
+      });
     } finally {
       if (!error) {
         setEmail(newEmail);
@@ -105,17 +108,12 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     }
     let error = false;
     try {
-      const credential = EmailAuthProvider.credential(user.email!, userInfo.uid);
+      const credential = EmailAuthProvider.credential(newEmail, userInfo.uid);
       await reauthenticateWithCredential(user, credential);
       await updatePassword(user, newPassword);
-      setMessage('パスワードが更新されました');
-      toast({
-        title: 'パスワード更新に成功しました。',
-        status: 'success',
-        position: 'top-right',
-      });
     } catch (e: any) {
       error = true;
+      await submitPasswordResetEmail();
       toast({
         title:
           'パスワード更新時にエラーが発生しました。担当者に問い合わせてパスワードをリセットしてください。',
@@ -123,10 +121,15 @@ const MailAndPassChangeDialog = (): JSX.Element => {
         position: 'top-right',
       });
       setMessage(`パスワード更新時にエラーが発生しました${e.message}`);
-      await submitPasswordResetEmail();
     }
     if (!error) {
       console.log(error);
+      setMessage('パスワードが更新されました');
+      toast({
+        title: 'パスワード更新に成功しました。',
+        status: 'success',
+        position: 'top-right',
+      });
       useStatus('done');
     } else {
       useStatus('passwordError');
@@ -139,7 +142,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       url: 'https://www.alt-prime.com/signin',
       handleCodeInApp: false,
     };
-    await sendPasswordResetEmail(auth, email, actionCodeSettings)
+    await sendPasswordResetEmail(auth, newEmail, actionCodeSettings)
       .then((resp) => {
         // メール送信成功
       })
