@@ -21,7 +21,7 @@ export const Page = () => {
       url: 'https://www.alt-prime.com/signin',
       handleCodeInApp: false,
     };
-    await sendPasswordResetEmail(auth, 'bykawa099@gmail.com')
+    await sendPasswordResetEmail(auth, email, actionCodeSettings)
       .then((resp) => {
         // メール送信成功
         console.log(resp);
