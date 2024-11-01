@@ -30,12 +30,6 @@ const MONTH_NAME: string[] = [
   '12月',
 ];
 
-type ChangeInfoState = {
-  year: number;
-  month: number;
-  day: number;
-};
-
 const date = new Date();
 const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();
