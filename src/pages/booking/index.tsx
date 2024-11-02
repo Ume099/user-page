@@ -441,7 +441,6 @@ export default function Booking() {
                   className="h-16 w-16"
                   Icon={GoTriangleDown}
                 />
-                <Button label="test" variant="secondary" onClick={() => sendMailToUser()} />
               </div>
               <div className="mt-5"></div>
               <BookingInfoBefChg

@@ -3,6 +3,7 @@ import { bookingChangeState } from '@/hooks/atom/bookingChange';
 import { useRecoilState } from 'recoil';
 
 import { BookedClassInfoListObj } from '@/lib/userSettings';
+import { getDayOfWeek } from '@/lib/date';
 
 const classNameList = ['class1', 'class2', 'class3', 'class4', 'class5', 'class6', 'class7'];
 
@@ -168,8 +169,16 @@ const ClassSelectModalModal = (props: Props) => {
       );
     };
 
+    // if (clName === '17:00~17:50') {
+    //   return;
+    // }
+
     // ボタンを、授業が振替元・振替先と一致しているかどうかの状況に応じて変えて追加していく。
-    if (isBooked && !checkIsSetAsClassBefChange()) {
+    if (clName === '17:00~17:50') {
+      // 時間短縮のためボタンとして表示しない
+    } else if (clName === '16:00~16:50') {
+    } else if (getDayOfWeek(year, month, day) === '土' && clName === '15:00~15:50') {
+    } else if (isBooked && !checkIsSetAsClassBefChange()) {
       // 既存の予約としてセットされている場合
       buttons.push(
         <li key={clName}>
