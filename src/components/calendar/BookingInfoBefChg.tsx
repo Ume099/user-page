@@ -13,7 +13,7 @@ const BookingInfoBefChg = (props: Props): JSX.Element => {
 
   // 日付情報がわたってこない場合は、何もないdivを表示する
   if (!date) {
-    return <div className="mx-2 w-full rounded-lg border-2 p-4 lg:w-80">{label}</div>;
+    return <div className="mx-2 !w-full rounded-lg border-2 p-4 lg:w-80">{label}</div>;
   }
 
   return (

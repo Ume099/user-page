@@ -32,6 +32,14 @@ export const linkList = [
   //   link: '/signin',
   // },
   {
+    name: '授業予定確認・変更',
+    link: '/booking',
+  },
+  // {
+  //   name: 'ログイン',
+  //   link: '/signin',
+  // },
+  {
     name: '請求書',
     link: '/invoice',
   },

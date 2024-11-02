@@ -1,10 +1,10 @@
-import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
-import { LinkNameList, urls } from '@/pages';
-import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
-import { useRecoilState } from 'recoil';
 
+import { useState, FormEvent } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { FormEvent, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
+import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
+import { LinkNameList, urls } from '@/pages';
 
 const linkList = urls.map((url, index) => {
   return { text: LinkNameList[index], link: url };
@@ -24,12 +24,10 @@ export const Page = () => {
       await signInWithEmailAndPassword(auth, email, password);
       setEmail('');
       setPassword('');
-      // Toast or alert for success
-      alert('ログインしました。');
+      alert('ログインしました。'); // 代わりにトーストを使用
       // TODO: ログイン後のページに遷移の処理を書く
     } catch (e) {
-      // Toast or alert for error
-      alert('エラーが発生しました。');
+      alert('エラーが発生しました。'); // 代わりにトーストを使用
       console.log(e);
     } finally {
       setIsLoading(false);
@@ -39,35 +37,41 @@ export const Page = () => {
   return (
     <>
       {!userInfo.isSignedIn ? (
-        <div className="mx-auto max-w-md py-14">
-          <h1 className="text-center text-2xl font-bold">サインイン</h1>
+        <div className="container mx-auto py-14">
+          <h1 className="mb-8 text-2xl font-bold">サインイン</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium">メールアドレス</label>
+              <label className="mb-1 block" htmlFor="email">
+                メールアドレス
+              </label>
               <input
                 type="email"
+                id="email"
                 name="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                className="w-full rounded border p-2"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium">パスワード</label>
+              <label className="mb-1 block" htmlFor="password">
+                パスワード
+              </label>
               <input
                 type="password"
+                id="password"
                 name="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-md border border-gray-300 p-2"
+                className="w-full rounded border p-2"
                 required
               />
             </div>
-            <div className="mt-4 flex justify-center">
+            <div className="flex justify-center">
               <button
                 type="submit"
-                className={`rounded-md bg-primary px-4 py-2 text-white ${
+                className={`rounded bg-primary px-4 py-2 font-bold text-white ${
                   isLoading ? 'cursor-not-allowed opacity-50' : ''
                 }`}
                 disabled={isLoading}
@@ -76,6 +80,12 @@ export const Page = () => {
               </button>
             </div>
           </form>
+          <p>
+            パスワードリセットは
+            <a className="underline" href="/resetPassword">
+              こちら
+            </a>
+          </p>
         </div>
       ) : (
         <PageListAfterSignIn linkList={linkList} />
