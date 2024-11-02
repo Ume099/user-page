@@ -50,7 +50,7 @@ export const Page = () => {
       setIsLoading(false);
     }
     if (!error) {
-      alert('パスワード再設定用メールを送信しました。'); // 代わりにトーストを使用
+      alert('パスワード再設定用メールを送信しました。');
       setEmail('');
     }
   };

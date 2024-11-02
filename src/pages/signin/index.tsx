@@ -79,7 +79,12 @@ export const Page = () => {
               </button>
             </div>
           </form>
-          <p>ログインできない場合は<a href="https://www.alt-prime.com/resetPassword">こちら</a></p>
+          <p>
+            パスワードリセットは
+            <a className="underline" href="/resetPassword">
+              こちら
+            </a>
+          </p>
         </div>
       ) : (
         <PageListAfterSignIn linkList={linkList} />
