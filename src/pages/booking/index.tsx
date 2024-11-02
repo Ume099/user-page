@@ -14,6 +14,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { GoTriangleDown } from 'react-icons/go';
 import { useRecoilState } from 'recoil';
+import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
+import { FirebaseError } from 'firebase/app';
+import { BookingChangeMailParam } from '@/lib/type/booking';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -201,7 +204,7 @@ export default function Booking() {
       )
     ) {
       toast({
-        title: '前日の午後10時を過ぎているため、予定を変更できません。',
+        title: '前日の午後10時を過ぎている予定は変更できません。',
         status: 'error',
         position: 'top',
       });
@@ -280,6 +283,8 @@ export default function Booking() {
       setIsSaveButtonLoading(false);
       clearClassBefChange(false);
     }
+    await sendMailToUser();
+    await sendMailToAdmin();
 
     isError = true;
     location.reload();
@@ -347,8 +352,82 @@ export default function Booking() {
     // classAfterChangeが設定されれば、クラス変更情報のオブジェクトがセットされる
   }, [checkIsAftChangeInfoExists()]);
 
+  const sendMailToUser = async () => {
+    const sendTo = await getUserEmail(userInfo.uid);
+    if (!sendTo) {
+      toast({
+        title: "エラーが発生しました。missing variant 'sendTo'",
+      });
+      return;
+    }
+    const body: BookingChangeMailParam = {
+      sendTo: sendTo,
+      yearBefChange: bookingChange.yearBefChange,
+      monthBefChange: bookingChange.monthBefChange,
+      dateBefChange: bookingChange.dayBefChange,
+      classBefChange: bookingChange.classBefChange,
+      yearAftChange: bookingChange.yearAftChange,
+      monthAftChange: bookingChange.monthAftChange,
+      dateAftChange: bookingChange.dayAftChange,
+      classAftChange: bookingChange.classAftChange,
+    };
+    console.log(body);
+    try {
+      const res = await fetch('/api/booking/sendMailToUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (e: any) {
+      if (e instanceof FirebaseError) {
+        alert(`エラーが発生しました。${e.message}`);
+      } else {
+        alert(`原因不明のエラーが発生しました。${e.message}`);
+      }
+    }
+  };
+
+  const sendMailToAdmin = async () => {
+    const sendTo = await getUserEmail(userInfo.uid);
+    console.log(bookingChangeInfo.classChangeInfo);
+    if (!sendTo) {
+      toast({
+        title: "missing variant 'sendTo'",
+      });
+      return;
+    }
+    const body: BookingChangeMailParam = {
+      sendTo,
+      yearBefChange: bookingChange.yearBefChange,
+      monthBefChange: bookingChange.monthBefChange,
+      dateBefChange: bookingChange.dayBefChange,
+      classBefChange: bookingChange.classBefChange,
+      yearAftChange: bookingChange.yearAftChange,
+      monthAftChange: bookingChange.monthAftChange,
+      dateAftChange: bookingChange.dayAftChange,
+      classAftChange: bookingChange.classAftChange,
+    };
+    console.log(body);
+    try {
+      const res = await fetch('/api/booking/sendMailToAdmin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...body, name: userInfo.userName }),
+      });
+    } catch (e: any) {
+      if (e instanceof FirebaseError) {
+        alert(`エラーが発生しました。${e.message}`);
+      } else {
+        alert(`原因不明のエラーが発生しました。${e.message}`);
+      }
+    }
+  };
+
   return (
-    // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
       <div className="w-full">
         <div className="w-full">
@@ -362,6 +441,7 @@ export default function Booking() {
                   className="h-16 w-16"
                   Icon={GoTriangleDown}
                 />
+                <Button label="test" variant="secondary" onClick={() => sendMailToUser()} />
               </div>
               <div className="mt-5"></div>
               <BookingInfoBefChg
@@ -411,9 +491,6 @@ export default function Booking() {
           <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
           <Calendar year={yearOnDisplay} month={monthOnDisplay} />
         </div>
-      </div>
-      <div className="mt-32 flex justify-center text-center">
-        予約変更をご希望の場合は公式ラインよりご連絡ください。
       </div>
     </AuthGuard>
   );

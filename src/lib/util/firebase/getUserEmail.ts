@@ -1,4 +1,4 @@
-// ユーザーのメールアドレスを取得する関数
+// uidからユーザーのメールアドレスを取得する関数
 export const getUserEmail = async (uid: string): Promise<string | null> => {
   try {
     const response = await fetch('/api/userActions/getUserEmail', {
