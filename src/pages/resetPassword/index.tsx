@@ -39,9 +39,12 @@ export const Page = () => {
     let error = false;
     try {
       await handleSendResetPasswordEmail();
-    } catch (e) {
-      alert('エラーが発生しました。'); // 代わりにトーストを使用
-      console.log(e);
+    } catch (e: unknown) {
+      if (e instanceof FirebaseError) {
+        alert(`エラーが発生しました。${e.message}`);
+      } else {
+        alert('原因不明のエラーが発生しました。再度お試しください。');
+      }
       error = true;
     } finally {
       setIsLoading(false);
