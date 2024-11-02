@@ -34,9 +34,9 @@ const YearAndMonthDropdown = (props: Props) => {
   };
 
   return (
-    <div className="text-2xl ml-16">
+    <div className="ml-16 text-2xl">
       <select
-        className="border rounded-lg mr-2"
+        className="mr-2 rounded-lg border"
         id="year"
         value={selectedYear ?? ''}
         onChange={handleChange}
@@ -49,7 +49,7 @@ const YearAndMonthDropdown = (props: Props) => {
       </select>
       <label htmlFor="year">年</label>
       <select
-        className="border rounded-lg mr-2"
+        className="mr-2 rounded-lg border"
         id="month"
         value={selectedMonth ?? ''}
         onChange={handleChangeMonth}

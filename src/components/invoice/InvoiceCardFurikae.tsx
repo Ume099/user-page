@@ -5,7 +5,7 @@ type Props = {
   invoice: FormatInvoice;
 };
 
-const InvoiceCardFurikomi = (props: Props) => {
+const InvoiceCardFurikae = (props: Props) => {
   const { invoice } = props;
 
   const totalPrice = invoice.totalPrice;
@@ -32,18 +32,9 @@ const InvoiceCardFurikomi = (props: Props) => {
                 下記の通りご請求申し上げます。
               </div>
               <p className="lg:text-l mt-4 text-sm font-bold underline">
-                ご請求金額：　{totalPrice || 0}　円
+                ご請求金額：　{totalPrice || ''}　円
               </p>
-              <div className="mt-4 rounded border border-primary p-2">
-                【口座情報】
-                <br /> 西日本シティ銀行
-                <br />
-                大橋駅前支店[735]
-                <br />
-                普通
-                <br />
-                3034698 ｽﾐ ﾄｼﾔ
-              </div>
+              <div className="mt-4 p-2"></div>
             </div>
             <div>
               <div className="flex h-full w-full justify-end">
@@ -79,4 +70,4 @@ const InvoiceCardFurikomi = (props: Props) => {
   );
 };
 
-export default InvoiceCardFurikomi;
+export default InvoiceCardFurikae;

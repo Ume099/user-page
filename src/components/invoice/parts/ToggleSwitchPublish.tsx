@@ -1,3 +1,5 @@
+import { useToast } from '@chakra-ui/react';
+import { FormatInvoice } from '@/lib/invoice';
 import { useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
@@ -7,15 +9,21 @@ type ToggleProps = {
   register?: UseFormRegisterReturn<any>;
   id: string;
   isDefaultPublished: boolean;
+  invoice: FormatInvoice;
 };
 
 const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
-  const { label, className, register, id, isDefaultPublished } = props;
+  const { label, className, register, id, isDefaultPublished, invoice } = props;
   const [isPublished, setIsPublished] = useState(isDefaultPublished);
 
   const handleToggleIsPublished = () => {
+    if (!isPublished && !confirm('メールが送信されます。')) {
+      return; // 何もしない
+    }
+
     upDateIsPublished(!isPublished);
     setIsPublished((prev) => !prev);
+    sendMail();
   };
 
   const upDateIsPublished = async (isPublished: boolean) => {
@@ -29,6 +37,34 @@ const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
 
     const data = await res.json();
     console.log(data);
+  };
+
+  const toast = useToast();
+
+  const sendMail = async () => {
+    const res = await fetch('/api/invoice/sendMail', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: invoice.fullName,
+        sendTo: invoice.mail,
+        year: invoice.date.split('_')[0],
+        month: invoice.date.split('_')[1],
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log(res.status);
+    if (data) {
+      toast({
+        title: res.status === 200 ? '発行メールを送信しました。' : 'メールの送信に失敗しました。',
+        status: res.status === 200 ? 'success' : 'warning',
+        position: 'top-right',
+      });
+    }
   };
 
   return (

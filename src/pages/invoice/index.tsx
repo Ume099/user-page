@@ -1,5 +1,6 @@
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 import InvoiceCardFurikomi from '@/components/invoice/InvoiceCardFurikomi';
+import InvoiceCardFurikae from '@/components/invoice/InvoiceCardFurikae';
 import YearDropdown from '@/components/invoice/parts/YearDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
@@ -64,7 +65,7 @@ const TeachingExample: NextPage = () => {
         <YearDropdown setYear={setYear} />
         {!invoiceInfo.length && (
           <ButtonOriginal
-            className="w-full my-4"
+            className="my-4 w-full"
             variant="primary"
             label="請求書情報を取得"
             onClick={() => getInvoice(userInfo.uid)}
@@ -74,7 +75,11 @@ const TeachingExample: NextPage = () => {
           <ul>
             {invoiceInfo.map((invoice, index) => (
               <li key={index}>
-                <InvoiceCardFurikomi invoice={invoice} />
+                {invoice.payment === '銀行振込' ? (
+                  <InvoiceCardFurikomi invoice={invoice} />
+                ) : (
+                  <InvoiceCardFurikae invoice={invoice} />
+                )}
               </li>
             ))}
           </ul>

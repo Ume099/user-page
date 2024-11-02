@@ -2,16 +2,16 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { createTransport } from 'nodemailer';
 import { Options } from 'nodemailer/lib/mailer';
 
-import { ContactFormParam, ReqBody } from '@/lib/type/contact';
+import { ContactFormParam, ReqBody } from '@/lib/type/invoice';
 import { __log } from '@/lib/util/log';
 
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const reqBody = req.body as ReqBody<ContactFormParam>;
 
-  const data = reqBody.body;
+  const data = req.body;
 
-  // 改行のエスケープシーケンス(\n)を <br> に置換
-  const htmlBody = data.body.replace(/\n/g, '<br>');
+  // // 改行のエスケープシーケンス(\n)を <br> に置換
+  // const mailBody = data.mailBody.replace(/\n/g, '<br>');
 
   // 送信用アカウントの設定（ここではGmail）
   const transporter = createTransport({
@@ -19,7 +19,7 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
     host: 'smtp.gmail.com',
     auth: {
       user: process.env.MAIL_SENDER,
-      // Googleアカウントでアプリパスワードを取得して入れる
+      // Googleアカウントのアプリパスワード
       pass: process.env.MAIL_PASS,
     },
     secure: true,
@@ -28,16 +28,13 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
   // 管理人に送るお問い合わせメッセージ通知メール
   const toHostMailData: Options = {
     from: process.env.MAIL_SENDER,
-    to: process.env.MAIL_RECEIVER,
-    replyTo: data.email,
-    subject: `【プライム】${data.name}様：お問い合わせフォーム`,
+    to: data.sendTo,
+    subject: `【プログラミングスクールプライム】${data.name}様`,
     html: `
-      <p>プライムお問い合わせページのフォームよりお問い合わせがありました。</p>
-      <p>名前*:<br>${data.name}</p>
-      <p>メールアドレス*:<br>${data.email}</p>
-      <p>電話番号*:<br>${data.tel}</p>
-      <p>会社名・事業者名*:<br>${data.company}</p>
-      <p>詳しいお問い合わせ内容*:<br>${htmlBody}</p>
+      <p>お世話になっております。</p>
+      <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
+      <p>${data.year}年${data.month + 1}月の請求書を発行いたしました。</p>
+      <p><a href="alt-prime.com/invoice">alt-prime.com/invoices</a>よりご確認下さい。</p>
     `,
   };
 
