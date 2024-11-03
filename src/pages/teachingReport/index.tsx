@@ -82,7 +82,19 @@ const TeachingExample: NextPage = () => {
     fetcher,
   );
 
+  const getDisplayNameByUid = (uid: string): string => {
+    if (!users) {
+      return '';
+    }
+    const user = users.find((user) => user.uid === uid);
+    if (!user) {
+      return '';
+    }
+    return user.displayName || '';
+  };
+
   const getPostData = (data: TeachingReportTemplateInputType): TeachingReportData => {
+    const studentName = getDisplayNameByUid(data.studentUid);
     const dataObj: TeachingReportData = {
       date: data.date,
       classTime: data.classTime,
@@ -90,7 +102,7 @@ const TeachingExample: NextPage = () => {
       topic: reportObj.topic,
       detail: reportObj.detail,
       studentUid: data.studentUid,
-      studentName: String((users && users[1].displayName) || ''),
+      studentName,
       writer: userInfo.userName || 'なし',
       writerUid: userInfo.uid,
       rikaido: data.rikaido,
