@@ -10,7 +10,11 @@ export type TeachingReportTemplateInputType = {
   rikaido: string;
   comment: string;
   isPublished: boolean;
-  isOriginal: boolean;
+  isOriginalStage: boolean;
+  stageName?: string;
+  isOriginalTopic: boolean;
+  toopic?: string;
+  isOriginalBehav: boolean;
 };
 
 export type TeachingReportTemplateInputPostType = {
