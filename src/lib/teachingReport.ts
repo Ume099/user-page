@@ -1,3 +1,4 @@
+// react-hoook-formで管理するオブジェクトの型
 export type TeachingReportTemplateInputType = {
   studentUid: string;
   date: Date;
@@ -9,6 +10,7 @@ export type TeachingReportTemplateInputType = {
   rikaido: string;
   comment: string;
   isPublished: boolean;
+  isOriginal: boolean;
 };
 
 export type TeachingReportTemplateInputPostType = {

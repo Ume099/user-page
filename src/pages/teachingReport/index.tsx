@@ -145,7 +145,7 @@ const TeachingExample: NextPage = () => {
           day: datas.date.toLocaleString().split('-')[2],
           stage,
           topic: reportObj.topic,
-          detail: reportObj.detail + datas.behavior,
+          detail: !datas.isOriginal ? reportObj.detail + datas.behavior : datas.behavior,
         }),
       });
     } catch (e) {
@@ -169,7 +169,7 @@ const TeachingExample: NextPage = () => {
   };
 
   // 提出の関数
-  const onSubmit = (data: TeachingReportTemplateInputType) => {
+  const onSubmit = async (data: TeachingReportTemplateInputType) => {
     if (!data.stage || !data.date) {
       toast({
         title: '必要事項を選択してください。',
@@ -182,7 +182,7 @@ const TeachingExample: NextPage = () => {
     if (data.isPublished) {
       sendMail(data);
     }
-    createTeachingReport(getPostData(data));
+    await createTeachingReport(getPostData(data));
     reset();
   };
 
@@ -247,7 +247,19 @@ const TeachingExample: NextPage = () => {
                 </div>
                 <div>
                   <p>【今日の授業の詳細】</p>
-                  <p>・{reportObj.detail}</p>
+                  <Controller
+                    name="isOriginal"
+                    control={control}
+                    defaultValue={false}
+                    render={({ field: { onChange, value } }) => (
+                      <ToggleSwitch
+                        label="オリジナルを指定する"
+                        isChecked={value}
+                        onChange={(e) => onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                  {!watch('isOriginal') ? <p>・{reportObj.detail}</p> : <></>}
                   <TextArea placeholder="当日の様子を追加" register={register('behavior')} />
                 </div>
               </div>
