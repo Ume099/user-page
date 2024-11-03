@@ -19,6 +19,7 @@ import { NextPage } from 'next';
 import { useForm, Controller } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
+import { error } from 'console';
 
 type ReportObj = {
   stageName: string;
@@ -82,15 +83,34 @@ const TeachingExample: NextPage = () => {
     fetcher,
   );
 
+  const getDisplayNameByUid = (uid: string): string => {
+    if (!users) {
+      return '';
+    }
+    const user = users.find((user) => user.uid === uid);
+    if (!user) {
+      return '';
+    }
+    return user.displayName || '';
+  };
+
   const getPostData = (data: TeachingReportTemplateInputType): TeachingReportData => {
+    const studentName = getDisplayNameByUid(data.studentUid);
+    if (data.isOriginalStage && !data.stageName) {
+      throw Error;
+    }
+
+    if (data.isOriginalTopic && !data.topic) {
+      throw Error;
+    }
     const dataObj: TeachingReportData = {
       date: data.date,
       classTime: data.classTime,
-      stage: reportObj.stageName,
-      topic: reportObj.topic,
-      detail: reportObj.detail,
+      stage: !data.isOriginalStage ? reportObj.stageName : data.stageName!,
+      topic: !data.isOriginalTopic ? reportObj.topic : data.topic,
+      detail: !data.isOriginalBehav ? reportObj.detail + data.behavior : data.behavior,
       studentUid: data.studentUid,
-      studentName: String((users && users[1].displayName) || ''),
+      studentName,
       writer: userInfo.userName || 'なし',
       writerUid: userInfo.uid,
       rikaido: data.rikaido,
@@ -131,9 +151,9 @@ const TeachingExample: NextPage = () => {
           year: datas.date.toLocaleString().split('-')[0],
           month: datas.date.toLocaleString().split('-')[1],
           day: datas.date.toLocaleString().split('-')[2],
-          stage,
-          topic: reportObj.topic,
-          detail: reportObj.detail + datas.behavior,
+          stage: !datas.isOriginalStage ? reportObj.stageName : datas.stageName,
+          topic: !datas.isOriginalTopic ? reportObj.topic : datas.topic,
+          detail: !datas.isOriginalBehav ? reportObj.detail + datas.behavior : datas.behavior,
         }),
       });
     } catch (e) {
@@ -157,7 +177,7 @@ const TeachingExample: NextPage = () => {
   };
 
   // 提出の関数
-  const onSubmit = (data: TeachingReportTemplateInputType) => {
+  const onSubmit = async (data: TeachingReportTemplateInputType) => {
     if (!data.stage || !data.date) {
       toast({
         title: '必要事項を選択してください。',
@@ -170,7 +190,15 @@ const TeachingExample: NextPage = () => {
     if (data.isPublished) {
       sendMail(data);
     }
-    createTeachingReport(getPostData(data));
+    try {
+      await createTeachingReport(getPostData(data));
+    } catch (e) {
+      toast({
+        title: 'getPostDataでエラーが発生しました。形式を満たしていません。',
+        status: 'warning',
+      });
+      return;
+    }
     reset();
   };
 
@@ -227,15 +255,59 @@ const TeachingExample: NextPage = () => {
               <div>
                 <div>
                   【今日のステージ】
-                  <p>#{reportObj.stageName}</p>
+                  <Controller
+                    name="isOriginalStage"
+                    control={control}
+                    defaultValue={false}
+                    render={({ field: { onChange, value } }) => (
+                      <ToggleSwitch
+                        label="オリジナルを指定する"
+                        isChecked={value}
+                        onChange={(e) => onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                  {!watch('isOriginalStage') ? (
+                    <p>#{reportObj.stageName}</p>
+                  ) : (
+                    <TextArea register={register('stageName')} />
+                  )}
                 </div>
                 <div>
                   <p>【今日の授業内容】</p>
-                  <p>・{reportObj.topic}</p>
+                  <Controller
+                    name="isOriginalTopic"
+                    control={control}
+                    defaultValue={false}
+                    render={({ field: { onChange, value } }) => (
+                      <ToggleSwitch
+                        label="オリジナルを指定する"
+                        isChecked={value}
+                        onChange={(e) => onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                  {!watch('isOriginalTopic') ? (
+                    <p>・{reportObj.topic}</p>
+                  ) : (
+                    <TextArea register={register('toopic')} />
+                  )}
                 </div>
                 <div>
                   <p>【今日の授業の詳細】</p>
-                  <p>・{reportObj.detail}</p>
+                  <Controller
+                    name="isOriginalBehav"
+                    control={control}
+                    defaultValue={false}
+                    render={({ field: { onChange, value } }) => (
+                      <ToggleSwitch
+                        label="オリジナルを指定する"
+                        isChecked={value}
+                        onChange={(e) => onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                  {!watch('isOriginalBehav') ? <p>・{reportObj.detail}</p> : <></>}
                   <TextArea placeholder="当日の様子を追加" register={register('behavior')} />
                 </div>
               </div>

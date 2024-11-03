@@ -5,6 +5,7 @@ import { useRecoilState } from 'recoil';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { BookingStatus, SeatMap } from '@/lib/SeatMap';
 import { UserData } from '@/lib/userSettings';
+import { getUserDisplayName } from '@/lib/util/firebase/getUserDisplayName';
 
 type Props = {
   year: number;
@@ -60,8 +61,55 @@ export default function SeatMapModal({ year, month, day }: Props) {
         params: { collectionName: collectionNameInMemo, docId: 'day_' + day },
       });
       const item = response.data._fieldsProto;
-      const seatMap = new SeatMap(item); // 型のキャストは不要
-      setBookingStatus(seatMap as BookingStatus);
+      const seatMap = new SeatMap(item);
+      console.log('seatMap.class3>>>>>>', seatMap.class3);
+      console.log(await getUserDisplayName('2auqq4rx23m2'));
+      const class1Names: (string | null)[] = await Promise.all(
+        seatMap.class1.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class2Names: (string | null)[] = await Promise.all(
+        seatMap.class2.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class3Names: (string | null)[] = await Promise.all(
+        seatMap.class3.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class4Names: (string | null)[] = await Promise.all(
+        seatMap.class4.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class5Names: (string | null)[] = await Promise.all(
+        seatMap.class5.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class6Names: (string | null)[] = await Promise.all(
+        seatMap.class6.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+      const class7Names: (string | null)[] = await Promise.all(
+        seatMap.class7.map(async (uid: string) => {
+          return await getUserDisplayName(uid);
+        }),
+      );
+
+      const seatMapWithDisplayName = {
+        class1: class1Names,
+        class2: class2Names,
+        class3: class3Names,
+        class4: class4Names,
+        class5: class5Names,
+        class6: class6Names,
+        class7: class7Names,
+      };
+      setBookingStatus(seatMapWithDisplayName as BookingStatus);
     } catch (error) {
       console.log(error);
       setError('Failed to fetch seat map');
@@ -91,6 +139,10 @@ export default function SeatMapModal({ year, month, day }: Props) {
         {bookingStatus ? (
           <div>
             {/* 座席表の描画部分 */}
+            <p>
+              Booking Status:
+              {JSON.stringify(bookingStatus.class1.map((uid: String) => getUserDisplayName(uid)))}
+            </p>
             <p>Booking Status: {JSON.stringify(bookingStatus)}</p>
             {/* ここで座席やユーザー情報などを表示できます */}
           </div>
