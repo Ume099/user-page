@@ -1,55 +1,30 @@
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
-import { useRecoilState } from 'recoil';
 
-import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
-import { BookingStatus, SeatMap } from '@/lib/SeatMap';
-import { UserData } from '@/lib/userSettings';
-import { getUserDisplayName } from '@/lib/util/firebase/getUserDisplayName';
+import { BookingStatus } from '@/lib/SeatMap';
+import { UidAndDName, UserData } from '@/lib/userSettings';
+import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 type Props = {
   year: number;
   month: number;
   day: number;
+  users: UidAndDName[];
 };
 
-// APIのレスポンスの型を定義
-type FetchUsersResponse = UserData[];
-type FetchSeatMapResponse = {
-  _fieldsProto: any; // SeatMapのコンストラクタで扱うプロパティの型
+// fetch済みのusersからuidを元にdisplayNameを取得する関数
+const getDisplayNameFromUsers = (uid: string, users: { uid: string; displayName: string }[]) => {
+  const found = users.find((item) => item.uid === uid);
+  return found ? found.displayName : ''; // 見つかった場合は key1 を返し、見つからない場合は null を返す
 };
 
 // 関数コンポーネント
-export default function SeatMapModal({ year, month, day }: Props) {
+const SeatMapModal = (props: Props) => {
+  const { year, month, day, users } = props;
   const [bookingStatus, setBookingStatus] = useState<BookingStatus | undefined>(undefined);
   const [error, setError] = useState<string>('');
   const [isFetchUser, setIsFetchUser] = useState<boolean>(false);
-  const [userInfo] = useRecoilState<UserInfo>(userInfoState);
-  const [users, setUsers] = useState<UserData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // 全ユーザーを取得する
-  const fetchUsers = async () => {
-    setError('');
-    try {
-      const response = await axios.get<FetchUsersResponse>('/api/userActions/fetchUsers');
-      setUsers(response.data);
-      setIsFetchUser(true);
-    } catch (error) {
-      setError('Failed to fetch user');
-    }
-  };
-
-  // レンダリング時に1度だけuserリストをfetch
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // uidからdisplayNameを取得する関数
-  const getDisplayNameList = (uid: string) => {
-    const user = users.find((data) => data.uid === uid);
-    return user?.displayName || 'Unknown';
-  };
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -57,59 +32,20 @@ export default function SeatMapModal({ year, month, day }: Props) {
   const getOpenDayInfo = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get<FetchSeatMapResponse>('/api/booking/fetchSeatMap', {
+      const response = await axios.get<BookingStatus>('/api/booking/fetchSeatMap', {
         params: { collectionName: collectionNameInMemo, docId: 'day_' + day },
       });
-      const item = response.data._fieldsProto;
-      const seatMap = new SeatMap(item);
-      console.log('seatMap.class3>>>>>>', seatMap.class3);
-      console.log(await getUserDisplayName('2auqq4rx23m2'));
-      const class1Names: (string | null)[] = await Promise.all(
-        seatMap.class1.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class2Names: (string | null)[] = await Promise.all(
-        seatMap.class2.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class3Names: (string | null)[] = await Promise.all(
-        seatMap.class3.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class4Names: (string | null)[] = await Promise.all(
-        seatMap.class4.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class5Names: (string | null)[] = await Promise.all(
-        seatMap.class5.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class6Names: (string | null)[] = await Promise.all(
-        seatMap.class6.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
-      const class7Names: (string | null)[] = await Promise.all(
-        seatMap.class7.map(async (uid: string) => {
-          return await getUserDisplayName(uid);
-        }),
-      );
+      const item: BookingStatus = response.data;
 
-      const seatMapWithDisplayName = {
-        class1: class1Names,
-        class2: class2Names,
-        class3: class3Names,
-        class4: class4Names,
-        class5: class5Names,
-        class6: class6Names,
-        class7: class7Names,
-      };
-      setBookingStatus(seatMapWithDisplayName as BookingStatus);
+      setBookingStatus({
+        class1: item.class1.map((data) => getDisplayNameFromUsers(data, users)),
+        class2: item.class2.map((data) => getDisplayNameFromUsers(data, users)),
+        class3: item.class3.map((data) => getDisplayNameFromUsers(data, users)),
+        class4: item.class4.map((data) => getDisplayNameFromUsers(data, users)),
+        class5: item.class5.map((data) => getDisplayNameFromUsers(data, users)),
+        class6: item.class6.map((data) => getDisplayNameFromUsers(data, users)),
+        class7: item.class7.map((data) => getDisplayNameFromUsers(data, users)),
+      });
     } catch (error) {
       console.log(error);
       setError('Failed to fetch seat map');
@@ -139,27 +75,126 @@ export default function SeatMapModal({ year, month, day }: Props) {
         {bookingStatus ? (
           <div>
             {/* 座席表の描画部分 */}
-            <p>
-              Booking Status:
-              {JSON.stringify(bookingStatus.class1.map((uid: String) => getUserDisplayName(uid)))}
-            </p>
-            <p>Booking Status: {JSON.stringify(bookingStatus)}</p>
-            {/* ここで座席やユーザー情報などを表示できます */}
+            <p>Booking Status:</p>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class1: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class1.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class2: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class2.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class3: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class3.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class4: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class4.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class5: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class5.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class6: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class6.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
+            <div className="gap mb-2 flex gap-x-2">
+              <p>class7: </p>
+              <ul className="gap flex gap-x-2">
+                {bookingStatus.class7.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
+              </ul>
+            </div>
           </div>
         ) : (
           <p>No booking status available.</p>
         )}
       </div>
-      {isFetchUser && (
-        <div>
-          <h2>User List</h2>
-          <ul>
-            {users.map((user) => (
-              <li key={user.uid}>{getDisplayNameList(user.uid)}</li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
-}
+};
+
+export default SeatMapModal;

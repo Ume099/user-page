@@ -23,7 +23,7 @@ interface Obj {
 }
 
 // 各クラスごとの状態を保持するインターフェース
-export interface BookingStatus {
+export type BookingStatus = {
   class1: string[];
   class2: string[];
   class3: string[];
@@ -31,7 +31,7 @@ export interface BookingStatus {
   class5: string[];
   class6: string[];
   class7: string[];
-}
+};
 
 // SeatMap クラス
 export class SeatMap implements BookingStatus {

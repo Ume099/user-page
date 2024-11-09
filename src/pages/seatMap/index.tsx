@@ -3,7 +3,9 @@ import ChangeYMModal from '@/components/calendar/parts/ChangeYMModal';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
-import { useState } from 'react';
+import { UidAndDName } from '@/lib/userSettings';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { GoTriangleDown } from 'react-icons/go';
 
 type ChangeInfoState = {
@@ -48,6 +50,7 @@ export default function Page() {
   const [year, setYear] = useState<number>(getCurrentYM().year);
   const [month, setMonth] = useState(getCurrentYM().month);
   const [errorYear, setErrorYear] = useState('');
+  const [users, setUsers] = useState<UidAndDName[]>([]);
 
   // 月日変更モーダルを開閉するモーダル
   const handleOpenModal = () => {
@@ -86,6 +89,19 @@ export default function Page() {
     setYear((prevState: number) => prevState + 1);
   };
 
+  // 全ユーザーを取得する
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get<UidAndDName[]>('/api/userActions/fetchUsers');
+      setUsers(response.data.map((data) => ({ displayName: data.displayName, uid: data.uid })));
+    } catch (error) {}
+  };
+
+  // レンダリング時に1度だけuserリストをfetch
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
   return (
     // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
@@ -119,7 +135,7 @@ export default function Page() {
 
         {/* カレンダー本体 */}
         <div className="">
-          <Calendar4SeatMap year={year} month={month} />
+          <Calendar4SeatMap users={users} year={year} month={month} />
         </div>
       </div>
     </AuthGuard>

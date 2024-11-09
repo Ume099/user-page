@@ -22,6 +22,11 @@ const isValidEmail = (email: string) => {
   return emailRegex.test(email);
 };
 
+// emailがメアドとして使用可能かどうかを判定するコード
+const isValidPassword = (pass: string): boolean => {
+  return pass.length >= 6;
+};
+
 const linkList = urls.map((url, index) => {
   return { text: LinkNameList[index], link: url };
 });
@@ -101,6 +106,14 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     if (newPassword !== newPasswordConfirm) {
       toast({
         title: 'パスワードが一致しません。',
+        status: 'warning',
+        position: 'top-right',
+      });
+      return;
+    }
+    if (isValidPassword(newPassword)) {
+      toast({
+        title: 'パスワードは6文字以上の必要があります。',
         status: 'warning',
         position: 'top-right',
       });

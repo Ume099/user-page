@@ -6,14 +6,16 @@ import SeatMapModal from '@/components/calendar/parts/SeatMapModal';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import DayOfWeek from './DayOfWeek';
+import { UidAndDName } from '@/lib/userSettings';
 
 type Props = {
   year: number;
   month: number;
+  users: UidAndDName[];
 };
 
 const Days4SeatMap = (props: Props) => {
-  const { year, month } = props;
+  const { year, month, users } = props;
   const today = dayjs();
   const [isOpenSetClassModal, setIsOpenSetClassModal] = useState(false);
   const [openDayList, setOpenDayList] = useState([]);
@@ -39,6 +41,8 @@ const Days4SeatMap = (props: Props) => {
       // openDayList[0]はundefined
       opnDayList.shift();
       setOpenDayList(opnDayList);
+
+      console.log('opnDayList>>>>>', opnDayList);
     } catch (error) {
       console.log(error);
     }
@@ -133,7 +137,7 @@ const Days4SeatMap = (props: Props) => {
             />
           </div>
 
-          <SeatMapModal year={year} month={month} day={day} />
+          <SeatMapModal users={users} year={year} month={month} day={day} />
         </div>
       )}
       <DayOfWeek />

@@ -69,6 +69,11 @@ export type UserData = {
   displayName?: string;
 };
 
+export type UidAndDName = {
+  uid: string;
+  displayName: string;
+};
+
 type ValueType = 'stringValue' | 'arrayValue';
 
 interface Value {
