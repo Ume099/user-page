@@ -39,6 +39,8 @@ const Days4SeatMap = (props: Props) => {
       // openDayList[0]はundefined
       opnDayList.shift();
       setOpenDayList(opnDayList);
+
+      console.log('opnDayList>>>>>', opnDayList);
     } catch (error) {
       console.log(error);
     }

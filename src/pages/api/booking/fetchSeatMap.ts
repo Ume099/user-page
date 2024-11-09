@@ -9,7 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const { collectionName, docId } = req.query;
   if (!collectionName || !docId) {
-    res.status(400).json({ message: 'collectionName is Missing' });
+    res.status(400).json({ message: 'collectionName or docId is missing' });
+    return;
   }
 
   try {
@@ -19,9 +20,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       res.status(404).json({ message: 'Document not found' });
       return;
     }
-    res.status(200).json(item);
+
+    // Convert Firestore document data to plain JSON
+    const data = item.data();
+    res.status(200).json(data);
   } catch (error: any) {
-    console.error('開校日情報の取得に失敗しました:', error);
+    console.error('Failed to fetch document:', error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }
 }

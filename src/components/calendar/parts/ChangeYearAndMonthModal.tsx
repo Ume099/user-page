@@ -59,9 +59,9 @@ const ChangeYearAndMonthModal = (props: Props) => {
               </div>
             </div>
             <div className="mt-12 grid grid-cols-3">
-              {MONTH_NAME.map((m, index) => (
-                <div className="">
-                  <ul className="">
+              <ul className="">
+                {MONTH_NAME.map((m, index) => (
+                  <div className="">
                     <li key={index}>
                       <CalendarButton
                         key={index}
@@ -71,9 +71,9 @@ const ChangeYearAndMonthModal = (props: Props) => {
                         className="w-24"
                       />
                     </li>
-                  </ul>
-                </div>
-              ))}
+                  </div>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
