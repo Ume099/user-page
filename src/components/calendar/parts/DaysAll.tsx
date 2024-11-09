@@ -27,10 +27,11 @@ type Props = {
   year: number;
   month: number;
   handleCloseModal?: () => void;
+  uid: string;
 };
 
-const Days = (props: Props) => {
-  const { year, month } = props;
+const DaysAll = (props: Props) => {
+  const { year, month, uid } = props;
   const [openDaysObjList, setOpenDaysObjList] = useState<any[]>([]);
   const today = dayjs();
   const firstDayOfMonth = dayjs(new Date(year, month - 1, 1));
@@ -130,14 +131,14 @@ const Days = (props: Props) => {
 
   // openDay_年_月のドキュメントすべてを取得するAPI
   const getAllDocs = async () => {
-    console.log('uid', userInfo.uid);
+    console.log('uid', uid);
     console.log('uid', userInfo.userName);
     try {
       const response = await axios.get('/api/fetchCollection', {
         params: { collectionName: collectionNameInMemo },
       });
 
-      const array = getDateByUID(response.data, userInfo.uid);
+      const array = getDateByUID(response.data, uid);
 
       setBookedDay(array);
     } catch (error) {
@@ -160,7 +161,7 @@ const Days = (props: Props) => {
       const params = {
         collectionName: collectionNameInMemo,
         docId: 'day_' + day,
-        uid: userInfo.uid,
+        uid: uid,
       };
       const response = await axios.get('api/booking/fetchBookedClassInfo', {
         params,
@@ -269,7 +270,7 @@ const Days = (props: Props) => {
             day={DAY}
             CLASS_LIST={classList}
             bookedClassInfoListObj={bookedClassInfoListObj}
-            uid={userInfo.uid}
+            uid={uid}
           />
         </div>
       )}
@@ -277,4 +278,4 @@ const Days = (props: Props) => {
   );
 };
 
-export default Days;
+export default DaysAll;

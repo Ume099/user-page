@@ -62,8 +62,6 @@ export default function SeatMapModal({ year, month, day }: Props) {
       });
       const item = response.data._fieldsProto;
       const seatMap = new SeatMap(item);
-      console.log('seatMap.class3>>>>>>', seatMap.class3);
-      console.log(await getUserDisplayName('2auqq4rx23m2'));
       const class1Names: (string | null)[] = await Promise.all(
         seatMap.class1.map(async (uid: string) => {
           return await getUserDisplayName(uid);

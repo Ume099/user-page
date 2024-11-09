@@ -1,5 +1,5 @@
 import BookingInfoBefChg from '@/components/calendar/BookingInfoBefChg';
-import Calendar from '@/components/calendar/Calendar';
+import CalendarAll from '@/components/calendar/CalendarAll';
 import ChangeYearAndMonthModal from '@/components/calendar/parts/ChangeYearAndMonthModal';
 import Button from '@/components/common/parts/Button';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
@@ -14,6 +14,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { GoTriangleDown } from 'react-icons/go';
 import { useRecoilState } from 'recoil';
+import useSWR from 'swr';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import SelectObj from '@/components/common/parts/SelectObj';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -34,7 +37,29 @@ const date = new Date();
 const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();
 
+type UserData = {
+  uid: string;
+  name?: string;
+  email?: string;
+  displayName?: string;
+};
+
+type InputType = {
+  uid: string;
+};
+
+// データフェッチ用の fetcher 関数
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
+
 export default function Booking() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<InputType>();
+
   const [isOpenSetmonthAndYearOnDisplayModal, setIsOpenSetmonthAndYearOnDisplayModal] =
     useState(false);
   const [yearOnDisplay, setYearOnDisplay] = useState<number>(currentYear);
@@ -53,6 +78,10 @@ export default function Booking() {
   const [aftChangeClass, setAftChangeClass] = useState<string[]>(['']);
 
   const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
+  const [uid, setUid] = useState<string>('');
+  const { data: users } = useSWR<UserData[]>('/api/userActions/fetchUsers', fetcher);
+
+  const toast = useToast();
 
   // 編集する月を設定する関数
   const setMonth = (num: number) => {
@@ -146,11 +175,11 @@ export default function Booking() {
     isForAft: boolean,
   ) => {
     try {
-      const response = await axios.get('api/booking/fetchClassStatus', {
+      const response = await axios.get('/api/booking/fetchClassStatus', {
         params: {
           collectionName: `openDay_${year}_${month}`,
           docId: 'day_' + day,
-          uid: userInfo.uid,
+          uid,
           fieldName: className,
         },
       });
@@ -167,8 +196,6 @@ export default function Booking() {
     }
   };
 
-  const toast = useToast();
-
   function isPast10PMOfPreviousDay(year: number, month: number, day: number) {
     // Get the current date and time
     const now = new Date();
@@ -181,7 +208,7 @@ export default function Booking() {
   }
 
   // 変更情報を更新するAPI
-  const handleSaveChange = async () => {
+  const handleSaveChange = async (uid: string) => {
     if (
       isPast10PMOfPreviousDay(
         bookingChange.yearAftChange,
@@ -214,7 +241,7 @@ export default function Booking() {
       return;
     }
     let isError: boolean = false;
-    getBookedClassInfo(
+    await getBookedClassInfo(
       bookingChange.yearAftChange,
       bookingChange.monthAftChange,
       bookingChange.dayAftChange,
@@ -234,7 +261,7 @@ export default function Booking() {
           collectionName: `openDay_${bookingChange.yearAftChange}_${bookingChange.monthAftChange}`,
           docId: `day_${bookingChange.dayAftChange}`,
           fieldName: getClassName(bookingChange.classAftChange),
-          newVal: [...aftChangeClass, userInfo.uid],
+          newVal: [...aftChangeClass, uid],
         }),
       });
     } catch (e) {
@@ -246,7 +273,7 @@ export default function Booking() {
       return; //何もしない
     }
 
-    getBookedClassInfo(
+    await getBookedClassInfo(
       bookingChange.yearBefChange,
       bookingChange.monthBefChange,
       bookingChange.dayBefChange,
@@ -264,7 +291,7 @@ export default function Booking() {
           collectionName: `openDay_${bookingChange.yearBefChange}_${bookingChange.monthBefChange}`,
           docId: `day_${bookingChange.dayBefChange}`,
           fieldName: getClassName(bookingChange.classBefChange),
-          newVal: befChangeClass.filter((classInfo) => classInfo !== userInfo.uid),
+          newVal: befChangeClass.filter((classInfo) => classInfo !== uid),
         }),
       });
     } catch (e) {
@@ -341,11 +368,38 @@ export default function Booking() {
     // classAfterChangeが設定されれば、クラス変更情報のオブジェクトがセットされる
   }, [checkIsAftChangeInfoExists()]);
 
+  const onSubmit: SubmitHandler<InputType> = async (data) => {
+    console.log(data.uid);
+    setUid(data.uid);
+  };
+
+  const usersListWithNull = users?.map((user) => ({
+    name: String(user.displayName),
+    value: String(user.uid),
+  }));
+  const usersList = usersListWithNull?.filter((user) => !!user.value && !!user.name);
+  const AllowedUidList: string[] = ['KZlzeAudgBVPawzaQuT7zo4BLCH3', 'kqhxd5wy22x8', 'tfsw7nz9ovb4'];
+  if (!AllowedUidList.includes(userInfo.uid)) {
+    return <div>許可されていないアカウントです。</div>;
+  }
+
   return (
-    // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
       <div className="w-full">
         <div className="w-full">
+          {/* まずは予定変更するユーザーを指定する */}
+          {!uid && (
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <SelectObj
+                optionList={usersList || [{ value: '', name: '' }]}
+                label="予約を変更する生徒を選択"
+                className="w-full"
+                register={register('uid')}
+              />
+              <input className="rounded-lg border bg-primary p-2 text-white" type="submit" />
+            </form>
+          )}
+
           {!isOpenSetmonthAndYearOnDisplayModal ? (
             <div className="w-full gap-4">
               <div className="mt-[52px] w-full pl-12">
@@ -376,7 +430,7 @@ export default function Booking() {
               <div className="mb-4"></div>
               <div className="grid grid-cols-1 gap-y-4">
                 <ButtonOriginal
-                  onClick={() => handleSaveChange()}
+                  onClick={() => handleSaveChange(uid)}
                   label="保存"
                   variant="primary"
                   disabled={isSaveButtonLoading}
@@ -389,25 +443,26 @@ export default function Booking() {
               </div>
             </div>
           ) : (
-            // 月and年変更モーダル
-            <ChangeYearAndMonthModal
-              setIsOpenSetmonthAndYearOnDisplayModal={handleOpenSetmonthAndYearOnDisplayModal}
-              setYearDecremented={setYearDecremented}
-              yearOnDisplay={yearOnDisplay}
-              setYearIncremented={setYearIncremented}
-              setMonth={setMonth}
-              errorYear={errorYear}
-            />
+            uid && (
+              // 月and年変更モーダル
+              <ChangeYearAndMonthModal
+                setIsOpenSetmonthAndYearOnDisplayModal={handleOpenSetmonthAndYearOnDisplayModal}
+                setYearDecremented={setYearDecremented}
+                yearOnDisplay={yearOnDisplay}
+                setYearIncremented={setYearIncremented}
+                setMonth={setMonth}
+                errorYear={errorYear}
+              />
+            )
           )}
         </div>
         {/* カレンダー本体 */}
-        <div className="">
-          <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
-          <Calendar year={yearOnDisplay} month={monthOnDisplay} />
-        </div>
-      </div>
-      <div className="mt-32 flex justify-center text-center">
-        予約変更をご希望の場合は公式ラインよりご連絡ください。
+        {uid && (
+          <div className="">
+            <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
+            <CalendarAll uid={uid} year={yearOnDisplay} month={monthOnDisplay} />
+          </div>
+        )}
       </div>
     </AuthGuard>
   );
