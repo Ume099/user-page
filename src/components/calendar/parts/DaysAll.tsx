@@ -119,7 +119,7 @@ const DaysAll = (props: Props) => {
   const getClassList = async (year: number, month: number, date: number) => {
     const dayOfWeek = getDayOfWeekEng(year, month, date);
     try {
-      const response = await axios.get('api/fetchFireStore', {
+      const response = await axios.get('/api/fetchFireStore', {
         params: { collectionName: 'classes', docId: dayOfWeek },
       });
       const res = getClassListFormatted(response.data);
@@ -150,6 +150,7 @@ const DaysAll = (props: Props) => {
   useEffect(() => {
     getClassList(year, month, DAY);
     getBookedClassInfo(DAY);
+    console.log('DAY>>>>>>>', DAY);
   }, [DAY]);
 
   // ログインしている生徒の予約情報を取得するAPI
@@ -163,13 +164,13 @@ const DaysAll = (props: Props) => {
         docId: 'day_' + day,
         uid: uid,
       };
-      const response = await axios.get('api/booking/fetchBookedClassInfo', {
+      const response = await axios.get('/api/booking/fetchBookedClassInfo', {
         params,
       });
 
       const resObj: any = response;
       const obj = packBookedClassInfo(resObj.data._fieldsProto);
-      console.log('objaaa', obj);
+      console.log('objbbb', obj);
       setBookedClassInfoListObj(obj);
     } catch (error) {
       console.log(error);

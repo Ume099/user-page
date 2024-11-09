@@ -118,7 +118,7 @@ const Days = (props: Props) => {
   const getClassList = async (year: number, month: number, date: number) => {
     const dayOfWeek = getDayOfWeekEng(year, month, date);
     try {
-      const response = await axios.get('api/fetchFireStore', {
+      const response = await axios.get('/api/fetchFireStore', {
         params: { collectionName: 'classes', docId: dayOfWeek },
       });
       const res = getClassListFormatted(response.data);
@@ -162,7 +162,7 @@ const Days = (props: Props) => {
         docId: 'day_' + day,
         uid: userInfo.uid,
       };
-      const response = await axios.get('api/booking/fetchBookedClassInfo', {
+      const response = await axios.get('/api/booking/fetchBookedClassInfo', {
         params,
       });
 
