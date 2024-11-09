@@ -3,15 +3,14 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { BookingStatus } from '@/lib/SeatMap';
 import { UidAndDName, UserData } from '@/lib/userSettings';
+import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 type Props = {
   year: number;
   month: number;
   day: number;
+  users: UidAndDName[];
 };
-
-// APIのレスポンスの型を定義
-type FetchUsersResponse = UidAndDName[];
 
 // fetch済みのusersからuidを元にdisplayNameを取得する関数
 const getDisplayNameFromUsers = (uid: string, users: { uid: string; displayName: string }[]) => {
@@ -20,36 +19,12 @@ const getDisplayNameFromUsers = (uid: string, users: { uid: string; displayName:
 };
 
 // 関数コンポーネント
-export default function SeatMapModal({ year, month, day }: Props) {
+const SeatMapModal = (props: Props) => {
+  const { year, month, day, users } = props;
   const [bookingStatus, setBookingStatus] = useState<BookingStatus | undefined>(undefined);
   const [error, setError] = useState<string>('');
   const [isFetchUser, setIsFetchUser] = useState<boolean>(false);
-  const [users, setUsers] = useState<FetchUsersResponse>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  // 全ユーザーを取得する
-  const fetchUsers = async () => {
-    setError('');
-    try {
-      const response = await axios.get<FetchUsersResponse>('/api/userActions/fetchUsers');
-      setUsers(response.data.map((data) => ({ displayName: data.displayName, uid: data.uid })));
-
-      setIsFetchUser(true);
-    } catch (error) {
-      setError('Failed to fetch user');
-    }
-  };
-
-  // レンダリング時に1度だけuserリストをfetch
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
-  // uidからdisplayNameを取得する関数
-  const getDisplayNameList = (uid: string) => {
-    const user = users.find((data) => data.uid === uid);
-    return user?.displayName || 'Unknown';
-  };
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -101,95 +76,116 @@ export default function SeatMapModal({ year, month, day }: Props) {
           <div>
             {/* 座席表の描画部分 */}
             <p>Booking Status:</p>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class1: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class1.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class1.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class2: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class2.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class2.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class3: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class3.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class3.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class4: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class4.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class4.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class5: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class5.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class5.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class6: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class6.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class6.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
-            <div className="gap flex gap-x-2">
+            <div className="gap mb-2 flex gap-x-2">
               <p>class7: </p>
               <ul className="gap flex gap-x-2">
-                {bookingStatus.class7.map((st, index) => (
-                  <li
-                    className="rounded-lg border bg-primary-light px-3 py-2"
-                    key={`${st}_${index}`}
-                  >
-                    <p>{st}</p>
-                  </li>
-                ))}
+                {bookingStatus.class7.map(
+                  (st, index) =>
+                    st !== '' && (
+                      <li
+                        className="rounded-lg border bg-primary-light px-3 py-2"
+                        key={`${st}_${index}`}
+                      >
+                        <p>{st}</p>
+                      </li>
+                    ),
+                )}
               </ul>
             </div>
           </div>
@@ -199,4 +195,6 @@ export default function SeatMapModal({ year, month, day }: Props) {
       </div>
     </div>
   );
-}
+};
+
+export default SeatMapModal;
