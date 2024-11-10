@@ -11,7 +11,6 @@ import { useAuthContext } from '@/feature/auth/provider/AuthProvider';
 import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
 
 import { userInfoState } from '@/hooks/atom/userInfo';
-import axios from 'axios';
 import ButtonOriginal from './parts/ButtonOriginal';
 
 export const linkList = [
@@ -86,26 +85,6 @@ const Header: React.FC = () => {
       console.log(e);
     } finally {
       setUserInfo({ ...userInfo, isSignedIn: false });
-    }
-  };
-
-  // dbからユーザー情報を取得する関数
-  const getUserIsFirstTime = async (year: number, month: number) => {
-    let isError = false;
-    let result: boolean;
-    try {
-      const res = await axios.get(
-        `/api/fetchFireStore?collectionName=invoice&docId=${userInfo.uid || ''}`,
-      );
-      console.log('getUserInfo', res.data.isFirstTime.booleanValue);
-      result = res.data.isFirstTime.booleanValue;
-    } catch (error) {
-      isError = true;
-      return; //何もしない
-    }
-
-    if (!isError) {
-      setUserInfo({ ...userInfo, isFirstTime: result });
     }
   };
 
