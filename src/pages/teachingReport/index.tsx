@@ -211,6 +211,11 @@ const TeachingExample: NextPage = () => {
     console.log('Error fetching users:', usersError);
   }
 
+  const AllowedUidList: string[] = ['KZlzeAudgBVPawzaQuT7zo4BLCH3', 'kqhxd5wy22x8', 'tfsw7nz9ovb4'];
+  if (!AllowedUidList.includes(userInfo.uid)) {
+    return <div>許可されていないアカウントです。</div>;
+  }
+
   return (
     <AuthGuard>
       <div className="mx-12 mt-24 max-w-4xl items-center">

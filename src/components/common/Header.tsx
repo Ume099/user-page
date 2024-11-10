@@ -31,7 +31,7 @@ export const linkList = [
   //   link: '/signin',
   // },
   {
-    name: '授業予定確認・変更',
+    name: '予定確認・変更',
     link: '/booking',
   },
   // {
