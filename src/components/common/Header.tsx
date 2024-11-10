@@ -116,29 +116,25 @@ const Header: React.FC = () => {
                 </ul>
               </div>
 
-              <div className="mr-16 flex w-full justify-end">
-                <div className="">
-                  {userInfo.isSignedIn && (
-                    <div className="">
-                      <ButtonOriginal
-                        onClick={handleSignOut}
-                        label="ログアウト"
-                        variant="error"
-                        className="bg-red-600 !py-0"
-                      />
-                    </div>
-                  )}
-                  {!user && (
-                    <div className="h-wrap no-shrink mx-4 flex gap-x-4">
-                      <Link
-                        href="/signin"
-                        className="self-center rounded-lg bg-primary-medium px-2 py-3"
-                      >
-                        ログイン
-                      </Link>
-                    </div>
-                  )}
-                </div>
+              <div className="flex w-full justify-end lg:mr-16">
+                {userInfo.isSignedIn && (
+                  <ButtonOriginal
+                    onClick={handleSignOut}
+                    label="ログアウト"
+                    variant="error"
+                    className="bg-red-600 !py-0"
+                  />
+                )}
+                {!user && (
+                  <div className="h-wrap no-shrink mx-4 flex gap-x-4">
+                    <Link
+                      href="/signin"
+                      className="self-center rounded-lg bg-primary-medium px-2 py-3"
+                    >
+                      ログイン
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
 
