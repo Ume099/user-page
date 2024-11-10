@@ -29,10 +29,10 @@ const ChangeYearAndMonthModal = (props: Props) => {
       <div className="px-auto max-w-sm lg:max-w-4xl">
         <div className="fixed top-[60px] z-10 h-screen w-screen bg-gray-700 opacity-90">
           <div className="mt-12 px-6">
-            <div className="flex gap-x-10">
+            <div className="">
               <button
                 onClick={() => setIsOpenSetmonthAndYearOnDisplayModal(false)}
-                className="disabled:opacity-1 } relative flex h-16 w-16 items-center justify-center gap-1 rounded-full border border-primary bg-white px-6 py-3 text-center text-base text-primary transition-all duration-200 ease-linear hover:opacity-70 disabled:border-theme-medium
+                className="disabled:opacity-1 relative mb-4 flex h-16 w-16 items-center justify-center gap-1 rounded-full border border-error bg-white px-6 py-3 text-center text-base font-bold text-error transition-all duration-200 ease-linear hover:opacity-70 disabled:border-theme-medium
                 disabled:text-theme-medium"
               >
                 <span>
@@ -55,11 +55,11 @@ const ChangeYearAndMonthModal = (props: Props) => {
                     className="border-none text-4xl"
                   />
                 </div>
-                <div className="mt-2 min-h-8 text-red-600">{errorYear}</div>
+                {errorYear && <div className="mt-2 min-h-8 text-red-600">{errorYear}</div>}
               </div>
             </div>
-            <div className="mt-12 grid grid-cols-3">
-              <ul className="">
+            <div className="mt-12">
+              <ul className="grid grid-cols-3 grid-rows-4 gap-y-4">
                 {MONTH_NAME.map((m, index) => (
                   <div className="">
                     <li key={index}>
@@ -68,7 +68,7 @@ const ChangeYearAndMonthModal = (props: Props) => {
                         label={m}
                         variant="secondary"
                         onClick={() => setMonth(index + 1)}
-                        className="w-24"
+                        className="w-full"
                       />
                     </li>
                   </div>
