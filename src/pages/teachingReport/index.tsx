@@ -97,10 +97,12 @@ const TeachingExample: NextPage = () => {
   const getPostData = (data: TeachingReportTemplateInputType): TeachingReportData => {
     const studentName = getDisplayNameByUid(data.studentUid);
     if (data.isOriginalStage && !data.stageName) {
+      console.log('error');
       throw Error;
     }
 
     if (data.isOriginalTopic && !data.topic) {
+      console.log('error');
       throw Error;
     }
     const dataObj: TeachingReportData = {
@@ -295,7 +297,7 @@ const TeachingExample: NextPage = () => {
                   {!watch('isOriginalTopic') ? (
                     <p>・{reportObj.topic}</p>
                   ) : (
-                    <TextArea register={register('toopic')} />
+                    <TextArea register={register('topic')} />
                   )}
                 </div>
                 <div>
