@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import PageListAfterSignIn from './parts/PageListAfterSignIn';
+import { useSearchParams } from 'next/navigation';
 
 // emailがメアドとして使用可能かどうかを判定するコード
 const isValidEmail = (email: string) => {
@@ -34,15 +35,24 @@ const linkList = urls.map((url, index) => {
 // データフェッチ用の fetcher 関数
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
+const statusList: String[] = ['email', 'password', 'passwordError', 'done'];
 type Status = 'email' | 'password' | 'passwordError' | 'done';
 
 const MailAndPassChangeDialog = (): JSX.Element => {
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
   const auth = getAuth();
   const user = auth.currentUser;
   const { data: users, error, mutate } = useSWR<UserData[]>('/api/userActions/fetchUsers', fetcher);
-  const [status, useStatus] = useState<Status>('email');
+
+  const statusFromQuery = searchParams.get('status');
+
+  // クエリのstatusがStatus型可動かを判定
+  const initialStatus =
+    statusFromQuery && statusList.includes(statusFromQuery) ? statusFromQuery : 'email';
+  const initialStatusStatus = initialStatus as Status;
+  const [status, useStatus] = useState<Status>(initialStatusStatus);
 
   const [email, setEmail] = useState(user?.email || '');
   const [newEmail, setNewEmail] = useState('');
@@ -111,7 +121,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       });
       return;
     }
-    if (isValidPassword(newPassword)) {
+    if (!isValidPassword(newPassword)) {
       toast({
         title: 'パスワードは6文字以上の必要があります。',
         status: 'warning',
@@ -128,8 +138,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       error = true;
       await submitPasswordResetEmail();
       toast({
-        title:
-          'パスワード更新時にエラーが発生しました。担当者に問い合わせてパスワードをリセットしてください。',
+        title: 'パスワード更新時にエラーが発生しました。',
         status: 'error',
         position: 'top-right',
       });
@@ -150,6 +159,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   };
 
   const submitPasswordResetEmail = async () => {
+    let errorStatus = false;
     const actionCodeSettings = {
       // パスワード再設定後のリダイレクト URL
       url: 'https://www.alt-prime.com/signin',
@@ -161,8 +171,20 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       })
       .catch((error) => {
         // メール送信失敗
+        errorStatus = true;
         console.log(error);
       });
+    if (!errorStatus) {
+      toast({
+        title: '再設定メールの送信に失敗しました。管理者に問い合わせて下さい。',
+        status: 'error',
+      });
+    } else {
+      toast({
+        title: `再設定メールを送信しました。 ${newEmail}に送信されたメールを確認して下さい。`,
+        status: 'success',
+      });
+    }
   };
 
   if ('email' === status) {
@@ -227,11 +249,27 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     );
   }
 
+  const retryPassword = () => {
+    const redirectUrl = userInfo.uid
+      ? `http://alt-prime.com/createUser/firstLogIn?dummyMail=${newEmail || email}&uid=${
+          userInfo.uid
+        }&status=password`
+      : `http://alt-prime.com/createUser/firstLogIn?dummyMail=${newEmail || email}&uid=${
+          userInfo.uid
+        }&status=passwordError`;
+    location.replace(redirectUrl);
+  };
+
   if ('passwordError' === status) {
     return (
       <div>
         <p>エラーが発生しました。</p>
         <p className="text-lg font-bold">{newEmail}あてにパスワード設定メールを送信しました。</p>
+        <ButtonOriginal
+          label="パスワード再設定メールを再送する"
+          onClick={() => submitPasswordResetEmail()}
+        />
+        <ButtonOriginal label="再度ログインする" onClick={() => retryPassword()} />
       </div>
     );
   }
@@ -239,7 +277,12 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     return <PageListAfterSignIn linkList={linkList} />;
   }
 
-  return <div>問題が発生しました。管理者に問い合わせてください。</div>;
+  return (
+    <div>
+      問題が発生しました。管理者に問い合わせてください。
+      <ButtonOriginal label="再度ログインする" onClick={() => retryPassword()} />
+    </div>
+  );
 };
 
 export default MailAndPassChangeDialog;
