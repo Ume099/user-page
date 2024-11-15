@@ -16,6 +16,7 @@ import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import PageListAfterSignIn from './parts/PageListAfterSignIn';
 import { useSearchParams } from 'next/navigation';
+import { FirebaseError } from 'firebase/app';
 
 // emailがメアドとして使用可能かどうかを判定するコード
 const isValidEmail = (email: string) => {
@@ -52,6 +53,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   const initialStatus =
     statusFromQuery && statusList.includes(statusFromQuery) ? statusFromQuery : 'email';
   const initialStatusStatus = initialStatus as Status;
+  console.log(initialStatus);
   const [status, useStatus] = useState<Status>(initialStatusStatus);
 
   const [email, setEmail] = useState(user?.email || '');
@@ -131,17 +133,38 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     }
     let error = false;
     try {
-      const credential = EmailAuthProvider.credential(newEmail, userInfo.uid);
+      const credential = EmailAuthProvider.credential(
+        searchParams.get('dummyMail') || email,
+        searchParams.get('uid') || userInfo.uid,
+      );
       await reauthenticateWithCredential(user, credential);
       await updatePassword(user, newPassword);
     } catch (e: any) {
       error = true;
+
+      if (e instanceof FirebaseError) {
+        if (e.code === 'auth/invalid-email' || e.code === 'auth/invalid-credential') {
+          toast({
+            title: `パスワード更新時にエラーが発生しました。リンクが正しくありません。管理者に問い合わせて下さい。コード：${e.code}`,
+            status: 'error',
+            position: 'top-right',
+          });
+        } else {
+          toast({
+            title: `パスワード更新時にエラーが発生しました。不明なFirebaseエラーです。管理者に問い合わせて下さい。コード：${e.code}`,
+            status: 'error',
+            position: 'top-right',
+          });
+        }
+      } else {
+        toast({
+          title: `パスワード更新時に不明なエラーが発生しました。通信環境が良好な場所でリトライして下さい。`,
+          status: 'error',
+          position: 'top-right',
+        });
+      }
       await submitPasswordResetEmail();
-      toast({
-        title: 'パスワード更新時にエラーが発生しました。',
-        status: 'error',
-        position: 'top-right',
-      });
+
       setMessage(`パスワード更新時にエラーが発生しました${e.message}`);
     }
     if (!error) {
@@ -253,7 +276,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     const redirectUrl = userInfo.uid
       ? `http://alt-prime.com/createUser/firstLogIn?dummyMail=${newEmail || email}&uid=${
           userInfo.uid
-        }&status=password`
+        }`
       : `http://alt-prime.com/createUser/firstLogIn?dummyMail=${newEmail || email}&uid=${
           userInfo.uid
         }&status=passwordError`;
@@ -263,9 +286,10 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   if ('passwordError' === status) {
     return (
       <div>
-        <p>エラーが発生しました。</p>
-        <p className="text-lg font-bold">{newEmail}あてにパスワード設定メールを送信しました。</p>
+        <p>エラーが発生しました。{message || ''}</p>
+        <p className="mt-4 text-lg font-bold">{email}あてにパスワード設定メールを送信しました。</p>
         <ButtonOriginal
+          className="mt-4"
           label="パスワード再設定メールを再送する"
           onClick={() => submitPasswordResetEmail()}
         />
