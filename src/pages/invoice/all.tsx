@@ -38,7 +38,7 @@ const TeachingExample: NextPage = () => {
 
   return (
     <AuthGuard>
-      <div className="ml-8">
+      <div className="">
         {/* 月を設定するボタン */}
         <YearAndMonthDropdown setMonth={setMonth} setYear={setYear} />
         {/* <div className="mt-8">
@@ -48,15 +48,19 @@ const TeachingExample: NextPage = () => {
           isDefaultChecked={false}
           uidList={invoiceInfo.map((invoice) => `${invoice.uid}_${invoice.date}`)}
         /> */}
-        <div className="mt-4">
-          <ul>
-            {invoiceInfo.map((invoice, index) => (
-              <li key={index}>
-                <InvoiceCardFurikomiAll defaultOpen={false} invoice={invoice} />
-              </li>
-            ))}
-          </ul>
-        </div>
+        {invoiceInfo ? (
+          <div className="mt-4">
+            <ul>
+              {invoiceInfo.map((invoice, index) => (
+                <li key={index}>
+                  <InvoiceCardFurikomiAll defaultOpen={false} invoice={invoice} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <div>請求書情報を取得中...</div>
+        )}
       </div>
     </AuthGuard>
   );
