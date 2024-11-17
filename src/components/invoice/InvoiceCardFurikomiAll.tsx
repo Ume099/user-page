@@ -39,6 +39,7 @@ const InvoiceCardFurikomiAll = (props: Props) => {
               <ButtonOriginal onClick={() => setOpen((prev) => !prev)} label="詳細" />
               <div className="mt-2 text-2xl font-bold">{invoice.fullName}</div>
               <ul className="flex">
+                項目：
                 {invoice.items.map((item, index) => (
                   <li key={index}>
                     {item.komoku}
@@ -46,9 +47,13 @@ const InvoiceCardFurikomiAll = (props: Props) => {
                   </li>
                 ))}
               </ul>
+              <hr />
+              <p>支払い方法：{invoice.payment}</p>
+              {invoice.fullName === '岡琉史' && '+ 現金'} {/*TODO: 一時的な処置*/}
+              <hr />
               <div className="flex gap-x-2">
-                <p>{invoice.totalPrice}</p>
-                <span>円</span>
+                合計金額：<p>{invoice.totalPrice}</p>
+                <span>円</span>（税込）
               </div>
             </div>
           </div>
@@ -115,7 +120,10 @@ const InvoiceCardFurikomiAll = (props: Props) => {
               <p>お支払い方法：</p>
               <p className="font-bold">銀行振込</p>
             </div>
-            <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />
+            <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />{' '}
+            <div className="mb-10 mr-10 mt-4 flex justify-end font-bold underline">
+              合計：　￥{totalPrice.toLocaleString()}
+            </div>
           </div>
         </div>
       )}
