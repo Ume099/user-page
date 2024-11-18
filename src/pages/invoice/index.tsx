@@ -23,8 +23,8 @@ const thisYear = new Date().getFullYear();
 // fetcher関数を定義
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const TeachingExample: NextPage = () => {
-  const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn[]>([]);
+const Invoice: NextPage = () => {
+  const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<Number>(thisYear);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
@@ -41,7 +41,7 @@ const TeachingExample: NextPage = () => {
         },
       });
       console.log(response.data);
-      setInvoiceInfo([formatInvoiceList(response.data)]);
+      setInvoiceInfo(formatInvoiceList(response.data));
       if (response) {
         toast({ title: '請求書を取得しました', status: 'success', position: 'top-right' });
       }
@@ -89,4 +89,4 @@ const TeachingExample: NextPage = () => {
   );
 };
 
-export default TeachingExample;
+export default Invoice;
