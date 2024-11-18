@@ -14,8 +14,6 @@ type MapValueType = {
 
 export type ItemReturn = { komoku: string; price: number; detail: string }[];
 
-export type FormatInvoiceListReturn = FormatInvoice[];
-
 type FieldValue = {
   stringValue?: string;
   integerValue?: string;
@@ -39,22 +37,6 @@ type MapValue = {
 
 type arrayValue = { values: MapValue[] };
 
-type ObjType = {
-  fullName: { stringValue: string; valueType: 'stringValue' };
-  date: { stringValue: string; valueType: 'stringValue' };
-  placeName: { stringValue: string; valueType: 'stringValue' };
-  account: { stringValue: string; valueType: 'stringValue' };
-  TEL: { stringValue: string; valueType: 'stringValue' };
-  mail: { stringValue: string; valueType: 'stringValue' };
-  totalPrice: { integerValue: number; valueType: 'integerValue' };
-  note: { stringValue: string; valueType: 'stringValue' };
-  payment: { stringValue: string; valueType: 'stringValue' };
-  dueDate: { stringValue: string; valueType: 'stringValue' };
-  item: { arrayValue: arrayValue };
-  isChecked: { booleanValue: boolean; valueType: 'booleanValue' };
-  isPublished: { booleanValue: boolean; valueType: 'booleanValue' };
-};
-
 // itemsの型定義
 export type Item = {
   komoku: string;
@@ -62,6 +44,7 @@ export type Item = {
   detail: string;
 };
 
+// dataの型定義
 export type Data = {
   date: string;
   uid: string;
@@ -85,7 +68,6 @@ export type Invoice = {
 
 // Invoiceの配列型定義
 export type InvoiceList = Invoice[];
-
 export type FormatInvoice = {
   uid: string;
   fullName: string;
@@ -102,6 +84,9 @@ export type FormatInvoice = {
   items: ItemReturn;
 };
 
+export type FormatInvoiceListReturn = FormatInvoice[];
+
+// 変換関数の実装
 export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => {
   return obj.map((invoice) => ({
     uid: invoice.data.uid,
@@ -124,6 +109,20 @@ export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => 
   }));
 };
 
+export type InvoiceInput = {
+  fullName: string;
+  placeName?: string;
+  date: string;
+  account?: string;
+  TEL?: string;
+  mail?: string;
+  totalPrice: number;
+  isPublished?: string;
+  payment: string;
+  dueDate: string;
+  items: ItemReturn;
+};
+
 export type InvoiceListAll = {
   id: string;
   date: string;
@@ -139,6 +138,7 @@ export type InvoiceListAll = {
   placeName: string;
   items: { komoku: string; price: number; detail: string }[] | null;
 }[];
+
 // データをFormatInvoiceListReturn型に変換する関数
 export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoiceListReturn {
   return invoiceList.map((invoice) => {
@@ -147,10 +147,13 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
       typeof invoice.totalPrice === 'string' && invoice.totalPrice === ''
         ? 0
         : Number(invoice.totalPrice);
+
     // paymentがnullの場合、デフォルト値として"未設定"を入れる
     const payment = invoice.payment || '未設定';
+
     // itemsがnullの場合は空配列にする
     const items: ItemReturn = invoice.items ? invoice.items : [];
+
     return {
       uid: invoice.uid,
       fullName: invoice.fullName,
@@ -167,24 +170,6 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
     };
   });
 }
-
-export type InvoiceInput = {
-  fullName: string;
-  placeName?: string;
-  date: string;
-  account?: string;
-  TEL?: string;
-  mail?: string;
-  totalPrice: number;
-  note?: string;
-  payment: string;
-  dueDate: string;
-  items: {
-    komoku: string;
-    price: number;
-    detail: string;
-  }[];
-};
 
 export const PAMENT_OBJ_LIST = [
   { label: '銀行振込', value: '銀行振込' },
