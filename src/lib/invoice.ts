@@ -170,3 +170,12 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
     };
   });
 }
+
+export const PAMENT_OBJ_LIST = [
+  { label: '銀行振込', value: '銀行振込' },
+  { label: '口座振替', value: '口座振替' },
+  { label: '福岡市習い事クーポン', value: '福岡市習い事クーポン' },
+];
+
+export const KOMOKU_LIST = ['入会金', '授業料', '', 'その他'];
+export const DETAIL_LIST = ['通常コース', '隔週コース', '中高生コース', '', ''];
