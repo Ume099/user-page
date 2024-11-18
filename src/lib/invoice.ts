@@ -177,12 +177,58 @@ export type InvoiceInput = {
   note?: string;
   payment: string;
   dueDate: string;
-  items: {
-    komoku: string;
-    price: number;
-    detail: string;
-  }[];
+  items: ItemReturn;
 };
+
+export type InvoiceListAll = {
+  id: string;
+  date: string;
+  uid: string;
+  isChecked: boolean;
+  mail: string;
+  totalPrice: number | string;
+  isPublished: boolean;
+  dueDate: string;
+  fullName: string;
+  TEL: string;
+  payment: string | null;
+  placeName: string;
+  items: { komoku: string; price: number; detail: string }[] | null;
+}[];
+
+// データをFormatInvoiceListReturn型に変換する関数
+export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoiceListReturn {
+  return invoiceList.map((invoice) => {
+    // totalPriceが空文字列の場合は0として扱う
+    const totalPrice =
+      typeof invoice.totalPrice === 'string' && invoice.totalPrice === ''
+        ? 0
+        : Number(invoice.totalPrice);
+
+    // paymentがnullの場合、デフォルト値として"未設定"を入れる
+    const payment = invoice.payment || '未設定';
+
+    // itemsがnullの場合は空配列にする
+    const items: ItemReturn = invoice.items ? invoice.items : [];
+
+    return {
+      uid: invoice.uid,
+      fullName: invoice.fullName,
+      placeName: invoice.placeName,
+      date: invoice.date,
+      TEL: invoice.TEL,
+      mail: invoice.mail,
+      totalPrice: totalPrice,
+      isPublished: invoice.isPublished,
+      isChecked: invoice.isChecked,
+      payment: payment,
+      dueDate: invoice.dueDate,
+      items: items,
+    };
+  });
+}
+
+export const DETAIL_LIST = ['通常コース', '隔週コース', '中高生コース', '', ''];
 
 export const PAMENT_OBJ_LIST = [
   { label: '銀行振込', value: '銀行振込' },
@@ -191,4 +237,3 @@ export const PAMENT_OBJ_LIST = [
 ];
 
 export const KOMOKU_LIST = ['入会金', '授業料', '', 'その他'];
-export const DETAIL_LIST = ['通常コース', '隔週コース', '中高生コース', '', ''];
