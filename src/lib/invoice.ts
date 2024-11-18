@@ -1,3 +1,80 @@
+const obj = {
+  fullName: {
+    stringValue: '弓指璃乃佳',
+    valueType: 'stringValue',
+  },
+  date: {
+    stringValue: '2024_09_30',
+    valueType: 'stringValue',
+  },
+  placeName: {
+    stringValue: 'コードアドベンチャー姪浜校',
+    valueType: 'stringValue',
+  },
+  account: {
+    stringValue: "福岡市西区内浜1-3-29 レンタルスペースM's Kitchen内",
+    valueType: 'stringValue',
+  },
+  TEL: {
+    stringValue: '08082592682',
+    valueType: 'stringValue',
+  },
+  mail: {
+    stringValue: 'en.prime1@gmail.com',
+    valueType: 'stringValue',
+  },
+  price: {
+    integerValue: '8800',
+    valueType: 'integerValue',
+  },
+  note: {
+    stringValue: '引き落としは毎月２８日となります。 （休日の場合、翌営業日となります）',
+    valueType: 'stringValue',
+  },
+  payment: {
+    stringValue: '銀行振込',
+    valueType: 'stringValue',
+  },
+  dueDate: {
+    stringValue: '2024_10_4',
+    valueType: 'stringValue',
+  },
+  item: {
+    arrayValue: {
+      values: [
+        {
+          mapValue: {
+            fields: {
+              komoku: {
+                stringValue: '授業料（お試し入会）',
+                valueType: 'stringValue',
+              },
+              price: {
+                integerValue: '8800',
+                valueType: 'integerValue',
+              },
+              detail: {
+                stringValue: 'プログラミング（通常コース）',
+                valueType: 'stringValue',
+              },
+            },
+          },
+          valueType: 'mapValue',
+        },
+      ],
+    },
+    valueType: 'arrayValue',
+  },
+  isChecked: {
+    booleanValue: false,
+    valueType: 'booleanValue',
+  },
+  isPublished: {
+    booleanValue: false,
+    valueType: 'booleanValue',
+  },
+};
+
 type ValueType =
   | { stringValue: string; valueType: 'stringValue' }
   | { integerValue: string; valueType: 'integerValue' }
@@ -13,6 +90,20 @@ type MapValueType = {
 };
 
 export type ItemReturn = { komoku: string; price: number; detail: string }[];
+
+export type FormatInvoiceListReturn = {
+  fullName: string;
+  placeName: string;
+  date: string;
+  account?: string;
+  TEL: string;
+  mail: string;
+  totalPrice: number;
+  note: string;
+  payment: string;
+  dueDate: string;
+  item: ItemReturn;
+};
 
 type FieldValue = {
   stringValue?: string;
@@ -37,76 +128,42 @@ type MapValue = {
 
 type arrayValue = { values: MapValue[] };
 
-// itemsの型定義
-export type Item = {
-  komoku: string;
-  price: number;
-  detail: string;
+type ObjType = {
+  fullName: { stringValue: string; valueType: 'stringValue' };
+  date: { stringValue: string; valueType: 'stringValue' };
+  placeName: { stringValue: string; valueType: 'stringValue' };
+  account: { stringValue: string; valueType: 'stringValue' };
+  TEL: { stringValue: string; valueType: 'stringValue' };
+  mail: { stringValue: string; valueType: 'stringValue' };
+  totalPrice: { integerValue: number; valueType: 'integerValue' };
+  note: { stringValue: string; valueType: 'stringValue' };
+  payment: { stringValue: string; valueType: 'stringValue' };
+  dueDate: { stringValue: string; valueType: 'stringValue' };
+  item: { arrayValue: arrayValue };
+  isChecked: { booleanValue: boolean; valueType: 'booleanValue' };
+  isPublished: { booleanValue: boolean; valueType: 'booleanValue' };
 };
 
-// dataの型定義
-export type Data = {
-  date: string;
-  uid: string;
-  isChecked: boolean;
-  mail: string;
-  totalPrice: number;
-  isPublished: boolean;
-  dueDate: string;
-  fullName: string;
-  TEL: string;
-  payment: string | null;
-  placeName: string;
-  items: Item[] | null;
-};
+export const formatInvoiceList = (data: ObjType): FormatInvoiceListReturn => {
+  const obj = {
+    fullName: data.fullName.stringValue,
+    date: data.date.stringValue,
+    placeName: data.placeName.stringValue,
+    TEL: data.TEL.stringValue,
+    mail: data.mail.stringValue,
+    totalPrice: data.totalPrice?.integerValue || 0,
+    note: data.note.stringValue,
+    payment: data.payment.stringValue,
+    dueDate: data.dueDate.stringValue,
+    item: data.item.arrayValue.values.map((value: MapValue) => ({
+      accountInfo: value.mapValue.fields.accountInfo?.stringValue || '',
+      komoku: value.mapValue.fields.komoku?.stringValue || '',
+      price: value.mapValue.fields.price?.integerValue || '',
+      detail: value.mapValue.fields.detail?.stringValue || '',
+    })),
+  };
 
-// 全体の型定義
-export type Invoice = {
-  id: string;
-  data: Data;
-};
-
-// Invoiceの配列型定義
-export type InvoiceList = Invoice[];
-export type FormatInvoice = {
-  uid: string;
-  fullName: string;
-  placeName: string;
-  date: string;
-  account?: string;
-  TEL: string;
-  mail: string;
-  totalPrice: number;
-  isPublished: boolean;
-  isChecked: boolean;
-  payment: string;
-  dueDate: string;
-  items: ItemReturn;
-};
-
-export type FormatInvoiceListReturn = FormatInvoice[];
-
-// 変換関数の実装
-export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => {
-  return obj.map((invoice) => ({
-    uid: invoice.data.uid,
-    fullName: invoice.data.fullName,
-    placeName: invoice.data.placeName,
-    date: invoice.data.date,
-    account: invoice.data.uid || undefined, // accountはuidを使用するか、存在しない場合undefined
-    TEL: invoice.data.TEL,
-    mail: invoice.data.mail,
-    totalPrice: invoice.data.totalPrice,
-    isPublished: invoice.data.isPublished ?? false, // 任意のフィールドを使用
-    isChecked: invoice.data.isPublished ?? false, // 任意のフィールドを使用
-    payment: invoice.data.payment || 'Unpaid', // paymentがnullの場合、'Unpaid'と表示
-    dueDate: invoice.data.dueDate,
-    items: invoice.data.items?.map((item: any) => ({
-      komoku: item.komoku,
-      price: item.price,
-      detail: item.detail,
-    })) || [{ komoku: '', price: 0, detail: '' }],
-  }));
+  return obj;
 };
 
 export type InvoiceInput = {
@@ -117,7 +174,7 @@ export type InvoiceInput = {
   TEL?: string;
   mail?: string;
   totalPrice: number;
-  isPublished?: string;
+  note?: string;
   payment: string;
   dueDate: string;
   items: ItemReturn;
