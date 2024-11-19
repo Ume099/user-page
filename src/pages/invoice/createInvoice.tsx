@@ -127,7 +127,6 @@ export const Page = () => {
 
   return (
     <div className="flex justify-center">
-      <ButtonOriginal onClick={() => console.log(watch('items'))} label="test" />
       <div className="flex w-full flex-col justify-center">
         <form onSubmit={handleSubmit(onSubmit)}>
           {users && (
