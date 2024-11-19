@@ -46,7 +46,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
 
     CLASS_NAME.forEach((time, index) => {
       const key = time;
-      // 土曜日の場合、
+      // TODO: 土曜日の時短処理
       dataObj[key] =
         (time === 'class1' || time === 'class2') && dayOfWeek === 'Sat'
           ? ['']

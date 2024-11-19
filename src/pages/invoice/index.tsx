@@ -11,19 +11,9 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-type UserData = {
-  uid: string;
-  name?: string;
-  email?: string;
-  displayName?: string;
-};
-
 const thisYear = new Date().getFullYear();
 
-// fetcher関数を定義
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
-
-const TeachingExample: NextPage = () => {
+const Invoice: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
   const [year, setYear] = useState<Number>(thisYear);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -33,6 +23,14 @@ const TeachingExample: NextPage = () => {
 
   // 請求書のデータをfetchする関数
   const getInvoice = async (uid: string) => {
+    if (!uid) {
+      toast({
+        title: 'ユーザー情報の取得に失敗しました。画面をリロードして下さい。',
+        status: 'error',
+        position: 'top-right',
+      });
+      return;
+    }
     try {
       const response = await axios.get('/api/invoice/fetchInvoice', {
         params: {
@@ -63,7 +61,7 @@ const TeachingExample: NextPage = () => {
       <div>
         {/* 月を設定するボタン */}
         <YearDropdown setYear={setYear} />
-        {!invoiceInfo.length && (
+        {!invoiceInfo && (
           <ButtonOriginal
             className="my-4 w-full"
             variant="primary"
@@ -89,4 +87,4 @@ const TeachingExample: NextPage = () => {
   );
 };
 
-export default TeachingExample;
+export default Invoice;
