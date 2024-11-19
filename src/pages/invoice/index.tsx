@@ -11,17 +11,7 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 
-type UserData = {
-  uid: string;
-  name?: string;
-  email?: string;
-  displayName?: string;
-};
-
 const thisYear = new Date().getFullYear();
-
-// fetcher関数を定義
-const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Invoice: NextPage = () => {
   const [invoiceInfo, setInvoiceInfo] = useState<FormatInvoiceListReturn>([]);
