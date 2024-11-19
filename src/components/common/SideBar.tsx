@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { AiFillHome, AiOutlineHome } from 'react-icons/ai';
 import { linkList } from './Header';
-import { TiThMenu } from 'react-icons/ti';
+import { IoHomeSharp } from 'react-icons/io5';
 
 const SideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +25,7 @@ const SideBar: React.FC = () => {
             {/* ホームボタン */}
 
             <Link href="/" className="fixed left-4 top-4 z-[9999] rounded-full bg-white">
-              <TiThMenu className="scale-[200%]" />
+              <IoHomeSharp className="scale-[200%]" />
             </Link>
           </>
         ) : (

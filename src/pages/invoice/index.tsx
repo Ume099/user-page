@@ -23,6 +23,14 @@ const Invoice: NextPage = () => {
 
   // 請求書のデータをfetchする関数
   const getInvoice = async (uid: string) => {
+    if (!uid) {
+      toast({
+        title: 'ユーザー情報の取得に失敗しました。画面をリロードして下さい。',
+        status: 'error',
+        position: 'top-right',
+      });
+      return;
+    }
     try {
       const response = await axios.get('/api/invoice/fetchInvoice', {
         params: {
