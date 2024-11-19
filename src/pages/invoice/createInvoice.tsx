@@ -15,8 +15,6 @@ export const Page = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<boolean>(false);
 
-  // >>>>>>>>>>>NEW
-
   const [users, setUsers] = useState<UserData[]>([]);
   const [isFetchUser, setIsFetchUser] = useState<boolean>(false);
 
@@ -29,11 +27,7 @@ export const Page = () => {
     control,
     formState: { errors },
   } = useForm<InvoiceInput>();
-  const {
-    fields, // 指定されたアイテムの配列
-    append, // 配列の最後にアイテムを追加できる関数
-    remove, // 指定された位置のアイテムを削除できる関数
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'items',
     rules: { minLength: 1 },
@@ -102,7 +96,6 @@ export const Page = () => {
     await postInvoice(data);
     reset();
   };
-  // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>NEW
 
   // ユーザー一覧を取得する際の型など
   type UserData = {
