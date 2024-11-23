@@ -32,8 +32,8 @@ const ToggleSwitchCheck = (props: ToggleProps): JSX.Element => {
     const data = await res.json();
     if (data) {
       toast({
-        title: isChecked ? 'チェックを反映しました。' : 'チェックを外しました。',
-        status: isChecked ? 'success' : 'warning',
+        title: !isChecked ? 'チェックを反映しました。' : 'チェックを外しました。',
+        status: isChecked ? 'warning' : 'success',
         position: 'top-right',
       });
     }
