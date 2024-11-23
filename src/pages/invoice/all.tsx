@@ -1,4 +1,4 @@
-import InvoiceCardFurikomiAll from '@/components/invoice/InvoiceCardFurikomiAll';
+import InvoiceCardAll from '@/components/invoice/InvoiceCardAll';
 import YearAndMonthDropdown from '@/components/invoice/parts/YearAndMonthDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { formatInvoiceListAll, FormatInvoiceListReturn } from '@/lib/invoice';
@@ -53,7 +53,7 @@ const TeachingExample: NextPage = () => {
             <ul>
               {invoiceInfo.map((invoice, index) => (
                 <li key={index}>
-                  <InvoiceCardFurikomiAll defaultOpen={false} invoice={invoice} />
+                  <InvoiceCardAll defaultOpen={false} invoice={invoice} />
                 </li>
               ))}
             </ul>

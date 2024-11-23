@@ -4,13 +4,15 @@ import ButtonOriginal from '../common/parts/ButtonOriginal';
 import ItemCard from './parts/ItemCard';
 import ToggleSwitchCheck from './parts/ToggleSwitchCheck';
 import ToggleSwitchPublish from './parts/ToggleSwitchPublish';
+import AccountInfoCard from './parts/AccountInfoCard';
+import ToggleSwitchIsPayed from './parts/ToggleSwitchIsPayed';
 
 type Props = {
   invoice: FormatInvoice;
   defaultOpen: boolean;
 };
 
-const InvoiceCardFurikomiAll = (props: Props) => {
+const InvoiceCardAll = (props: Props) => {
   const { invoice, defaultOpen = false } = props;
 
   const [open, setOpen] = useState(defaultOpen);
@@ -35,6 +37,15 @@ const InvoiceCardFurikomiAll = (props: Props) => {
                   isDefaultPublished={invoice.isPublished}
                   id={`${invoice.uid}_${invoice.date}`}
                 />
+                {invoice.uid === 'uzxghkh6jkmi' && (
+                  <>
+                    <label htmlFor={`${invoice.uid}_${invoice.date}`}>現金のお支払い</label>
+                    <ToggleSwitchIsPayed
+                      defaultIsPayed={invoice.isPayed}
+                      id={`${invoice.uid}_${invoice.date}`}
+                    />
+                  </>
+                )}
               </div>
               <ButtonOriginal onClick={() => setOpen((prev) => !prev)} label="詳細" />
               <div className="mt-2 text-2xl font-bold">{invoice.fullName}</div>
@@ -88,16 +99,7 @@ const InvoiceCardFurikomiAll = (props: Props) => {
               <p className="lg:text-l mt-4 text-sm font-bold underline">
                 ご請求金額：　{totalPrice || 0}　円
               </p>
-              <div className="mt-4 rounded border border-primary p-2">
-                【口座情報】
-                <br /> 西日本シティ銀行
-                <br />
-                大橋駅前支店[735]
-                <br />
-                普通
-                <br />
-                3034698 ｽﾐ ﾄｼﾔ
-              </div>
+              {invoice.payment === '銀行振込' ? <AccountInfoCard /> : <div></div>}
             </div>
             <div>
               <div className="flex h-full w-full justify-end">
@@ -118,7 +120,7 @@ const InvoiceCardFurikomiAll = (props: Props) => {
           <div className="mt-4">
             <div className="mb-4 flex justify-start">
               <p>お支払い方法：</p>
-              <p className="font-bold">銀行振込</p>
+              <p className="font-bold">{invoice.payment}</p>
             </div>
             <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />{' '}
             <div className="mb-10 mr-10 mt-4 flex justify-end font-bold underline">
@@ -131,4 +133,4 @@ const InvoiceCardFurikomiAll = (props: Props) => {
   );
 };
 
-export default InvoiceCardFurikomiAll;
+export default InvoiceCardAll;

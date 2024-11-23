@@ -7,17 +7,17 @@ type ToggleProps = {
   className?: string;
   register?: UseFormRegisterReturn<any>;
   id: string;
-  isDefaultChecked: boolean;
+  defaultIsPayed: boolean;
 };
 
 const ToggleSwitchIsPayed = (props: ToggleProps): JSX.Element => {
-  const { label, className, register, id, isDefaultChecked } = props;
-  const [isChecked, setIsChecked] = useState(isDefaultChecked);
+  const { label, className, register, id, defaultIsPayed } = props;
+  const [isPayed, setIsPayed] = useState(defaultIsPayed);
 
   const handleToggle = async () => {
     try {
-      await upDateIsChecked(!isChecked);
-      setIsChecked((prev) => !prev);
+      await upDateIsPayed(!isPayed);
+      setIsPayed((prev) => !prev);
     } catch (e) {
       toast({
         title: 'チェック状態の更新に失敗しました。',
@@ -28,21 +28,21 @@ const ToggleSwitchIsPayed = (props: ToggleProps): JSX.Element => {
   };
   const toast = useToast();
 
-  const upDateIsChecked = async (isChecked: boolean) => {
+  const upDateIsPayed = async (isPayed: boolean) => {
     try {
-      const res = await fetch('/api/invoice/updateIsChecked', {
+      const res = await fetch('/api/invoice/updateIsPayed', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ id, isChecked }),
+        body: JSON.stringify({ id, isPayed }),
       });
 
       const data = await res.json();
       if (data) {
         toast({
-          title: isChecked ? 'チェックを反映しました。' : 'チェックを外しました。',
-          status: isChecked ? 'success' : 'warning',
+          title: isPayed ? 'チェックを反映しました。' : 'チェックを外しました。',
+          status: isPayed ? 'success' : 'warning',
           position: 'top-right',
         });
       }
@@ -66,17 +66,17 @@ const ToggleSwitchIsPayed = (props: ToggleProps): JSX.Element => {
             type="checkbox"
             {...register}
             className="hidden"
-            checked={isChecked}
+            checked={isPayed}
             onChange={handleToggle}
           />
           <span
             className={`toggle-switch block h-6 w-10 rounded-full p-1 transition-all duration-300 ease-in-out ${
-              isChecked ? 'bg-blue-500' : 'bg-gray-300'
+              isPayed ? 'bg-blue-500' : 'bg-gray-300'
             }`}
           >
             <span
               className={`toggle-knob block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ease-in-out ${
-                isChecked ? 'translate-x-4' : 'translate-x-0'
+                isPayed ? 'translate-x-4' : 'translate-x-0'
               }`}
             />
           </span>
