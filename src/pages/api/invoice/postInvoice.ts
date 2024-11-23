@@ -11,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const { uid, date, dueDate, fullName, isChecked, isPublished, item } = req.body;
+  const { uid, date, dueDate, fullName, isChecked, isPublished, item, isPayed } = req.body;
 
   if (!uid) {
     res.status(400).json({ message: 'UID is required' });
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   try {
     const docRef = db.collection(COLLECTION_NAME).doc(uid);
-    const insertData = { uid, date, dueDate, fullName, isChecked, isPublished, item };
+    const insertData = { uid, date, dueDate, fullName, isChecked, isPublished, item, isPayed };
     await docRef.set(insertData);
     res.status(200).json({ message: 'Document successfully written!', data: insertData });
   } catch (error) {

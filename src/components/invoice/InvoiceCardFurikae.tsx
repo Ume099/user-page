@@ -12,6 +12,7 @@ const InvoiceCardFurikae = (props: Props) => {
 
   return (
     <div className="w-full max-w-4xl items-center p-2">
+      {invoice.uid === 'uzxghkh6jkmi' && invoice.isPayed && '✅お支払い済み'}
       {invoice.isPublished && invoice.isChecked && (
         <div className="h-full w-full border px-4 lg:p-10">
           <div className="my-10 flex items-center rounded border border-primary py-4 text-center">
@@ -47,7 +48,7 @@ const InvoiceCardFurikae = (props: Props) => {
             </div>
           </div>
           <p className="mt-4 inline-block">
-            お支払期限：　
+            引き落とし予定日：
             <span className="font-bold">
               {invoice.dueDate.replace('_', '年').replace('_', '月')}日
             </span>
