@@ -6,9 +6,7 @@ import { ContactFormParam, ReqBody } from '@/lib/type/invoice';
 import { __log } from '@/lib/util/log';
 
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const reqBody = req.body as ReqBody<ContactFormParam>;
-
-  const data = req.body;
+  const data = req.body as ContactFormParam;
 
   // // 改行のエスケープシーケンス(\n)を <br> に置換
   // const mailBody = data.mailBody.replace(/\n/g, '<br>');
@@ -33,7 +31,7 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
     html: `
       <p>お世話になっております。</p>
       <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
-      <p>${data.year}年${data.month + 1}月の請求書を発行いたしました。</p>
+      <p>${data.year}年${data.month + 1 === 13 ? data.month : 1}月の請求書を発行いたしました。</p>
       <p><a href="alt-prime.com/invoice">alt-prime.com/invoices</a>よりご確認下さい。</p>
     `,
   };

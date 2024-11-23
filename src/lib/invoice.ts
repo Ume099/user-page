@@ -57,6 +57,7 @@ export type Data = {
   TEL: string;
   payment: string | null;
   placeName: string;
+  isPayed: boolean;
   items: Item[] | null;
 };
 
@@ -81,6 +82,7 @@ export type FormatInvoice = {
   isChecked: boolean;
   payment: string;
   dueDate: string;
+  isPayed: boolean;
   items: ItemReturn;
 };
 
@@ -101,6 +103,7 @@ export const formatInvoiceList = (obj: InvoiceList): FormatInvoiceListReturn => 
     isChecked: invoice.data.isPublished ?? false, // 任意のフィールドを使用
     payment: invoice.data.payment || 'Unpaid', // paymentがnullの場合、'Unpaid'と表示
     dueDate: invoice.data.dueDate,
+    isPayed: invoice.data.isPayed,
     items: invoice.data.items?.map((item: any) => ({
       komoku: item.komoku,
       price: item.price,
@@ -136,6 +139,7 @@ export type InvoiceListAll = {
   TEL: string;
   payment: string | null;
   placeName: string;
+  isPayed: boolean;
   items: { komoku: string; price: number; detail: string }[] | null;
 }[];
 
@@ -166,6 +170,7 @@ export function formatInvoiceListAll(invoiceList: InvoiceListAll): FormatInvoice
       isChecked: invoice.isChecked,
       payment: payment,
       dueDate: invoice.dueDate,
+      isPayed: invoice.isPayed,
       items: items,
     };
   });

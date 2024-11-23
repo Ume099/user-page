@@ -3,7 +3,12 @@ import DatePicker from '@/components/common/parts/DatePicker';
 import InputRadio from '@/components/common/parts/InputRadio';
 import Input from '@/components/React-Hook-Form/Input';
 import Select from '@/components/React-Hook-Form/Select';
-import { DETAIL_LIST, InvoiceInput, KOMOKU_LIST, PAMENT_OBJ_LIST } from '@/lib/invoice';
+import {
+  DETAIL_LIST,
+  InvoiceInput,
+  KOMOKU_LIST,
+  PAMENT_OBJ_LIST as PAYMENT_OBJ_LIST,
+} from '@/lib/invoice';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { FirebaseError } from 'firebase/app';
@@ -37,6 +42,7 @@ export const Page = () => {
   const postInvoice = async (data: InvoiceInput) => {
     console.log('postUserData>>>>>>>>>>>>>>>>>');
     setIsLoading(true);
+    const uid = uidSetter(data.fullName)?.uid;
     try {
       setError(false);
       const response = await fetch('/api/invoice/postInvoice', {
@@ -50,6 +56,7 @@ export const Page = () => {
           dueDate: data.dueDate.replaceAll('-', '_'),
           fullName: data.fullName,
           payment: data.payment,
+          isPayed: ('uzxghkh6jkmi' !== uid) as Boolean, // 岡リヒトだけ初期false
           // 以下のようにしないと全部Stringになる
           items: data.items.map((item) => ({
             komoku: item.komoku,
@@ -87,7 +94,7 @@ export const Page = () => {
 
   const onSubmit: SubmitHandler<InvoiceInput> = async (data) => {
     data.items = [{ price: 10000, komoku: '授業料', detail: '通常コース' }]; // 数値固定
-    console.log(data);
+
     data.totalPrice = data.items.reduce((sum, item) => Number(sum + item.price), 0) * 1.1;
     if (!data.totalPrice || !data.fullName) {
       toast({ title: '必須事項が入力されていません。', status: 'error', position: 'bottom' });
@@ -141,7 +148,7 @@ export const Page = () => {
             label="支払方法"
             className="w-full"
             register={register('payment')}
-            options={PAMENT_OBJ_LIST}
+            options={PAYMENT_OBJ_LIST}
           />
           <DatePicker label="発行日" withDefaultValue register={register('date')} />
           <DatePicker label="お支払い期限" withDefaultValue register={register('dueDate')} />
