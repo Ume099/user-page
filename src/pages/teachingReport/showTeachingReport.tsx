@@ -84,7 +84,7 @@ const ShowTeachingReport: NextPage = () => {
   }, [reportObj, userInfo.uid]);
 
   useEffect(() => {
-    if (templateError) {
+    if (templateError && templateError.status !== 404) {
       toast({
         title: 'データ取得エラー',
         description: '指導報告書のデータ取得に失敗しました。',
