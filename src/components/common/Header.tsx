@@ -89,7 +89,7 @@ const Header: React.FC = () => {
       {/* ヘッダー分の余白を生成 */}
       <div className="mt-14"></div>
       {/* ヘッダー本体 */}
-      <header className="fixed top-0 z-[9998] flex w-full justify-center shadow-md">
+      <header className="fixed top-0 z-[999] flex w-full justify-center shadow-md">
         <div className="w-full">
           <nav className="w-full bg-white">
             <div className="flex w-full items-center justify-between">
@@ -97,7 +97,7 @@ const Header: React.FC = () => {
                 <ul className="select-none md:flex">
                   <li>
                     <div className="flex h-14 w-full items-center justify-between">
-                      <div className="flex px-3"></div>
+                      <div className="flex px-3 pl-8"></div>
 
                       <Link href={Routes.INDEX.url} className="">
                         <Image

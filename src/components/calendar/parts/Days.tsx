@@ -110,7 +110,7 @@ const Days = (props: Props) => {
     toast({
       title: '予約を変更するには、先に変更元の日時を選択してください。',
       status: 'error',
-      position: 'bottom',
+      position: 'top-right',
     });
   };
 

@@ -24,10 +24,8 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
           <AuthProvider>
             <Header />
             <HeaderInfo />
-            <div className="flex">
-              <SideBar />
-              <Component {...pageProps} />
-            </div>
+            <SideBar />
+            <Component {...pageProps} />
             <MessageDialog />
           </AuthProvider>
         </ChakraProvider>
