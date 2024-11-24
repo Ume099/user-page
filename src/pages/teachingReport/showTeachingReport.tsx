@@ -71,6 +71,18 @@ const ShowTeachingReport: NextPage = () => {
       ? `/api/teachingReport/fetchTeachingReport?collectionName=teaching-report&studentUid=${userInfo.uid}`
       : null,
     fetcher,
+    {
+      onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
+        // 404エラーの場合はリトライしない
+        if (error.response?.status === 404) return;
+
+        // 他のエラーでもリトライ回数を制限
+        if (retryCount >= 3) return;
+
+        // リトライを実行
+        setTimeout(() => revalidate({ retryCount }), 5000);
+      },
+    },
   );
 
   useEffect(() => {
