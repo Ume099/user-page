@@ -97,7 +97,7 @@ export const Page = () => {
 
     data.totalPrice = data.items.reduce((sum, item) => Number(sum + item.price), 0) * 1.1;
     if (!data.totalPrice || !data.fullName) {
-      toast({ title: '必須事項が入力されていません。', status: 'error', position: 'bottom' });
+      toast({ title: '必須事項が入力されていません。', status: 'error', position: 'top-right' });
       return; // 何もしない
     }
     await postInvoice(data);
