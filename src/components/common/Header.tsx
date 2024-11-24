@@ -34,10 +34,6 @@ export const linkList = [
     name: '予定確認・変更',
     link: '/booking',
   },
-  // {
-  //   name: 'ログイン',
-  //   link: '/signin',
-  // },
   {
     name: '請求書',
     link: '/invoice',
@@ -91,7 +87,7 @@ const Header: React.FC = () => {
   return (
     <>
       {/* ヘッダー分の余白を生成 */}
-      <div className="mt-20"></div>
+      <div className="mt-14"></div>
       {/* ヘッダー本体 */}
       <header className="fixed top-0 z-[9998] flex w-full justify-center shadow-md">
         <div className="w-full">

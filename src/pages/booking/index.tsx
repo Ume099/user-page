@@ -17,6 +17,7 @@ import { useRecoilState } from 'recoil';
 import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
 import { FirebaseError } from 'firebase/app';
 import { BookingChangeMailParam } from '@/lib/type/booking';
+import InfoMessage from '@/components/common/parts/InfoMessage';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -430,6 +431,13 @@ export default function Booking() {
   return (
     <AuthGuard>
       <div className="w-full">
+        {/* ヘッダーメッセージ */}
+        <div className="h-auto">
+          <InfoMessage
+            message={'ご不明点等ございましたらLINEの方までご連絡ください。'}
+            status={'info'}
+          />
+        </div>
         <div className="w-full">
           {!isOpenSetmonthAndYearOnDisplayModal ? (
             <div className="w-full gap-4">

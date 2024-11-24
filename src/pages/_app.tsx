@@ -11,6 +11,7 @@ import SideBar from '@/components/common/SideBar';
 import { AuthProvider } from '@/feature/auth/provider/AuthProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import type { AppProps } from 'next/app';
+import HeaderInfo from '@/components/common/HeaderInfo';
 
 initializeFirebaseApp();
 
@@ -22,6 +23,7 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
         <ChakraProvider>
           <AuthProvider>
             <Header />
+            <HeaderInfo />
             <div className="flex">
               <SideBar />
               <Component {...pageProps} />
