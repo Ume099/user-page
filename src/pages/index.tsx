@@ -38,30 +38,32 @@ const getIcon = (title: string): ReactElement => {
 
 const Home: NextPage = () => {
   return (
-    <AuthGuard>
-      <Layout
-        path={Routes.INDEX.url}
-        title={Routes.INDEX.title}
-        noTitleTemplate={true}
-        isTopPage={true}
-      >
-        <div className="mx-12 mt-16 flex flex-col justify-center border-b-4">
-          <h1 className="mb-4">ホーム</h1>
-          <div className="gap-y-2">
-            {linkList.map((link, index) => (
-              <Link
-                href={link.link}
-                key={index}
-                className="mt-2 flex w-full justify-start rounded-md border bg-yellow-100 p-4 px-4"
-              >
-                {getIcon(link.name)}
-                <p className="ml-2 font-bold">{link.name}</p>
-              </Link>
-            ))}
+    <>
+      <AuthGuard>
+        <Layout
+          path={Routes.INDEX.url}
+          title={Routes.INDEX.title}
+          noTitleTemplate={true}
+          isTopPage={true}
+        >
+          <div className="mx-12 mt-16 flex flex-col justify-center border-b-4">
+            <h1 className="mb-4">ホーム</h1>
+            <div className="gap-y-2">
+              {linkList.map((link, index) => (
+                <Link
+                  href={link.link}
+                  key={index}
+                  className="mt-2 flex w-full justify-start rounded-md border bg-yellow-100 p-4 px-4"
+                >
+                  {getIcon(link.name)}
+                  <p className="ml-2 font-bold">{link.name}</p>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </Layout>
-    </AuthGuard>
+        </Layout>
+      </AuthGuard>
+    </>
   );
 };
 
