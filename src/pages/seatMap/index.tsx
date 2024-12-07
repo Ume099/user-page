@@ -103,7 +103,6 @@ export default function Page() {
   }, []);
 
   return (
-    // 未サインインの場合はサインインページにジャンプ
     <AuthGuard>
       <div>
         <div className="">

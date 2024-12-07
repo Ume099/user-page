@@ -8,6 +8,19 @@ import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 import DayOfWeek from './DayOfWeek';
 import { UidAndDName } from '@/lib/userSettings';
 
+type OpenDayList = {
+  id: string; // 例: "day_14"
+  date: number; // 例: 14
+  dayOfWeek: string; // 例: "Sat"
+  class1: string[]; // クラス1のIDリスト
+  class2: string[]; // クラス2のIDリスト
+  class3: string[]; // クラス3のIDリスト
+  class4: string[]; // クラス4のIDリスト
+  class5: string[]; // クラス5のIDリスト
+  class6: string[]; // クラス6のIDリスト
+  class7: string[]; // クラス7のIDリスト
+};
+
 type Props = {
   year: number;
   month: number;
@@ -18,31 +31,26 @@ const Days4SeatMap = (props: Props) => {
   const { year, month, users } = props;
   const today = dayjs();
   const [isOpenSetClassModal, setIsOpenSetClassModal] = useState(false);
-  const [openDayList, setOpenDayList] = useState([]);
+  const [openDayList, setOpenDayList] = useState<OpenDayList[]>([]);
   const [day, setDay] = useState(0);
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
   // 開校日を月ごとにfetchする関数
   const getOpenDayInfo = async (collectionName: string) => {
-    console.log('getOpenDayInfo', collectionName);
     try {
       const response = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName },
       });
-      const itemList: SetStateAction<any[]> = [];
-      response.data.forEach((data: any) => itemList.push(data._fieldsProto));
+
+      const ret = response.data as OpenDayList[];
+
+      console.log(ret);
 
       // openDayListに開校日を格納
-      const opnDayList = itemList.map((openDaysObj) =>
-        parseInt(openDaysObj.date?.integerValue),
-      ) as never[];
+      setOpenDayList(ret);
 
       // openDayList[0]はundefined
-      opnDayList.shift();
-      setOpenDayList(opnDayList);
-
-      console.log('opnDayList>>>>>', opnDayList);
     } catch (error) {
       console.log(error);
     }
@@ -63,11 +71,12 @@ const Days4SeatMap = (props: Props) => {
     setIsOpenSetClassModal((prev) => !prev);
   };
   // dayがopenDayListに含まれているかを判定する関数
-  const checkIsOpenDay = (targetDay: number) => {
+  const checkIsOpenDay = (targetDay: number): boolean => {
     if (!targetDay) {
-      return;
+      return false;
     }
-    return openDayList.includes(targetDay as never);
+    const li = openDayList.find((dayObj) => dayObj.date === targetDay);
+    return li !== undefined;
   };
 
   const firstDayOfMonth = dayjs(new Date(year, month - 1, 1));

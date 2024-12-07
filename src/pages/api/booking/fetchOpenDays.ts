@@ -7,19 +7,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const items: any[] = [];
-
   const { collectionName } = req.query;
-  if (!collectionName) {
-    res.status(400).json({ message: 'collectionName is Missing' });
+
+  if (!collectionName || typeof collectionName !== 'string') {
+    res.status(400).json({ message: 'collectionName is missing or invalid' });
+    return;
   }
 
   try {
-    const snapshot = await db.collection(String(collectionName)).get();
-    snapshot.docs.forEach((doc) => items.push(doc));
+    const snapshot = await db.collection(collectionName).get();
+    const items = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
     res.status(200).json(items);
-  } catch (error: any) {
-    console.error('開校日情報の取得に失敗しました:', error);
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+  } catch (error: unknown) {
+    console.error('Failed to fetch data from Firestore:', error);
+    res.status(500).json({
+      message: 'Internal Server Error',
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 }
