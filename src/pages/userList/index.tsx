@@ -212,11 +212,6 @@ const UsersPage = () => {
           </li>
         ))}
       </ul>
-      <ButtonOriginal
-        variant="primary"
-        label="削除"
-        onClick={() => removeFromAllClassesWithUid('2auqq4rx23m2')}
-      />
     </div>
   );
 };
