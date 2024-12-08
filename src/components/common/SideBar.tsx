@@ -1,10 +1,8 @@
 import Link from 'next/link';
 import { useState } from 'react';
-import { AiOutlineHome } from 'react-icons/ai';
 import { TiThMenu } from 'react-icons/ti';
 import { IoMdClose } from 'react-icons/io';
 import { linkList } from './Header';
-import { IoClose } from 'react-icons/io5';
 
 const SideBar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,11 +20,7 @@ const SideBar: React.FC = () => {
             isOpen ? 'left-0' : '-left-2/3'
           }`}
         ></div>
-        <div
-          className={`fixed z-[999] mr-8 h-full w-full duration-75 ${
-            isOpen ? 'left-0' : '-left-2/3'
-          }`}
-        >
+        <div className={`fixed z-[999] mr-8 h-full duration-75 ${isOpen ? 'left-0' : '-left-2/3'}`}>
           <div className="flex h-full w-full flex-col overflow-y-scroll lg:w-[240px]">
             {linkList.map((link, key) => (
               <li key={key} className="w-full list-none">

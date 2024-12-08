@@ -101,12 +101,8 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
       const response = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName },
       });
-      const itemList: any = [];
-      response.data.forEach((data: any) => {
-        itemList.push(data._fieldsProto);
-      });
 
-      setOpenDaysObjList(itemList);
+      setOpenDaysObjList(response.data);
     } catch (e) {
       console.log(e);
     }

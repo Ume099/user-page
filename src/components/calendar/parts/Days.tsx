@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
-import { getClassListFormatted, getDayOfWeekEng } from '@/lib/date';
+import { getClassListFormatted, getDayOfWeekEng, OpenDayList } from '@/lib/date';
 
 import { SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -31,7 +31,7 @@ type Props = {
 
 const Days = (props: Props) => {
   const { year, month } = props;
-  const [openDaysObjList, setOpenDaysObjList] = useState<any[]>([]);
+  const [openDaysObjList, setOpenDaysObjList] = useState<OpenDayList[]>([]);
   const today = dayjs();
   const firstDayOfMonth = dayjs(new Date(year, month - 1, 1));
   const startDay = firstDayOfMonth.day();
@@ -47,7 +47,7 @@ const Days = (props: Props) => {
   const [bookingChange] = useRecoilState(bookingChangeState);
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
 
-  const [bookedClassInfoListObj, setBookedClassInfoListObj] = useState<BookedClassInfoListObj>();
+  const [bookedClassInfoListObj, setBookedClassInfoListObj] = useState<OpenDayList>();
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -57,9 +57,8 @@ const Days = (props: Props) => {
       const response = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName: collectionNameInMemo },
       });
-      const itemList: SetStateAction<any[]> = [];
-      response.data.forEach((data: any) => itemList.push(data._fieldsProto));
-      setOpenDaysObjList(itemList);
+      response;
+      setOpenDaysObjList(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -138,7 +137,6 @@ const Days = (props: Props) => {
       });
 
       const array = getDateByUID(response.data, userInfo.uid);
-
       setBookedDay(array);
     } catch (error) {
       console.log(error);
@@ -147,8 +145,11 @@ const Days = (props: Props) => {
 
   // モーダルに渡す開校日の授業情報と、生徒の予約情報を取得するAPIを叩く
   useEffect(() => {
-    getClassList(year, month, DAY);
-    getBookedClassInfo(DAY);
+    if (DAY) {
+      console.log(classList);
+      getClassList(year, month, DAY);
+      getBookedClassInfo(DAY);
+    }
   }, [DAY]);
 
   // ログインしている生徒の予約情報を取得するAPI
@@ -160,16 +161,15 @@ const Days = (props: Props) => {
       const params = {
         collectionName: collectionNameInMemo,
         docId: 'day_' + day,
-        uid: userInfo.uid,
       };
       const response = await axios.get('/api/booking/fetchBookedClassInfo', {
         params,
       });
 
-      const resObj: any = response;
-      const obj = packBookedClassInfo(resObj.data._fieldsProto);
-      console.log('objaaa', obj);
-      setBookedClassInfoListObj(obj);
+      const resObj = response.data as OpenDayList;
+      console.log('resObj.data');
+      console.log(resObj);
+      setBookedClassInfoListObj(resObj);
     } catch (error) {
       console.log(error);
     }
@@ -177,20 +177,9 @@ const Days = (props: Props) => {
 
   useEffect(() => {
     // 設定している開校日情報をリセット
-    setOpenDaysObjList([]);
     getOpenDayInfo();
     getAllDocs();
   }, [year, month]);
-
-  // 変更後の情報が存在しているかを判定する関数
-  const checkIsAftChangeExists = (): boolean => {
-    return !!(
-      bookingChange.yearAftChange &&
-      bookingChange.monthAftChange &&
-      bookingChange.dayAftChange &&
-      bookingChange.classAftChange
-    );
-  };
 
   // days配列を作成する
   const days = [];
@@ -205,9 +194,8 @@ const Days = (props: Props) => {
     const isPast = currentDay.isBefore(today, 'day');
 
     // openDaysObjListの中にdayが含まれているかどうかを確認する
-    const openDayList = openDaysObjList?.filter(
-      (d: any) => Number(d?.date?.integerValue) === Number(day),
-    );
+    const openDayList = openDaysObjList?.filter((d: OpenDayList) => Number(d.date) === Number(day));
+
     // dayが開校日に含まれていれば、trueになる
     const isOpenDay = openDayList.length > 0;
 
