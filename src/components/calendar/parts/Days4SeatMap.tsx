@@ -7,19 +7,7 @@ import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import DayOfWeek from './DayOfWeek';
 import { UidAndDName } from '@/lib/userSettings';
-
-type OpenDayList = {
-  id: string; // 例: "day_14"
-  date: number; // 例: 14
-  dayOfWeek: string; // 例: "Sat"
-  class1: string[]; // クラス1のIDリスト
-  class2: string[]; // クラス2のIDリスト
-  class3: string[]; // クラス3のIDリスト
-  class4: string[]; // クラス4のIDリスト
-  class5: string[]; // クラス5のIDリスト
-  class6: string[]; // クラス6のIDリスト
-  class7: string[]; // クラス7のIDリスト
-};
+import { OpenDayList } from '@/lib/date';
 
 type Props = {
   year: number;

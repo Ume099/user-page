@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
-import { getClassListFormatted, getDayOfWeekEng } from '@/lib/date';
+import { getClassListFormatted, getDayOfWeekEng, OpenDayList } from '@/lib/date';
 
 import { SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -48,7 +48,7 @@ const DaysAll = (props: Props) => {
   const [bookingChange] = useRecoilState(bookingChangeState);
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
 
-  const [bookedClassInfoListObj, setBookedClassInfoListObj] = useState<BookedClassInfoListObj>();
+  const [bookedClassInfoListObj, setBookedClassInfoListObj] = useState<OpenDayList>();
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -58,9 +58,8 @@ const DaysAll = (props: Props) => {
       const response = await axios.get('/api/booking/fetchOpenDays', {
         params: { collectionName: collectionNameInMemo },
       });
-      const itemList: SetStateAction<any[]> = [];
-      response.data.forEach((data: any) => itemList.push(data._fieldsProto));
-      setOpenDaysObjList(itemList);
+
+      setOpenDaysObjList(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -168,9 +167,7 @@ const DaysAll = (props: Props) => {
         params,
       });
 
-      const resObj: any = response;
-      const obj = packBookedClassInfo(resObj.data._fieldsProto);
-      console.log('objbbb', obj);
+      const obj = response.data as OpenDayList;
       setBookedClassInfoListObj(obj);
     } catch (error) {
       console.log(error);

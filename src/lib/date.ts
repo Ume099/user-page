@@ -96,3 +96,16 @@ export const getClassListFormatted = (obj: ClassListApiType): string[] => {
   };
   return Obj.classList;
 };
+
+export type OpenDayList = {
+  id: string; // 例: "day_14"
+  date: number; // 例: 14
+  dayOfWeek: string; // 例: "Sat"
+  class1?: string[]; // クラス1のIDリスト
+  class2?: string[]; // クラス2のIDリスト
+  class3?: string[]; // クラス3のIDリスト
+  class4?: string[]; // クラス4のIDリスト
+  class5?: string[]; // クラス5のIDリスト
+  class6?: string[]; // クラス6のIDリスト
+  class7?: string[]; // クラス7のIDリスト
+};

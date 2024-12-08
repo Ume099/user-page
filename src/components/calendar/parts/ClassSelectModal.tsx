@@ -3,7 +3,7 @@ import { bookingChangeState } from '@/hooks/atom/bookingChange';
 import { useRecoilState } from 'recoil';
 
 import { BookedClassInfoListObj } from '@/lib/userSettings';
-import { getDayOfWeek } from '@/lib/date';
+import { getDayOfWeek, OpenDayList } from '@/lib/date';
 
 const classNameList = ['class1', 'class2', 'class3', 'class4', 'class5', 'class6', 'class7'];
 
@@ -12,7 +12,7 @@ type Props = {
   month: number;
   day: number;
   CLASS_LIST: string[];
-  bookedClassInfoListObj: BookedClassInfoListObj | undefined;
+  bookedClassInfoListObj: OpenDayList | undefined;
   uid: string;
 };
 
@@ -30,9 +30,9 @@ const ClassSelectModalModal = (props: Props) => {
     const obj = {
       class1: bookedClassInfoListObj.class1?.includes(uid) || false,
       class2: bookedClassInfoListObj.class2?.includes(uid) || false,
-      class3: bookedClassInfoListObj.class3.includes(uid),
-      class4: bookedClassInfoListObj.class4.includes(uid),
-      class5: bookedClassInfoListObj.class5.includes(uid),
+      class3: bookedClassInfoListObj.class3?.includes(uid),
+      class4: bookedClassInfoListObj.class4?.includes(uid),
+      class5: bookedClassInfoListObj.class5?.includes(uid),
       // class6: bookedClassInfoListObj.class6.includes(uid),
       // class7: bookedClassInfoListObj.class7.includes(uid),
     };
