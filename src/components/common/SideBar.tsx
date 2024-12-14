@@ -37,7 +37,7 @@ const SideBar: React.FC = () => {
                 <Link
                   href={link.link}
                   onClick={() => setIsOpen(false)} // クリック時にメニューを閉じる
-                  className="flex h-24 items-center border-2 bg-gray-100 px-4 text-gray-800 transition duration-150 ease-in-out hover:underline focus:border-gray-800 focus:text-gray-400 focus:underline lg:h-full lg:w-auto lg:border-0 lg:border-gray-200 lg:bg-white lg:hover:no-underline lg:focus:no-underline"
+                  className="flex h-24 items-center border-2 bg-gray-100 px-4 text-gray-900 transition duration-150 ease-in-out hover:underline focus:border-gray-800 focus:text-gray-400 focus:underline lg:h-full lg:w-auto lg:border-0 lg:border-gray-200 lg:bg-white lg:hover:no-underline lg:focus:no-underline"
                 >
                   {link.name}
                 </Link>
