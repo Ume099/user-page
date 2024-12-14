@@ -11,23 +11,33 @@ const SideBar: React.FC = () => {
     setIsOpen((prev) => !prev);
   };
 
+  const handleClickCloseOpen = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    e.preventDefault();
+    setIsOpen(false);
+  };
+
   return (
     <div className="md:w-40">
       <div className=" md:w-40">
         {/* メニュー */}
         <div
-          className={`fixed top-0 z-[2] h-screen w-2/3 bg-gray-800 duration-75 ${
-            isOpen ? 'left-0' : '-left-2/3'
+          className={`fixed top-0 z-[2] h-screen w-full bg-gray-800 opacity-70 duration-75 ${
+            isOpen ? 'left-0' : '-left-[100%]'
           }`}
+          onClick={(e) => handleClickCloseOpen(e)}
         ></div>
-        <div className={`fixed z-[999] mr-8 h-full duration-75 ${isOpen ? 'left-0' : '-left-2/3'}`}>
-          <div className="flex h-full w-full flex-col overflow-y-scroll lg:w-[240px]">
+        <div
+          className={`fixed z-[4] mr-8 h-full w-2/3 duration-75 ${
+            isOpen ? 'left-0' : '-left-[100%]'
+          }`}
+        >
+          <div className="flex h-full w-full flex-col overflow-y-scroll text-2xl lg:w-[240px]">
             {linkList.map((link, key) => (
               <li key={key} className="w-full list-none">
                 <Link
                   href={link.link}
                   onClick={() => setIsOpen(false)} // クリック時にメニューを閉じる
-                  className="flex h-24 !w-2/3 items-center border-2 bg-gray-100 px-4 text-gray-800 transition duration-150 ease-in-out hover:underline focus:border-gray-800 focus:text-gray-400 focus:underline lg:h-full lg:w-auto lg:border-0 lg:border-gray-200 lg:bg-white lg:hover:no-underline lg:focus:no-underline"
+                  className="flex h-24 items-center border-2 bg-gray-100 px-4 text-gray-800 transition duration-150 ease-in-out hover:underline focus:border-gray-800 focus:text-gray-400 focus:underline lg:h-full lg:w-auto lg:border-0 lg:border-gray-200 lg:bg-white lg:hover:no-underline lg:focus:no-underline"
                 >
                   {link.name}
                 </Link>
