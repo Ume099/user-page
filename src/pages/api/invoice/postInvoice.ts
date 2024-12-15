@@ -11,15 +11,49 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const { uid, date, dueDate, fullName, isChecked, isPublished, item, isPayed } = req.body;
+  const {
+    uid,
+    date,
+    dueDate,
+    fullName,
+    isChecked,
+    isPublished,
+    items,
+    isPayed,
+    totalPrice,
+    payment,
+  } = req.body;
 
-  if (!uid) {
+  if (
+    uid === undefined ||
+    date === undefined ||
+    dueDate === undefined ||
+    fullName === undefined ||
+    isChecked === undefined ||
+    isPublished === undefined ||
+    items === undefined ||
+    isPayed === undefined ||
+    totalPrice === undefined ||
+    payment === undefined
+  ) {
     res.status(400).json({ message: 'UID is required' });
     return;
   }
+
   try {
     const docRef = db.collection(COLLECTION_NAME).doc(uid);
-    const insertData = { uid, date, dueDate, fullName, isChecked, isPublished, item, isPayed };
+    const insertData = {
+      uid,
+      date,
+      dueDate,
+      fullName,
+      isChecked,
+      isPublished,
+      items,
+      isPayed,
+      totalPrice,
+      payment,
+    };
     await docRef.set(insertData);
     res.status(200).json({ message: 'Document successfully written!', data: insertData });
   } catch (error) {
