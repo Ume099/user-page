@@ -3,6 +3,7 @@ import DatePicker from '@/components/common/parts/DatePicker';
 import InputRadio from '@/components/common/parts/InputRadio';
 import Input from '@/components/React-Hook-Form/Input';
 import Select from '@/components/React-Hook-Form/Select';
+import Submit from '@/components/React-Hook-Form/Submit';
 import {
   DETAIL_LIST,
   InvoiceInput,
@@ -21,7 +22,6 @@ export const Page = () => {
   const [error, setError] = useState<boolean>(false);
 
   const [users, setUsers] = useState<UserData[]>([]);
-  const [isFetchUser, setIsFetchUser] = useState<boolean>(false);
 
   const toast = useToast();
   const {
@@ -45,7 +45,7 @@ export const Page = () => {
     const uid = uidSetter(data.fullName)?.uid;
     try {
       setError(false);
-      const response = await fetch('/api/invoice/postInvoice', {
+      await fetch('/api/invoice/postInvoice', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,6 +56,8 @@ export const Page = () => {
           dueDate: data.dueDate.replaceAll('-', '_'),
           fullName: data.fullName,
           payment: data.payment,
+          isChecked: false,
+          isPublished: false,
           isPayed: ('uzxghkh6jkmi' !== uid) as Boolean, // 岡リヒトだけ初期false
           // 以下のようにしないと全部Stringになる
           items: data.items.map((item) => ({
@@ -116,7 +118,6 @@ export const Page = () => {
     try {
       const response = await axios.get<UserData[]>('/api/userActions/fetchUsers');
       setUsers(response.data);
-      setIsFetchUser(true);
     } catch (error) {
       console.log(error);
     }
@@ -215,7 +216,7 @@ export const Page = () => {
             className="w-full"
             register={register('totalPrice')}
           />
-          <input className="rounded-lg border bg-primary px-3 py-2" type="submit" />
+          <Submit variant="primary" loading={isLoading} />
         </form>
       </div>
     </div>
