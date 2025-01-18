@@ -16,14 +16,26 @@ const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
   const { label, className, register, id, isDefaultPublished, invoice } = props;
   const [isPublished, setIsPublished] = useState(isDefaultPublished);
 
-  const handleToggleIsPublished = () => {
+  const toast = useToast();
+
+  const handleToggleIsPublished = async () => {
     if (!isPublished && !confirm('メールが送信されます。')) {
       return; // 何もしない
     }
 
-    upDateIsPublished(!isPublished);
+    await upDateIsPublished(!isPublished);
+    if (!isPublished) {
+      if (invoice.mail) {
+        await sendMail();
+      } else {
+        toast({
+          title: 'メールが登録されていません。',
+          status: 'error',
+          position: 'top-right',
+        });
+      }
+    }
     setIsPublished((prev) => !prev);
-    sendMail();
   };
 
   const upDateIsPublished = async (isPublished: boolean) => {
@@ -38,8 +50,6 @@ const ToggleSwitchPublish = (props: ToggleProps): JSX.Element => {
     const data = await res.json();
     console.log(data);
   };
-
-  const toast = useToast();
 
   const sendMail = async () => {
     const res = await fetch('/api/invoice/sendMail', {
