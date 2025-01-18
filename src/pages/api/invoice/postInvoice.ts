@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const docRef = db.collection(COLLECTION_NAME).doc(uid);
+    const docRef = db.collection(COLLECTION_NAME).doc(`${uid}_${date}`);
     const insertData = {
       uid,
       date,

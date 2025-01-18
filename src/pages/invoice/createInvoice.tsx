@@ -10,6 +10,7 @@ import {
   KOMOKU_LIST,
   PAMENT_OBJ_LIST as PAYMENT_OBJ_LIST,
 } from '@/lib/invoice';
+import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { FirebaseError } from 'firebase/app';
@@ -40,9 +41,18 @@ export const Page = () => {
   });
 
   const postInvoice = async (data: InvoiceInput) => {
-    console.log('postUserData>>>>>>>>>>>>>>>>>');
     setIsLoading(true);
     const uid = uidSetter(data.fullName)?.uid;
+
+    if (!uid) {
+      console.log('uid is missing...');
+      return;
+    }
+    const mail = getUserEmail(uid);
+    if (!mail) {
+      console.log('mail is missing...');
+      return;
+    }
     try {
       setError(false);
       await fetch('/api/invoice/postInvoice', {
@@ -52,6 +62,7 @@ export const Page = () => {
         },
         body: JSON.stringify({
           uid: uidSetter(data.fullName)?.uid || '',
+          mail,
           date: data.date.replaceAll('-', '_'),
           dueDate: data.dueDate.replaceAll('-', '_'),
           fullName: data.fullName,
