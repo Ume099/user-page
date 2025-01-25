@@ -32,7 +32,7 @@ const ClassSelectModalModal = (props: Props) => {
       class2: bookedClassInfoListObj.class2?.includes(uid) || false,
       class3: bookedClassInfoListObj.class3?.includes(uid),
       class4: bookedClassInfoListObj.class4?.includes(uid),
-      class5: bookedClassInfoListObj.class5?.includes(uid),
+      // class5: bookedClassInfoListObj.class5?.includes(uid),
       // class6: bookedClassInfoListObj.class6.includes(uid),
       // class7: bookedClassInfoListObj.class7.includes(uid),
     };
@@ -136,9 +136,9 @@ const ClassSelectModalModal = (props: Props) => {
         isBooked = BookedClass.class4;
         break;
 
-      case 'class5':
-        isBooked = BookedClass.class5;
-        break;
+      // case 'class5':
+      //   isBooked = BookedClass.class5;
+      //   break;
 
       // case 'class6':
       //   isBooked = BookedClass.class6;
@@ -177,6 +177,7 @@ const ClassSelectModalModal = (props: Props) => {
     if (clName === '17:00~17:50') {
       // 時間短縮のためボタンとして表示しない
     } else if (clName === '16:00~16:50') {
+    } else if (clName === '15:00~15:50') {
     } else if (getDayOfWeek(year, month, day) === '土' && clName === '15:00~15:50') {
     } else if (isBooked && !checkIsSetAsClassBefChange()) {
       // 既存の予約としてセットされている場合
