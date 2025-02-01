@@ -1,6 +1,7 @@
 import InvoiceCardAll from '@/components/invoice/InvoiceCardAll';
 import YearAndMonthDropdown from '@/components/invoice/parts/YearAndMonthDropdown';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
+import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
 import { formatInvoiceListAll, FormatInvoiceListReturn } from '@/lib/invoice';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
@@ -37,7 +38,7 @@ const TeachingExample: NextPage = () => {
   }, [year, month]);
 
   return (
-    <AuthGuard>
+    <AuthLimited>
       <div className="">
         {/* 月を設定するボタン */}
         <YearAndMonthDropdown setMonth={setMonth} setYear={setYear} />
@@ -62,7 +63,7 @@ const TeachingExample: NextPage = () => {
           <div>請求書情報を取得中...</div>
         )}
       </div>
-    </AuthGuard>
+    </AuthLimited>
   );
 };
 

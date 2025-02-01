@@ -17,6 +17,7 @@ import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import SelectObj from '@/components/common/parts/SelectObj';
+import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -384,7 +385,7 @@ export default function Booking() {
   }
 
   return (
-    <AuthGuard>
+    <AuthLimited>
       <div className="w-full">
         <div className="w-full">
           {/* まずは予定変更するユーザーを指定する */}
@@ -464,6 +465,6 @@ export default function Booking() {
           </div>
         )}
       </div>
-    </AuthGuard>
+    </AuthLimited>
   );
 }

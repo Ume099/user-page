@@ -4,6 +4,7 @@ import InputRadio from '@/components/common/parts/InputRadio';
 import Input from '@/components/React-Hook-Form/Input';
 import Select from '@/components/React-Hook-Form/Select';
 import Submit from '@/components/React-Hook-Form/Submit';
+import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
 import {
   DETAIL_LIST,
   InvoiceInput,
@@ -145,92 +146,94 @@ export const Page = () => {
   };
 
   return (
-    <div className="flex justify-center">
-      <div className="flex w-full flex-col justify-center">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {users && (
-            <Select<string>
-              optionList={users.map((user) => user.displayName!)}
-              label="名前"
+    <AuthLimited>
+      <div className="flex justify-center">
+        <div className="flex w-full flex-col justify-center">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            {users && (
+              <Select<string>
+                optionList={users.map((user) => user.displayName!)}
+                label="名前"
+                className="w-full"
+                register={register('fullName')}
+              />
+            )}
+            <InputRadio
+              label="支払方法"
               className="w-full"
-              register={register('fullName')}
+              register={register('payment')}
+              options={PAYMENT_OBJ_LIST}
             />
-          )}
-          <InputRadio
-            label="支払方法"
-            className="w-full"
-            register={register('payment')}
-            options={PAYMENT_OBJ_LIST}
-          />
-          <DatePicker label="発行日" withDefaultValue register={register('date')} />
-          <DatePicker label="お支払い期限" withDefaultValue register={register('dueDate')} />
-          <div className="grid grid-cols-3">
-            <p>項目</p>
-            <p>詳細</p>
-            <p>値段</p>
-          </div>
-          {fields.map((field, index: number) => (
-            <div className=" flex" key={field.id}>
-              <div className="grid grid-cols-3 gap-x-2">
-                <Controller
-                  name={`items.${index}.komoku`}
-                  control={control}
-                  render={({ field }) => (
-                    <div>
-                      <Select<string> optionList={KOMOKU_LIST} {...field} />
-                    </div>
-                  )}
-                />
-                <Controller
-                  name={`items.${index}.detail`}
-                  control={control}
-                  render={({ field }) => (
-                    <div className="overflow-hidden">
-                      <Select<string> optionList={DETAIL_LIST} {...field} />
-                    </div>
-                  )}
-                />
-                <Controller
-                  name={`items.${index}.price`}
-                  control={control}
-                  render={({ field }) => (
-                    <div className="overflow-hidden">
-                      <Input label="" {...field} />
-                    </div>
-                  )}
-                />
-              </div>
-
-              <div className="flex items-start">
-                <button
-                  className="p-2 text-lg font-bold text-error"
-                  type="button"
-                  onClick={() => remove(index)}
-                >
-                  ―
-                </button>
-              </div>
+            <DatePicker label="発行日" withDefaultValue register={register('date')} />
+            <DatePicker label="お支払い期限" withDefaultValue register={register('dueDate')} />
+            <div className="grid grid-cols-3">
+              <p>項目</p>
+              <p>詳細</p>
+              <p>値段</p>
             </div>
-          ))}
+            {fields.map((field, index: number) => (
+              <div className=" flex" key={field.id}>
+                <div className="grid grid-cols-3 gap-x-2">
+                  <Controller
+                    name={`items.${index}.komoku`}
+                    control={control}
+                    render={({ field }) => (
+                      <div>
+                        <Select<string> optionList={KOMOKU_LIST} {...field} />
+                      </div>
+                    )}
+                  />
+                  <Controller
+                    name={`items.${index}.detail`}
+                    control={control}
+                    render={({ field }) => (
+                      <div className="overflow-hidden">
+                        <Select<string> optionList={DETAIL_LIST} {...field} />
+                      </div>
+                    )}
+                  />
+                  <Controller
+                    name={`items.${index}.price`}
+                    control={control}
+                    render={({ field }) => (
+                      <div className="overflow-hidden">
+                        <Input label="" {...field} />
+                      </div>
+                    )}
+                  />
+                </div>
 
-          <button
-            className="mb-8 text-4xl font-bold text-primary-dark"
-            type="button"
-            onClick={() => append({ komoku: '', price: 0, detail: '' })}
-          >
-            +
-          </button>
-          <Input
-            value={getTotal(watch('items')?.map((item) => Number(item.price))) * 1.1 || ''}
-            placeholder="合計金額"
-            label="合計金額"
-            className="w-full"
-            register={register('totalPrice')}
-          />
-          <Submit variant="primary" loading={isLoading} />
-        </form>
+                <div className="flex items-start">
+                  <button
+                    className="p-2 text-lg font-bold text-error"
+                    type="button"
+                    onClick={() => remove(index)}
+                  >
+                    ―
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            <button
+              className="mb-8 text-4xl font-bold text-primary-dark"
+              type="button"
+              onClick={() => append({ komoku: '', price: 0, detail: '' })}
+            >
+              +
+            </button>
+            <Input
+              value={getTotal(watch('items')?.map((item) => Number(item.price))) * 1.1 || ''}
+              placeholder="合計金額"
+              label="合計金額"
+              className="w-full"
+              register={register('totalPrice')}
+            />
+            <Submit variant="primary" loading={isLoading} />
+          </form>
+        </div>
       </div>
-    </div>
+    </AuthLimited>
   );
 };
 

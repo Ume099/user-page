@@ -298,7 +298,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     );
   }
   if ('done' === status) {
-    return <PageListAfterSignIn linkList={linkList} />;
+    return <PageListAfterSignIn />;
   }
 
   return (

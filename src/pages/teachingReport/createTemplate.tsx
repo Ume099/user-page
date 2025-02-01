@@ -12,6 +12,8 @@ import { useToast } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import ToggleSwitch from '@/components/common/parts/ToggleSwitch copy';
 import { useEffect, useState } from 'react';
+import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
+import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
 
 type NewVal = {
   stageName: string;
@@ -78,43 +80,45 @@ const CreateTemplate: NextPage = () => {
   }, [watch('isForAd')]);
 
   return (
-    <div className="mx-12 mt-24 max-w-4xl items-center">
-      {/* 報告するステージの選択ボタン */}
+    <AuthLimited>
+      <div className="mx-12 mt-24 max-w-4xl items-center">
+        {/* 報告するステージの選択ボタン */}
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="flex space-x-2">
-          <h2>応用編用?</h2>
-          <input type="checkbox" {...register('isForAd')} />
-        </div>
-        <div>
-          <p className="h-8">指導報告書のテンプレートを作成するステージを選択してください。</p>
-          <Select<string>
-            optionList={!isStageListForAd ? stageList : stageListAdvanced}
-            className="w-full"
-            register={register('stage')}
-          />
-        </div>
-        <div className="mt-4 font-bold">指導報告書の内容</div>
-        <div className="border p-2">
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="flex space-x-2">
+            <h2>応用編用?</h2>
+            <input type="checkbox" {...register('isForAd')} />
+          </div>
           <div>
+            <p className="h-8">指導報告書のテンプレートを作成するステージを選択してください。</p>
+            <Select<string>
+              optionList={!isStageListForAd ? stageList : stageListAdvanced}
+              className="w-full"
+              register={register('stage')}
+            />
+          </div>
+          <div className="mt-4 font-bold">指導報告書の内容</div>
+          <div className="border p-2">
             <div>
-              <p>【今日のステージ】</p>
-              <p>#{watch('stage')}</p>
-            </div>
-            <div>
-              <Input label="【今日の授業内容】" register={register('topic')} />
-            </div>
-            <div>
-              <TextArea label="【今日の授業の詳細】" register={register('detail')} />
+              <div>
+                <p>【今日のステージ】</p>
+                <p>#{watch('stage')}</p>
+              </div>
+              <div>
+                <Input label="【今日の授業内容】" register={register('topic')} />
+              </div>
+              <div>
+                <TextArea label="【今日の授業の詳細】" register={register('detail')} />
+              </div>
             </div>
           </div>
-        </div>
-        <input
-          type="submit"
-          className="mt-4 rounded-lg border bg-primary p-2 font-bold text-white"
-        />
-      </form>
-    </div>
+          <input
+            type="submit"
+            className="mt-4 rounded-lg border bg-primary p-2 font-bold text-white"
+          />
+        </form>
+      </div>
+    </AuthLimited>
   );
 };
 

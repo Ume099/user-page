@@ -3,6 +3,7 @@ import ChangeYMModal from '@/components/calendar/parts/ChangeYMModal';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
+import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
 import { UidAndDName } from '@/lib/userSettings';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -103,7 +104,7 @@ export default function Page() {
   }, []);
 
   return (
-    <AuthGuard>
+    <AuthLimited>
       <div>
         <div className="">
           {!isOpenModal ? (
@@ -137,6 +138,6 @@ export default function Page() {
           <Calendar4SeatMap users={users} year={year} month={month} />
         </div>
       </div>
-    </AuthGuard>
+    </AuthLimited>
   );
 }
