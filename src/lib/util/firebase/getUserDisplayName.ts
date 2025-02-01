@@ -1,6 +1,5 @@
-// uidからユーザーの表示名を取得する関数
-export const getUserDisplayName = async (uid: String): Promise<string | null> => {
-  console.log('uid >>>>>>', uid);
+// UID からユーザーの表示名を取得する関数
+export const getUserDisplayName = async (uid: string): Promise<string | null> => {
   try {
     const response = await fetch('/api/userActions/getUserDisplayName', {
       method: 'POST',
@@ -22,4 +21,16 @@ export const getUserDisplayName = async (uid: String): Promise<string | null> =>
     console.error('Request failed:', error);
     return null;
   }
+};
+
+// UID のリストからユーザーの表示名を取得する関数
+export const getUserDisplayNameObject = async (
+  uidList: string[],
+): Promise<{ uid: string; displayName: string }[]> => {
+  return Promise.all(
+    uidList.map(async (uid) => ({
+      uid,
+      displayName: (await getUserDisplayName(uid)) ?? '',
+    })),
+  );
 };
