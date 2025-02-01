@@ -1,4 +1,3 @@
-
 import { useState, FormEvent } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRecoilState } from 'recoil';
@@ -82,7 +81,7 @@ export const Page = () => {
           </form>
           <p>
             パスワードリセットは
-            <a className="underline" href="/resetPassword">
+            <a className="underline" href="/resetPass">
               こちら
             </a>
           </p>

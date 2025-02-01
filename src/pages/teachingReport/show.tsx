@@ -58,7 +58,7 @@ const DEFAULT_REPORT_OBJ: TeachingReport[] = [
 // fetcher関数を定義
 const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
-const ShowTeachingReport: NextPage = () => {
+const Show: NextPage = () => {
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
   const [reportList, setReportList] = useState<TeachingReport[]>([]);
   const toast = useToast();
@@ -188,4 +188,4 @@ const ShowTeachingReport: NextPage = () => {
   );
 };
 
-export default ShowTeachingReport;
+export default Show;

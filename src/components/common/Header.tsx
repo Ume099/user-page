@@ -20,7 +20,7 @@ export const linkList = [
   // },
   {
     name: '指導報告書',
-    link: '/teachingReport/showTeachingReport',
+    link: '/teachingReport/show',
   },
   // {
   //   name: '授業予定確認・変更',
