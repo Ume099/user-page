@@ -1,3 +1,4 @@
+import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
@@ -135,56 +136,58 @@ const Show: NextPage = () => {
   };
 
   return (
-    <div className="mx-12 max-w-4xl items-center">
-      {/* ユーザーデータの表示 */}
-      <div className="mt-6">
-        <h2 className="mb-8 text-4xl font-bold">指導報告書</h2>
+    <AuthGuard>
+      <div className="mx-12 max-w-4xl items-center">
+        {/* ユーザーデータの表示 */}
+        <div className="mt-6">
+          <h2 className="mb-8 text-4xl font-bold">指導報告書</h2>
 
-        <div className="border p-2">
-          {/* reportListの表示 */}
-          {reportList.length > 0 ? (
-            reportList.map(
-              (report) =>
-                report.isPublished && (
-                  <div key={report.id} className="border-b py-2">
-                    <p className="text-xl font-bold">〇授業時間</p>
-                    <div className="my-4">
-                      <p>
-                        {report.date
-                          ? report.date.replace('-', '年').replace('-', '月') + '日'
-                          : ''}
-                      </p>
-                      <p>{report.classTime || ''}</p>
+          <div className="border p-2">
+            {/* reportListの表示 */}
+            {reportList.length > 0 ? (
+              reportList.map(
+                (report) =>
+                  report.isPublished && (
+                    <div key={report.id} className="border-b py-2">
+                      <p className="text-xl font-bold">〇授業時間</p>
+                      <div className="my-4">
+                        <p>
+                          {report.date
+                            ? report.date.replace('-', '年').replace('-', '月') + '日'
+                            : ''}
+                        </p>
+                        <p>{report.classTime || ''}</p>
+                      </div>
+                      {report.rikaido !== 'null' && (
+                        <>
+                          <p className="mb-2 text-xl  font-bold">〇理解度</p>
+                          <div className="mb-4">
+                            <Image
+                              src={getStarImage(report.rikaido)}
+                              alt="pt1"
+                              width={248}
+                              height={128}
+                            />
+                          </div>
+                        </>
+                      )}
+
+                      <p className="text-xl font-bold">〇ステージ</p>
+                      <p className="mb-4 text-lg"># {report.stage}</p>
+                      <p className="text-xl font-bold">〇内容</p>
+                      <p className="mb-4 text-lg">{report.topic}</p>
+                      <p className="text-xl font-bold">授業の詳細</p>
+                      <p className="mb-4">{report.detail}</p>
                     </div>
-                    {report.rikaido !== 'null' && (
-                      <>
-                        <p className="mb-2 text-xl  font-bold">〇理解度</p>
-                        <div className="mb-4">
-                          <Image
-                            src={getStarImage(report.rikaido)}
-                            alt="pt1"
-                            width={248}
-                            height={128}
-                          />
-                        </div>
-                      </>
-                    )}
-
-                    <p className="text-xl font-bold">〇ステージ</p>
-                    <p className="mb-4 text-lg"># {report.stage}</p>
-                    <p className="text-xl font-bold">〇内容</p>
-                    <p className="mb-4 text-lg">{report.topic}</p>
-                    <p className="text-xl font-bold">授業の詳細</p>
-                    <p className="mb-4">{report.detail}</p>
-                  </div>
-                ),
-            )
-          ) : (
-            <p>報告書はありません。</p>
-          )}
+                  ),
+              )
+            ) : (
+              <p>報告書はありません。</p>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </AuthGuard>
   );
 };
 

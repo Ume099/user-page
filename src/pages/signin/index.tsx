@@ -1,33 +1,44 @@
 import { useState, FormEvent } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router'; // 追加
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import PageListAfterSignIn from '@/components/common/parts/PageListAfterSignIn';
 import { LinkNameList, urls } from '@/pages';
+import { useToast } from '@chakra-ui/react';
 
 const linkList = urls.map((url, index) => {
   return { text: LinkNameList[index], link: url };
 });
 
 export const Page = () => {
+  const router = useRouter();
+  const redirectTo = router.query.redirectTo;
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
+  const [userInfo] = useRecoilState<UserInfo>(userInfoState);
+
+  const toast = useToast();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    setIsLoading(true);
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const auth = getAuth();
       await signInWithEmailAndPassword(auth, email, password);
+
       setEmail('');
       setPassword('');
-      alert('ログインしました。'); // 代わりにトーストを使用
-      // TODO: ログイン後のページに遷移の処理を書く
-    } catch (e) {
-      alert('エラーが発生しました。'); // 代わりにトーストを使用
-      console.log(e);
+      toast({ title: 'ログインしました', position: 'top-right', status: 'success' });
+
+      router.push(typeof redirectTo === 'string' ? redirectTo : '/');
+    } catch (error) {
+      toast({ title: 'エラーが発生しました。', position: 'top-right', status: 'error' });
+
+      console.log(error);
     } finally {
       setIsLoading(false);
     }
@@ -87,7 +98,7 @@ export const Page = () => {
           </p>
         </div>
       ) : (
-        <PageListAfterSignIn linkList={linkList} />
+        <PageListAfterSignIn />
       )}
     </>
   );

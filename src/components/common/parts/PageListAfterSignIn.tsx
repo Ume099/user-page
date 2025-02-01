@@ -4,17 +4,7 @@ import { useRecoilState } from 'recoil';
 
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 
-type LinkObj = {
-  text: string;
-  link: string;
-};
-
-type Props = {
-  linkList: LinkObj[];
-};
-
-const PageListAfterSignIn = (props: Props): JSX.Element => {
-  const { linkList } = props;
+const PageListAfterSignIn = (): JSX.Element => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
 
   const handleSignOut = async () => {
@@ -33,15 +23,6 @@ const PageListAfterSignIn = (props: Props): JSX.Element => {
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className=" rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
           <h1 className="mb-4 font-bold text-primary">ログインに成功しました。</h1>
-          <ul className="mb-4 grid grid-cols-1 gap-y-2 font-bold text-primary-dark">
-            <li>
-              <a href="/teachingReport/show">指導報告書ページ</a>
-            </li>
-            <li>
-              <a href="/invoice">請求書</a>
-            </li>
-          </ul>
-          <ButtonOriginal variant="error-secondary" label="ログアウト" onClick={handleSignOut} />
         </div>
       </div>
     </>

@@ -12,6 +12,7 @@ import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
 
 import { userInfoState } from '@/hooks/atom/userInfo';
 import ButtonOriginal from './parts/ButtonOriginal';
+import { useRouter } from 'next/router';
 
 export const linkList = [
   // {
@@ -43,6 +44,8 @@ export const linkList = [
 const Header: React.FC = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
   const [loginMessage, setLoginMessage] = useState('未ログイン');
+  const router = useRouter();
+  const currentPath = router.asPath;
 
   // Auth周りの更新を自動で検知して実行
   useEffect(() => {
@@ -99,7 +102,7 @@ const Header: React.FC = () => {
                     <div className="flex h-14 w-full items-center justify-between">
                       <div className="flex px-3 pl-8"></div>
 
-                      <Link href={Routes.INDEX.url} className="">
+                      <Link href={Routes.INDEX.url}>
                         <Image
                           src="/lp/util/logo_long.png"
                           width={128}
@@ -124,7 +127,10 @@ const Header: React.FC = () => {
                 {!user && (
                   <div className="h-wrap no-shrink mx-4 flex gap-x-4">
                     <Link
-                      href="/signin"
+                      href={{
+                        pathname: '/signin',
+                        query: { redirectTo: currentPath },
+                      }}
                       className="self-center rounded-lg bg-primary-medium px-2 py-3"
                     >
                       ログイン
@@ -137,7 +143,10 @@ const Header: React.FC = () => {
             <div className="hidden shrink-0 items-center md:pr-6">
               {!userInfo.isSignedIn && (
                 <Link
-                  href="/signin"
+                  href={{
+                    pathname: '/signin',
+                    query: { redirectTo: currentPath },
+                  }}
                   className="gradation-background menu-list self-center rounded px-8 py-3 md:mr-4"
                 >
                   ログイン
@@ -162,12 +171,15 @@ const Header: React.FC = () => {
                 </form>
               ) : (
                 <form method="post" action="/signin">
-                  <button
-                    onClick={handleSignOut}
+                  <Link
+                    href={{
+                      pathname: '/signin',
+                      query: { redirectTo: currentPath },
+                    }}
                     className="self-center rounded bg-red-600 !py-0 px-4 text-white"
                   >
                     ログイン
-                  </button>
+                  </Link>
                 </form>
               )}
             </div>
