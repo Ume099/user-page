@@ -15,6 +15,7 @@ export type TeachingReportTemplateInputType = {
   isOriginalTopic: boolean;
   toopic?: string;
   isOriginalBehav: boolean;
+  isForAd?: boolean;
 };
 
 export type TeachingReportTemplateInputPostType = {
@@ -183,4 +184,20 @@ export const RIKAIDO_OBJ_LIST = [
   { value: '8', label: RIKAIDO_OPTION_LIST[8] },
   { value: '9', label: RIKAIDO_OPTION_LIST[9] },
   { value: '10', label: RIKAIDO_OPTION_LIST[10] },
+];
+
+export const stageListAdvanced: string[] = [
+  '',
+  'progate HTML CSS I',
+  'progate HTML CSS II',
+  'progate HTML CSS III',
+  'progate Python I',
+  'progate Python II',
+  'progate Python III',
+  'progate React I',
+  'progate React II',
+  'progate React III',
+  'React ウェブアプリ開発',
+  'Python 計算問題',
+  '',
 ];
