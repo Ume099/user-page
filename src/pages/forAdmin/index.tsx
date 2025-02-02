@@ -5,6 +5,8 @@ const ADMIN_PAGES = [
   { link: '/invoice/all', title: 'すべての領収書' },
   { link: '/invoice/create', title: '領収書作成' },
   { link: '/seatMap', title: '座席表' },
+  { link: '/setOpenDays', title: '開校日登録' },
+  { link: '/standardSeatMap', title: '基本の座席' },
 ];
 
 export const Page = () => {

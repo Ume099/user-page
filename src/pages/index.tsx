@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 
-import { linkList } from '@/components/common/Header';
+import { linkList } from '@/constant/link';
 import Layout from '@/components/common/Layout';
 import { Routes } from '@/lib/data/routes';
 import Link from 'next/link';

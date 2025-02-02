@@ -95,7 +95,6 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
 
   // 開校日を月ごとにfetchする関数
   const getOpenDayInfo = async () => {
-    // openDay_2024_7のような文字列を格納
     const collectionName: String = 'openDay_' + year + '_' + month;
     try {
       const response = await axios.get('/api/booking/fetchOpenDays', {
@@ -103,16 +102,15 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
       });
 
       setOpenDaysObjList(response.data);
+      console.log(response.data);
     } catch (e) {
       console.log(e);
     }
   };
 
   useEffect(() => {
-    // 設定している開校日情報をリセット
     setOpenDaysObjList([]);
     getOpenDayInfo();
-    // 年と月が設定されたら再度fetch
   }, [year, month]);
 
   const days = [];
@@ -166,7 +164,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
         variant="primary"
         Icon={IoReloadCircleOutline}
         label="日時取得"
-        onClick={() => getOpenDayInfo()}
+        onClick={getOpenDayInfo}
       />
     </div>
   );
