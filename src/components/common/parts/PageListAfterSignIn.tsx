@@ -22,7 +22,7 @@ const PageListAfterSignIn = (): JSX.Element => {
     <>
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className=" rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
-          <h1 className="mb-4 font-bold text-primary">ログインに成功しました。</h1>
+          <h1 className="mb-4 font-bold text-primary">ログインに成功しました</h1>
         </div>
       </div>
     </>
