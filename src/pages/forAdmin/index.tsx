@@ -7,6 +7,8 @@ const ADMIN_PAGES = [
   { link: '/seatMap', title: '座席表' },
   { link: '/setOpenDays', title: '開校日登録' },
   { link: '/standardSeatMap', title: '基本の座席' },
+  { link: '/teachingReport', title: '指導報告書作成' },
+  { link: '/teachingReport/createTemplate', title: '指導報告書テンプレ作成' },
 ];
 
 export const Page = () => {
