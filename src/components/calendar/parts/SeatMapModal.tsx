@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { BookingStatus } from '@/lib/SeatMap';
 import { UidAndDName, UserData } from '@/lib/userSettings';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
+import { useRecoilState } from 'recoil';
+import { displaNameState } from '@/hooks/atom/displayNameList';
 
 type Props = {
   year: number;
