@@ -34,23 +34,25 @@ export default function SetOpenDays() {
     }
   }, [users]);
 
-  const fetchSeatMap = async () => {
-    try {
-      const response = await fetch('/api/seatMap/fetchStandard'); // 規定の座席表を取得
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status} ${response.statusText}`);
-      }
-
-      const data: SeatMapData[] = await response.json();
-      setSeatMap(data);
-      console.log(data); // ここまでは取れている
-    } catch (err: any) {
-    } finally {
-    }
-  };
-
   useEffect(() => {
-    fetchSeatMap();
+    const fetchSeatMap = async () => {
+      try {
+        const response = await fetch('/api/seatMap/fetchStandard'); // 規定の座席表を取得
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} ${response.statusText}`);
+        }
+
+        const data: SeatMapData[] = await response.json();
+        setSeatMap(data);
+        console.log(data); // ここまでは取れている
+      } catch (err: any) {
+      } finally {
+      }
+    };
+
+    return () => {
+      fetchSeatMap();
+    };
   }, []);
 
   const classNames = ['class1', 'class2', 'class3', 'class4', 'class5'] as const;

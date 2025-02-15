@@ -426,11 +426,12 @@ export default function Booking() {
     <AuthGuard>
       <div className="w-full">
         {/* ヘッダーメッセージ */}
-        <div className="h-auto">
+        <div className="mx-auto h-auto">
           <InfoMessage
             message={'ご不明点等ございましたらLINEの方までご連絡ください。'}
             status={'info'}
           />
+          <InfoMessage message={'2/16 データベースを復旧しました。'} status={'info'} />
         </div>
         <div className="w-full">
           {!isOpenSetmonthAndYearOnDisplayModal ? (

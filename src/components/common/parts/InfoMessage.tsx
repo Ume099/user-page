@@ -26,7 +26,7 @@ const InfoMessage = (props: Props): JSX.Element => {
 
   return (
     <div
-      className={`flex h-full w-full justify-center py-2 align-middle ${
+      className={`mx-80 flex h-full w-80 justify-start py-2 align-middle ${
         'bg-' + getStatusColor(status)
       }`}
     >
