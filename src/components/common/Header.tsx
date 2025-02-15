@@ -13,11 +13,20 @@ import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
 import { userInfoState } from '@/hooks/atom/userInfo';
 import ButtonOriginal from './parts/ButtonOriginal';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import { UserData } from '@/lib/userSettings';
+import axios from 'axios';
+import { displaNameState } from '@/hooks/atom/displayNameList';
+import { displayName } from '@/hooks/atom/models/types';
+
+// データフェッチ用の fetcher 関数
+const fetcher = (url: string) => axios.get(url).then((res) => res.data);
 
 const Header: React.FC = () => {
   const [userInfo, setUserInfo] = useRecoilState<UserInfo>(userInfoState);
   const [loginMessage, setLoginMessage] = useState('未ログイン');
   const router = useRouter();
+
   const currentPath = router.asPath;
 
   // Auth周りの更新を自動で検知して実行

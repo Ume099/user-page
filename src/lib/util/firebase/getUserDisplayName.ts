@@ -1,3 +1,5 @@
+import { displayName } from '@/hooks/atom/models/types';
+
 // UID からユーザーの表示名を取得する関数
 export const getUserDisplayName = async (uid: string): Promise<string | null> => {
   try {
@@ -33,4 +35,12 @@ export const getUserDisplayNameObject = async (
       displayName: (await getUserDisplayName(uid)) ?? '',
     })),
   );
+};
+
+export const getDisplayNameByUid = (users: displayName[], uid: string): string => {
+  const user = users.find((user) => user.uid === uid);
+  if (uid === 'unabailable') {
+    return '';
+  }
+  return user ? user.displayName : '?';
 };
