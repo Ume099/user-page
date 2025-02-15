@@ -40,23 +40,21 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
   const toast = useToast();
 
   useEffect(() => {
-    const fetchSeatMap = async () => {
+    const fetchSeatMapData = async () => {
       try {
-        const response = await fetch('/api/seatMap/fetchStandard'); // 規定の座席表を取得
+        const response = await fetch('/api/seatMap/fetchStandard');
         if (!response.ok) {
           throw new Error(`Error: ${response.status} ${response.statusText}`);
         }
 
         const data: SeatMapData[] = await response.json();
         setSeatMap(data);
-      } catch (err: any) {
-      } finally {
+      } catch (err) {
+        console.error('Error fetching seat map:', err);
       }
     };
 
-    return () => {
-      fetchSeatMap();
-    };
+    fetchSeatMapData();
   }, []);
 
   const handleAddOpenDate = async (day: number) => {
