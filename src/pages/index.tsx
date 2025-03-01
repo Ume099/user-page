@@ -9,6 +9,9 @@ import { ReactElement } from 'react';
 import { FaRegPenToSquare } from 'react-icons/fa6';
 import { MdEditCalendar } from 'react-icons/md';
 import { LiaFileInvoiceDollarSolid } from 'react-icons/lia';
+import { FaHome } from 'react-icons/fa';
+import { RiAdminLine } from 'react-icons/ri';
+import { getIcon } from '@/lib/util/getIcon';
 
 // URL配列を作成する関数
 const getUrls = () => {
@@ -22,19 +25,6 @@ const getLinkNameList = () => {
 // URL配列を取得
 export const urls = getUrls();
 export const LinkNameList = getLinkNameList();
-
-const getIcon = (title: string): ReactElement => {
-  switch (title) {
-    case '指導報告書':
-      return <FaRegPenToSquare className="mr-4 w-4 scale-[200%]" />;
-    case '予定確認・変更':
-      return <MdEditCalendar className="mr-4 w-4 scale-[200%]" />;
-    case '請求書':
-      return <LiaFileInvoiceDollarSolid className="mr-4 w-4 scale-[200%]" />;
-    default:
-      return <div>error</div>;
-  }
-};
 
 const Home: NextPage = () => {
   return (
@@ -51,7 +41,7 @@ const Home: NextPage = () => {
             <div className="gap-y-2">
               {linkList.map((link, index) => (
                 <Link
-                  href={link.link}
+                  href={link.path}
                   key={index}
                   className="mt-2 flex w-full justify-start rounded-md border bg-yellow-100 p-4 px-4"
                 >
