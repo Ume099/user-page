@@ -12,6 +12,7 @@ import { AuthProvider } from '@/feature/auth/provider/AuthProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
+import { NextSeo } from 'next-seo';
 
 initializeFirebaseApp();
 
@@ -21,15 +22,29 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <>
       <GoogleTagManager googleTagManagerId={googleTagManagerId} />
+      <Head>
+        <NextSeo
+          title="Special Page"
+          description="This is a special page description."
+          canonical="https://example.com/special-page"
+          openGraph={{
+            url: 'https://alt-prime.com/lp',
+            title: '【福岡市のプログラミングスクール】プライム - PRIME -',
+            description:
+              '福岡市のプログラミングスクール　プライムは格安で、大学生や社会人になりたての方でも通いやすいコーチングベースのプログラミングスクールです。',
+            images: [
+              {
+                url: 'https://example.com/images/special-page.jpg',
+                width: 800,
+                height: 600,
+                alt: 'Special Page Image',
+              },
+            ],
+            site_name: 'MyApplication',
+          }}
+        />
+      </Head>
       <RecoilRoot>
-        <Head>
-          <title>EXAMPLE TITLE</title>
-          <meta name="description" content="EXAMPLE DESCRIPTION" />
-          <meta
-            name="google-site-verification"
-            content={googleVerificationContent || 'default-verification-code'}
-          />
-        </Head>
         <ChakraProvider>
           <AuthProvider>
             <Header />

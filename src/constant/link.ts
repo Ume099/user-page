@@ -1,26 +1,22 @@
 export const linkList = [
-  // {
-  //   name: 'HOME',
-  //   link: '/',
-  // },
+  {
+    name: 'HOME',
+    path: '/',
+  },
   {
     name: '指導報告書',
-    link: '/teachingReport/show',
+    path: '/teachingReport/show',
   },
-  // {
-  //   name: '授業予定確認・変更',
-  //   link: '/booking',
-  // },
-  // {
-  //   name: 'ログイン',
-  //   link: '/signin',
-  // },
   {
     name: '予定確認・変更',
-    link: '/booking',
+    path: '/booking',
   },
   {
     name: '請求書',
-    link: '/invoice',
+    path: '/invoice',
+  },
+  {
+    name: 'ADMIN',
+    path: '/forAdmin',
   },
 ];
