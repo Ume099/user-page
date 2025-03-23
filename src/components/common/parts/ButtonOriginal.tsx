@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { IconType } from 'react-icons';
 import { ImSpinner7 } from 'react-icons/im';
 
@@ -5,36 +6,42 @@ import { ImSpinner7 } from 'react-icons/im';
  * Props:
  *   variant : ボタンのスタイルのタイプ
  *   label   : ボタンのテキスト
- *   Icon    : React Icon のアイコン [optional]
+ *   Icon    : React Icon のアイコン
  *   loading : ローディング状態
  */
 
+type Variant = 'primary' | 'secondary' | 'error' | 'error-secondary' | 'gray' | 'text';
+
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: 'primary' | 'secondary' | 'error' | 'error-secondary' | 'text' | string;
+  variant?: Variant;
   label: string;
   Icon?: IconType;
   loading?: boolean;
 };
 
+const getButtonColor = (variant: Variant): string => {
+  switch (variant) {
+    case 'primary':
+      return 'border-primary bg-primary text-white disabled:border-theme-medium disabled:bg-theme-medium';
+    case 'secondary':
+      return 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium';
+    case 'error':
+      return 'border-error bg-error text-white disabled:border-theme-medium disabled:bg-theme-medium';
+    case 'error-secondary':
+      return 'border-error bg-white text-error disabled:border-theme-medium disabled:text-theme-medium';
+    case 'gray':
+      return 'border-gray-400 bg-gray-300 text-gray-800 disabled:border-theme-medium disabled:text-theme-medium';
+    default:
+      return 'border-transparent bg-transparent text-primary hover:border-theme-light hover:bg-theme-light disabled:border-transparent disabled:bg-transparent disabled:text-theme-medium';
+  }
+};
+
 // ボタン本体
 const ButtonOriginal = (props: ButtonProps): JSX.Element => {
-  const { variant, label, Icon, loading, className = '', ...buttonHTMLAttributes } = props;
+  const { variant = 'text', label, Icon, loading, ...buttonHTMLAttributes } = props;
 
   // variant でボタンの色を分岐
-  const btnColor =
-    variant === 'primary'
-      ? 'border-primary bg-primary text-white disabled:border-theme-medium disabled:bg-theme-medium'
-      : variant === 'secondary'
-      ? 'border-primary bg-white text-primary disabled:border-theme-medium disabled:text-theme-medium'
-      : variant === 'error'
-      ? 'border-error bg-error text-white disabled:border-theme-medium disabled:bg-theme-medium'
-      : variant === 'error-secondary'
-      ? 'border-error bg-white text-error disabled:border-theme-medium disabled:text-theme-medium'
-      : variant === 'text'
-      ? `border-transparent bg-transparent text-primary hover:border-theme-light hover:bg-theme-light disabled:border-transparent disabled:bg-transparent disabled:text-theme-medium ${
-          loading ? '!bg-theme-light' : ''
-        }`
-      : '';
+  const btnColor = useMemo(() => getButtonColor(variant), [variant]);
 
   // Component
   return (
@@ -42,8 +49,8 @@ const ButtonOriginal = (props: ButtonProps): JSX.Element => {
       <button
         {...buttonHTMLAttributes}
         className={`text-btn relative flex items-center justify-center gap-1 rounded-md border px-4 py-2 text-center transition-all duration-200 ease-linear hover:opacity-70 disabled:opacity-100 ${
-          loading ? 'opacity-70 [&>span]:!text-transparent' : ''
-        } ${btnColor} ${className}`}
+          loading && 'opacity-70 [&>span]:!text-transparent'
+        } ${btnColor}`}
       >
         {Icon && (
           <span>

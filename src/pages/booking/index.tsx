@@ -184,8 +184,23 @@ export default function Booking() {
     return now > previousDay10PM;
   }
 
-  // 変更情報を更新するAPI
+  // 変更情報を更新する
   const handleSaveChange = async () => {
+    // 変更前・変更後の予定どちらかが設定されていない
+    if (!checkIsClassBefChangeExists() || !checkIsAftChangeInfoExists()) {
+      toast({
+        title: !checkIsClassAftChangeExists()
+          ? !checkIsClassBefChangeExists()
+            ? '振替元の曜日を選択して下さい。'
+            : '振替先の曜日を選択してください。'
+          : '',
+        status: 'warning',
+        position: 'top',
+      });
+      return;
+    }
+
+    // 変更前日10時まで制約
     if (
       isPast10PMOfPreviousDay(
         bookingChange.yearAftChange,
@@ -205,18 +220,7 @@ export default function Booking() {
       });
       return;
     }
-    if (!checkIsClassBefChangeExists() || !checkIsAftChangeInfoExists()) {
-      toast({
-        title: !checkIsClassAftChangeExists()
-          ? !checkIsClassBefChangeExists()
-            ? '振替元の曜日を選択して下さい。'
-            : '振替先の曜日を選択してください。'
-          : '',
-        status: 'error',
-        position: 'top',
-      });
-      return;
-    }
+
     let isError: boolean = false;
     getBookedClassInfo(
       bookingChange.yearAftChange,
@@ -247,7 +251,7 @@ export default function Booking() {
     }
 
     if (isError) {
-      return; //何もしない
+      return;
     }
 
     getBookedClassInfo(
@@ -302,11 +306,10 @@ export default function Booking() {
     return true;
   };
 
-  // recoil管理のbookingChangeInfoListに、新規追加する変更情報Objを設定する関数
+  // 新規追加する変更情報Objを設定
   const handleSetBookingChangeInfo = () => {
     if (!checkIsAftChangeInfoExists()) {
-      console.log('checkIsAftChangeInfoExists()', checkIsAftChangeInfoExists());
-      return; // 何もしない
+      return;
     }
     // 振替元の情報
     const classBefChange =
@@ -425,13 +428,12 @@ export default function Booking() {
   return (
     <AuthGuard>
       <div className="w-full">
-        {/* ヘッダーメッセージ */}
+        {/* header message */}
         <div className="mx-auto h-auto">
           <InfoMessage
             message={'ご不明点等ございましたらLINEの方までご連絡ください。'}
-            status={'info'}
+            status="info"
           />
-          <InfoMessage message={'2/16 データベースを復旧しました。'} status={'info'} />
         </div>
         <div className="w-full">
           {!isOpenSetmonthAndYearOnDisplayModal ? (
@@ -466,7 +468,11 @@ export default function Booking() {
                 <ButtonOriginal
                   onClick={() => handleSaveChange()}
                   label="保存"
-                  variant="primary"
+                  variant={
+                    checkIsClassBefChangeExists() && checkIsAftChangeInfoExists()
+                      ? 'primary'
+                      : 'gray'
+                  }
                   disabled={isSaveButtonLoading}
                 />
                 <ButtonOriginal
