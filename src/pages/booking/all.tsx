@@ -18,6 +18,7 @@ import useSWR from 'swr';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import SelectObj from '@/components/common/parts/SelectObj';
 import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
+import Calendar from '@/components/calendar/Calendar';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -384,6 +385,44 @@ export default function Booking() {
     return <div>許可されていないアカウントです。</div>;
   }
 
+  const handleSetMonth = (dir: '+' | '-') => {
+    setmonthOnDisplay((prevMonth) => {
+      let newMonth = prevMonth;
+      let newYear = yearOnDisplay;
+
+      if (dir === '+') {
+        if (prevMonth === 12) {
+          newMonth = 1;
+          newYear = yearOnDisplay + 1;
+        } else {
+          newMonth = prevMonth + 1;
+        }
+      } else {
+        if (prevMonth === 1) {
+          newMonth = 12;
+          newYear = yearOnDisplay - 1;
+        } else {
+          newMonth = prevMonth - 1;
+        }
+
+        if (newYear < currentYear || (newYear === currentYear && newMonth < currentMonth + 1)) {
+          toast({
+            title: '過去の予定は取得できません。',
+            position: 'top',
+            status: 'warning',
+          });
+          return prevMonth;
+        }
+      }
+
+      if (newYear !== yearOnDisplay) {
+        setYearOnDisplay(newYear);
+      }
+
+      return newMonth;
+    });
+  };
+
   return (
     <AuthLimited>
       <div className="w-full">
@@ -445,15 +484,75 @@ export default function Booking() {
             </div>
           ) : (
             uid && (
-              // 月and年変更モーダル
-              <ChangeYearAndMonthModal
-                setIsOpenSetmonthAndYearOnDisplayModal={handleOpenSetmonthAndYearOnDisplayModal}
-                setYearDecremented={setYearDecremented}
-                yearOnDisplay={yearOnDisplay}
-                setYearIncremented={setYearIncremented}
-                setMonth={setMonth}
-                errorYear={errorYear}
-              />
+              <div className="w-full">
+                {/* header message */}
+                <div className="w-full">
+                  <div className="w-full gap-4">
+                    <div className="mt-5"></div>
+                    <BookingInfoBefChg
+                      label={
+                        checkIsClassBefChangeExists()
+                          ? `変更前: ${bookingChange.yearBefChange}年 ${bookingChange.monthBefChange}月 ${bookingChange.dayBefChange}日 ${bookingChange.classBefChange}`
+                          : ''
+                      }
+                    />
+                    <p className="flex items-center justify-center !text-center"> ↓</p>
+                    <BookingInfoBefChg
+                      label={
+                        checkIsClassAftChangeExists()
+                          ? `変更後: ${bookingChange.yearAftChange}年 ${bookingChange.monthAftChange}月 ${bookingChange.dayAftChange}日 ${bookingChange.classAftChange}`
+                          : ''
+                      }
+                    />
+                    <div className="mb-4"></div>
+                    <div className="grid grid-cols-1 gap-y-4">
+                      <ButtonOriginal
+                        onClick={() => handleSaveChange(uid)}
+                        label="保存"
+                        variant={
+                          checkIsClassBefChangeExists() && checkIsAftChangeInfoExists()
+                            ? 'primary'
+                            : 'gray'
+                        }
+                        disabled={isSaveButtonLoading}
+                      />
+                      <ButtonOriginal
+                        onClick={() => clearClassBefChange()}
+                        label="リセット"
+                        variant="error-secondary"
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/* カレンダー本体 */}
+                <div className="">
+                  <div className="mt-[52px] w-full pl-12">
+                    <p className="ml-10 text-xl">
+                      {yearOnDisplay}
+                      <span>年</span>
+                    </p>
+                    <div className="flex w-[200px] items-center justify-center space-x-2 rounded-lg p-2 text-xl">
+                      <button
+                        onClick={() => handleSetMonth('-')}
+                        className="h-10 w-10 rounded-lg bg-gray-200 "
+                      >
+                        {'<'}
+                      </button>
+                      <p className="font-bold">
+                        {monthOnDisplay}
+                        <span>月</span>
+                      </p>
+                      <button
+                        onClick={() => handleSetMonth('+')}
+                        className="h-10 w-10 rounded-lg bg-gray-200"
+                      >
+                        {'>'}
+                      </button>
+                    </div>
+                  </div>
+                  <Calendar year={yearOnDisplay} month={monthOnDisplay} />
+                </div>
+              </div>
             )
           )}
         </div>
