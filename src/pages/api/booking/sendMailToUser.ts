@@ -6,8 +6,6 @@ import { BookingChangeMailParam, ReqBody } from '@/lib/type/booking';
 import { __log } from '@/lib/util/log';
 
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-  const reqBody = req.body as ReqBody<BookingChangeMailParam>;
-
   const data: BookingChangeMailParam = req.body;
 
   // // 改行のエスケープシーケンス(\n)を <br> に置換

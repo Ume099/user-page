@@ -1,7 +1,7 @@
 import { IoMdClose } from 'react-icons/io';
 
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
-import CalendarButton from '@/components/common/parts/CalendarButton';
+import CalendarButton from '@/components/calendar/parts/CalendarButton';
 import { MONTH_NAME } from '@/lib/date';
 
 type Props = {

@@ -1,7 +1,7 @@
 import { IoMdClose } from 'react-icons/io';
 
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
-import CalendarButton from '@/components/common/parts/CalendarButton';
+import CalendarButton from '@/components/calendar/parts/CalendarButton';
 import { MONTH_NAME } from '@/lib/date';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
   setYearDecremented: () => void;
   yearOnDisplay: number;
   setYearIncremented: () => void;
-  setMonth: (index: number) => void;
+  handleSetMonth: (index: number) => void;
   errorYear: string;
 };
 
@@ -19,7 +19,7 @@ const ChangeYearAndMonthModal = (props: Props) => {
     setYearDecremented,
     yearOnDisplay,
     setYearIncremented,
-    setMonth,
+    handleSetMonth,
     errorYear,
   } = props;
 
@@ -67,7 +67,7 @@ const ChangeYearAndMonthModal = (props: Props) => {
                         key={index}
                         label={m}
                         variant="secondary"
-                        onClick={() => setMonth(index + 1)}
+                        onClick={() => handleSetMonth(index + 1)}
                         className="w-full"
                       />
                     </li>

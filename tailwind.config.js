@@ -41,7 +41,7 @@ module.exports = {
         primary: {
           light: '#C5FF95',
           medium: '#5DEBD7',
-          DEFAULT: '#00cdc9',
+          DEFAULT: '#00C1D2',
           dark: '#074173',
         },
         // エラー時のカラー

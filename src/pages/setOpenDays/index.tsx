@@ -1,7 +1,7 @@
 import CalenderToSetOpen from '@/components/calendar/CalenderToSetOpen';
 import Button from '@/components/common/parts/Button';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
-import CalendarButton from '@/components/common/parts/CalendarButton';
+import CalendarButton from '@/components/calendar/parts/CalendarButton';
 
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
