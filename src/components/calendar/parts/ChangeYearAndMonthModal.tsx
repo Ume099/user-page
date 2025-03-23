@@ -9,7 +9,7 @@ type Props = {
   setYearDecremented: () => void;
   yearOnDisplay: number;
   setYearIncremented: () => void;
-  setMonth: (index: number) => void;
+  handleSetMonth: (index: number) => void;
   errorYear: string;
 };
 
@@ -19,7 +19,7 @@ const ChangeYearAndMonthModal = (props: Props) => {
     setYearDecremented,
     yearOnDisplay,
     setYearIncremented,
-    setMonth,
+    handleSetMonth,
     errorYear,
   } = props;
 
@@ -67,7 +67,7 @@ const ChangeYearAndMonthModal = (props: Props) => {
                         key={index}
                         label={m}
                         variant="secondary"
-                        onClick={() => setMonth(index + 1)}
+                        onClick={() => handleSetMonth(index + 1)}
                         className="w-full"
                       />
                     </li>

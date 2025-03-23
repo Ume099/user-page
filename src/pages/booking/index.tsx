@@ -1,7 +1,5 @@
 import BookingInfoBefChg from '@/components/calendar/BookingInfoBefChg';
 import Calendar from '@/components/calendar/Calendar';
-import ChangeYearAndMonthModal from '@/components/calendar/parts/ChangeYearAndMonthModal';
-import Button from '@/components/common/parts/Button';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
@@ -12,7 +10,6 @@ import { getClassName } from '@/lib/SeatMap';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { GoTriangleDown } from 'react-icons/go';
 import { useRecoilState } from 'recoil';
 import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
 import { FirebaseError } from 'firebase/app';
@@ -20,31 +17,12 @@ import { BookingChangeMailParam } from '@/lib/type/booking';
 import InfoMessage from '@/components/common/parts/InfoMessage';
 import { isPast10PMOfPreviousDay } from '@/lib/util/booking/booking';
 
-const MONTH_NAME: string[] = [
-  '1月',
-  '2月',
-  '3月',
-  '4月',
-  '5月',
-  '6月',
-  '7月',
-  '8月',
-  '9月',
-  '10月',
-  '11月',
-  '12月',
-];
-
 const date = new Date();
 const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();
 
 export default function Booking() {
-  const [isOpenSetmonthAndYearOnDisplayModal, setIsOpenSetmonthAndYearOnDisplayModal] =
-    useState(false);
   const [yearOnDisplay, setYearOnDisplay] = useState<number>(currentYear);
-  const [errorYear, setErrorYear] = useState('');
-  const [errorMonth, setErrorMonth] = useState('');
   const [monthOnDisplay, setmonthOnDisplay] = useState(currentMonth + 1);
 
   const [bookingChange, setBookingChange] = useRecoilState(bookingChangeState);
@@ -57,41 +35,42 @@ export default function Booking() {
   const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
 
   // 編集する月を設定する関数
-  const setMonth = (num: number) => {
-    setmonthOnDisplay(num);
-    if (yearOnDisplay === currentYear && num - 1 < currentMonth) {
-      setErrorMonth('過去の情報は取得できません。');
-      setIsOpenSetmonthAndYearOnDisplayModal(false);
-      return; //何もしない
-    } else if (yearOnDisplay < currentYear) {
-      setErrorMonth('過去の情報は取得できません。');
-      setIsOpenSetmonthAndYearOnDisplayModal(false);
-      return; //何もしない
-    }
-    setErrorMonth('');
-    setIsOpenSetmonthAndYearOnDisplayModal(false);
-  };
+  const handleSetMonth = (dir: '+' | '-') => {
+    setmonthOnDisplay((prevMonth) => {
+      let newMonth = prevMonth;
+      let newYear = yearOnDisplay;
 
-  const handleOpenSetmonthAndYearOnDisplayModal = (): void => {
-    setIsOpenSetmonthAndYearOnDisplayModal(!isOpenSetmonthAndYearOnDisplayModal);
-  };
+      if (dir === '+') {
+        if (prevMonth === 12) {
+          newMonth = 1;
+          newYear = yearOnDisplay + 1;
+        } else {
+          newMonth = prevMonth + 1;
+        }
+      } else {
+        if (prevMonth === 1) {
+          newMonth = 12;
+          newYear = yearOnDisplay - 1;
+        } else {
+          newMonth = prevMonth - 1;
+        }
 
-  // 月and年変更モーダルで年を増加させる関数
-  const setYearIncremented = () => {
-    if (yearOnDisplay + 1 >= currentYear) {
-      setErrorYear('');
-    }
-    setYearOnDisplay((prev) => prev + 1);
-  };
+        if (newYear < currentYear || (newYear === currentYear && newMonth < currentMonth + 1)) {
+          toast({
+            title: '過去の予定は取得できません。',
+            position: 'top',
+            status: 'warning',
+          });
+          return prevMonth;
+        }
+      }
 
-  // 月and年変更モーダルで年を減少させる関数
-  const setYearDecremented = () => {
-    if (yearOnDisplay === currentYear) {
-      setErrorYear('過去の情報は取得できません。');
-    } else if (yearOnDisplay === currentYear || monthOnDisplay === currentMonth) {
-      setErrorMonth('過去の情報は取得できません。');
-    }
-    setYearOnDisplay((prev) => prev - 1);
+      if (newYear !== yearOnDisplay) {
+        setYearOnDisplay(newYear);
+      }
+
+      return newMonth;
+    });
   };
 
   // 変更元の授業が設定されているかを確認する関数
@@ -103,6 +82,7 @@ export default function Booking() {
       bookingChange.classBefChange
     );
   };
+
   // 変更先の授業が設定されているかを確認する関数
   const checkIsClassAftChangeExists = () => {
     return (
@@ -423,67 +403,67 @@ export default function Booking() {
           />
         </div>
         <div className="w-full">
-          {!isOpenSetmonthAndYearOnDisplayModal ? (
-            <div className="w-full gap-4">
-              <div className="mt-[52px] w-full pl-12">
-                <Button
-                  onClick={handleOpenSetmonthAndYearOnDisplayModal}
-                  variant="primary"
-                  label={String(monthOnDisplay)}
-                  className="h-16 w-16"
-                  Icon={GoTriangleDown}
-                />
-              </div>
-              <div className="mt-5"></div>
-              <BookingInfoBefChg
-                label={
-                  checkIsClassBefChangeExists()
-                    ? `変更前: ${bookingChange.yearBefChange}年 ${bookingChange.monthBefChange}月 ${bookingChange.dayBefChange}日 ${bookingChange.classBefChange}`
-                    : ''
-                }
-              />
-              <p className="flex items-center justify-center !text-center"> ↓</p>
-              <BookingInfoBefChg
-                label={
-                  checkIsClassAftChangeExists()
-                    ? `変更後: ${bookingChange.yearAftChange}年 ${bookingChange.monthAftChange}月 ${bookingChange.dayAftChange}日 ${bookingChange.classAftChange}`
-                    : ''
-                }
-              />
-              <div className="mb-4"></div>
-              <div className="grid grid-cols-1 gap-y-4">
-                <ButtonOriginal
-                  onClick={() => handleSaveChange()}
-                  label="保存"
-                  variant={
-                    checkIsClassBefChangeExists() && checkIsAftChangeInfoExists()
-                      ? 'primary'
-                      : 'gray'
-                  }
-                  disabled={isSaveButtonLoading}
-                />
-                <ButtonOriginal
-                  onClick={() => clearClassBefChange()}
-                  label="リセット"
-                  variant="error-secondary"
-                />
-              </div>
-            </div>
-          ) : (
-            // 月and年変更モーダル
-            <ChangeYearAndMonthModal
-              setIsOpenSetmonthAndYearOnDisplayModal={handleOpenSetmonthAndYearOnDisplayModal}
-              setYearDecremented={setYearDecremented}
-              yearOnDisplay={yearOnDisplay}
-              setYearIncremented={setYearIncremented}
-              setMonth={setMonth}
-              errorYear={errorYear}
+          <div className="w-full gap-4">
+            <div className="mt-5"></div>
+            <BookingInfoBefChg
+              label={
+                checkIsClassBefChangeExists()
+                  ? `変更前: ${bookingChange.yearBefChange}年 ${bookingChange.monthBefChange}月 ${bookingChange.dayBefChange}日 ${bookingChange.classBefChange}`
+                  : ''
+              }
             />
-          )}
+            <p className="flex items-center justify-center !text-center"> ↓</p>
+            <BookingInfoBefChg
+              label={
+                checkIsClassAftChangeExists()
+                  ? `変更後: ${bookingChange.yearAftChange}年 ${bookingChange.monthAftChange}月 ${bookingChange.dayAftChange}日 ${bookingChange.classAftChange}`
+                  : ''
+              }
+            />
+            <div className="mb-4"></div>
+            <div className="grid grid-cols-1 gap-y-4">
+              <ButtonOriginal
+                onClick={() => handleSaveChange()}
+                label="保存"
+                variant={
+                  checkIsClassBefChangeExists() && checkIsAftChangeInfoExists() ? 'primary' : 'gray'
+                }
+                disabled={isSaveButtonLoading}
+              />
+              <ButtonOriginal
+                onClick={() => clearClassBefChange()}
+                label="リセット"
+                variant="error-secondary"
+              />
+            </div>
+          </div>
         </div>
         {/* カレンダー本体 */}
         <div className="">
-          <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
+          <div className="mt-[52px] w-full pl-12">
+            <p className="ml-10 text-xl">
+              {yearOnDisplay}
+              <span>年</span>
+            </p>
+            <div className="flex w-[200px] items-center justify-center space-x-2 rounded-lg p-2 text-xl">
+              <button
+                onClick={() => handleSetMonth('-')}
+                className="h-10 w-10 rounded-lg bg-gray-200 "
+              >
+                {'<'}
+              </button>
+              <p className="font-bold">
+                {monthOnDisplay}
+                <span>月</span>
+              </p>
+              <button
+                onClick={() => handleSetMonth('+')}
+                className="h-10 w-10 rounded-lg bg-gray-200"
+              >
+                {'>'}
+              </button>
+            </div>
+          </div>
           <Calendar year={yearOnDisplay} month={monthOnDisplay} />
         </div>
       </div>
