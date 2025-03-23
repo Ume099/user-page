@@ -34,7 +34,7 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
       <p>お世話になっております。</p>
       <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
       <p>
-        ${data.name}の予定が以下の通り変更されました。<br/>
+        ${data.name}さんの予定が以下の通り変更されました。<br/>
         ${data.yearBefChange}年${data.monthBefChange}月${data.dateBefChange}日${data.classBefChange}<br/>
         から<br/>
         ${data.yearAftChange}年${data.monthAftChange}月${data.dateAftChange}日${data.classAftChange}に変更しました。
