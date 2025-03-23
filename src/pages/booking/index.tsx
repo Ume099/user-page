@@ -18,6 +18,7 @@ import { getUserEmail } from '@/lib/util/firebase/getUserEmail';
 import { FirebaseError } from 'firebase/app';
 import { BookingChangeMailParam } from '@/lib/type/booking';
 import InfoMessage from '@/components/common/parts/InfoMessage';
+import { isPast10PMOfPreviousDay } from '@/lib/util/booking/booking';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -52,9 +53,6 @@ export default function Booking() {
 
   const [bookingChangeInfo, setBookingChangeInfo] =
     useRecoilState<BookingChangeInfoState>(bookingChangeInfoState);
-
-  const [befChangeClass, setBefChangeClass] = useState<string[]>(['']);
-  const [aftChangeClass, setAftChangeClass] = useState<string[]>(['']);
 
   const [isSaveButtonLoading, setIsSaveButtonLoading] = useState(false);
 
@@ -141,14 +139,19 @@ export default function Booking() {
     });
   };
 
-  // 特定の日の予約状況を取得してaftChangeに設定する関数
+  // 特定の日の予約状況を取得
   const getBookedClassInfo = async (
     year: number,
     month: number,
     day: number,
     className: string,
-    isForAft: boolean,
-  ) => {
+  ): Promise<string[]> => {
+    console.log({
+      year,
+      month,
+      day,
+      className,
+    });
     try {
       const response = await axios.get('api/booking/fetchClassStatus', {
         params: {
@@ -158,31 +161,16 @@ export default function Booking() {
           fieldName: className,
         },
       });
-
-      const obj: string[] = response.data.fieldValue;
-      if (isForAft) {
-        setAftChangeClass(obj);
-      } else {
-        setBefChangeClass(obj);
-      }
-      console.log('obj', response.data.fieldValue);
+      const ret: string[] = response.data.fieldValue;
+      return ret;
     } catch (error) {
-      console.log(error);
+      alert(error);
+      console.error(error);
+      throw error;
     }
   };
 
   const toast = useToast();
-
-  function isPast10PMOfPreviousDay(year: number, month: number, day: number) {
-    // Get the current date and time
-    const now = new Date();
-
-    // Create a Date object for 10 PM on the previous day
-    const previousDay10PM = new Date(year, month - 1, day - 1, 21, 0, 0);
-
-    // Compare the current time with 10 PM of the previous day
-    return now > previousDay10PM;
-  }
 
   // 変更情報を更新する
   const handleSaveChange = async () => {
@@ -222,12 +210,11 @@ export default function Booking() {
     }
 
     let isError: boolean = false;
-    getBookedClassInfo(
+    const aftChangeClass = await getBookedClassInfo(
       bookingChange.yearAftChange,
       bookingChange.monthAftChange,
       bookingChange.dayAftChange,
       getClassName(bookingChange.classAftChange),
-      true,
     );
 
     setIsSaveButtonLoading(true);
@@ -248,18 +235,18 @@ export default function Booking() {
     } catch (e) {
       isError = true;
       console.log(e);
+      return;
     }
 
     if (isError) {
       return;
     }
 
-    getBookedClassInfo(
+    const befChangeClass = await getBookedClassInfo(
       bookingChange.yearBefChange,
       bookingChange.monthBefChange,
       bookingChange.dayBefChange,
       getClassName(bookingChange.classBefChange),
-      false,
     );
 
     try {

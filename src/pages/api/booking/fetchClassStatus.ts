@@ -2,20 +2,21 @@ import { db } from '@/lib/firebase/firebase-admin';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  console.log('fetchClassStatus');
   if (req.method !== 'GET') {
     res.status(405).json({ message: 'Method Not Allowed' });
     return;
   }
 
-  const { docId, fieldName } = req.query;
+  const { docId, fieldName, collectionName } = req.query;
 
-  if (!docId || !fieldName) {
+  if (!docId || !fieldName || !collectionName) {
     res.status(400).json({ message: 'Request query parameters are missing.' });
     return;
   }
 
   try {
-    const docRef = db.collection('teaching-report-template').doc(String(docId));
+    const docRef = db.collection(String(collectionName)).doc(String(docId));
     const item = await docRef.get();
 
     if (!item.exists) {
