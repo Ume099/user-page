@@ -1,7 +1,6 @@
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import { NextPage } from 'next';
 import { NextSeo } from 'next-seo';
 import Image from 'next/image';
@@ -21,13 +20,13 @@ type FormValues = {
 };
 
 const timeOptions = [
-  { value: 'sat_13', label: '土曜日 13:00~13:50' },
-  { value: 'sat_14', label: '土曜日 14:00~14:50' },
-  { value: 'sun_10', label: '日曜日 10:00~10:50' },
-  { value: 'sun_11', label: '日曜日 11:00~11:50' },
-  { value: 'sun_13', label: '日曜日 13:00~13:50' },
-  { value: 'sun_14', label: '日曜日 14:00~14:50' },
-  { value: 'sun_15', label: 'その他の時間を希望（土日のみ）' },
+  { value: '土曜日 13:00~13:50', label: '土曜日 13:00~13:50' },
+  { value: '土曜日 14:00~14:50', label: '土曜日 14:00~14:50' },
+  { value: '日曜日 10:00~10:50', label: '日曜日 10:00~10:50' },
+  { value: '日曜日 11:00~11:50', label: '日曜日 11:00~11:50' },
+  { value: '日曜日 13:00~13:50', label: '日曜日 13:00~13:50' },
+  { value: '日曜日 14:00~14:50', label: '日曜日 14:00~14:50' },
+  { value: 'その他の時間を希望（土日のみ）', label: 'その他の時間を希望（土日のみ）' },
 ];
 
 const gradeOptions = [
@@ -83,7 +82,7 @@ const Home: NextPage = () => {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, []);
+  }, [isFormSent]);
 
   const sendMail = async (formData: FormValues) => {
     try {
@@ -369,7 +368,7 @@ const Home: NextPage = () => {
             <ButtonOriginal
               label="送信する"
               loading={loading}
-              className="w-full bg-indigo-600 font-bold text-white"
+              className="w-full !bg-indigo-600 font-bold text-white"
             />
           </form>
         </div>

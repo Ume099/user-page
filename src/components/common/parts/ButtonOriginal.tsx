@@ -17,6 +17,7 @@ export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   label: string;
   Icon?: IconType;
   loading?: boolean;
+  className?: string;
 };
 
 const getButtonColor = (variant: Variant): string => {
@@ -38,7 +39,7 @@ const getButtonColor = (variant: Variant): string => {
 
 // ボタン本体
 const ButtonOriginal = (props: ButtonProps): JSX.Element => {
-  const { variant = 'text', label, Icon, loading, ...buttonHTMLAttributes } = props;
+  const { variant = 'text', label, Icon, loading, className = '', ...buttonHTMLAttributes } = props;
 
   // variant でボタンの色を分岐
   const btnColor = useMemo(() => getButtonColor(variant), [variant]);
@@ -50,7 +51,7 @@ const ButtonOriginal = (props: ButtonProps): JSX.Element => {
         {...buttonHTMLAttributes}
         className={`text-btn relative flex items-center justify-center gap-1 rounded-md border px-4 py-2 text-center transition-all duration-200 ease-linear hover:opacity-70 disabled:opacity-100 ${
           loading && 'opacity-70 [&>span]:!text-transparent'
-        } ${btnColor}`}
+        } ${btnColor} ${className}`}
       >
         {Icon && (
           <span>
