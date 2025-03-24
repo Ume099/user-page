@@ -21,3 +21,15 @@ export type LPFormParam = {
   howDidYouKnow: string[];
   body?: string;
 };
+
+export type FormValues = {
+  email: string;
+  firstChoice: string;
+  secondChoice: string;
+  studentName: string;
+  studentKana: string;
+  grade: string;
+  phone: string;
+  inquiry: string;
+  agree: boolean;
+};
