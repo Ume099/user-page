@@ -198,7 +198,7 @@ const Home: NextPage = () => {
             site_name: 'MyApplication',
           }}
         />
-        <div className="flex flex-col items-center bg-indigo-100 py-10">
+        <div className="flex flex-col items-center bg-indigo-100 px-8 py-10">
           <div className="">
             <Image src="/logo/ca.png" width={300} height={80} alt="プライム" />
           </div>
