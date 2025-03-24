@@ -5,6 +5,18 @@ import { Options } from 'nodemailer/lib/mailer';
 import { __log } from '@/lib/util/log';
 import { FormValues } from '@/lib/type/contact';
 
+type ss = {
+  email: string;
+  firstChoice: string;
+  secondChoice: string;
+  studentName: string;
+  studentKana: string;
+  grade: string;
+  phone: string;
+  inquiry: string;
+  agree: boolean;
+};
+
 const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const data = req.body as FormValues;
 
@@ -31,11 +43,21 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
       <p>プログラミングスクールプライム（コードアドベンチャー姪浜校）です。</p>
       <p>この度はお問い合わせいただき、誠にありがとうございます。</p>
       <p>以下の内容でコードアドベンチャー体験会のご応募を受け付けました。</p>
+      <h3>生徒氏名</h3>
+      <p>${data.studentName}</p>
+      <h3>生徒氏名カナ</h3>
+      <p>${data.studentKana}</p>
       <h3>ご希望日程</h3>
       <p>【第一希望】</p>
       ${data.firstChoice}
       <p>【第二希望】</p>
       ${data.secondChoice}
+      <h3>お子様の学年</h3>
+      <p>${data.grade}</p>
+      <h3>電話番号</h3>
+      <p>${data.phone}</p>
+      <h3>ご要望</h3>
+      <p>${data.inquiry || ''}</p>
       <p>※体験会の日程はまだ確定ではございません。24時間以内に担当者よりご連絡させていただきます。</p>
       <p>今しばらくお待ちくださいませ。</p>
       <br/>
