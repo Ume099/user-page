@@ -187,14 +187,22 @@ const Home: NextPage = () => {
               <label htmlFor="subject" className="block font-medium">
                 将来的に上級コース（React）受講生への指導を希望しますか？
               </label>
-              <input
+
+              <p className="mb-px mt-1 text-xs font-bold text-red-500">※必須</p>
+              <select
                 id="subject"
-                type="text"
                 className="w-full rounded border p-2"
                 {...register('subject', {
-                  required: '担当希望科目を入力してください',
+                  required: '回答してください。',
                 })}
-              />
+              >
+                <option value="">選択してください</option>
+                {['希望する', '希望しない', 'わからない'].map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
               {errors.subject && <p className="text-sm text-red-500">{errors.subject.message}</p>}
             </div>
 
@@ -220,9 +228,7 @@ const Home: NextPage = () => {
                 id="motivation"
                 className="w-full rounded border p-2"
                 rows={4}
-                {...register('motivation', {
-                  required: 'プログラミングのご経験を入力してください',
-                })}
+                {...register('motivation')}
               />
               {errors.motivation && (
                 <p className="text-sm text-red-500">{errors.motivation.message}</p>
