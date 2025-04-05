@@ -53,7 +53,6 @@ const MailAndPassChangeDialog = (): JSX.Element => {
   const initialStatus =
     statusFromQuery && statusList.includes(statusFromQuery) ? statusFromQuery : 'email';
   const initialStatusStatus = initialStatus as Status;
-  console.log(initialStatus);
   const [status, useStatus] = useState<Status>(initialStatusStatus);
 
   const [email, setEmail] = useState(user?.email || '');
@@ -210,7 +209,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     }
   };
 
-  if ('email' === status) {
+  if (false) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
@@ -237,7 +236,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       </div>
     );
   }
-  if ('password' === status) {
+  if (true) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
