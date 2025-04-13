@@ -157,9 +157,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
     const isPast = currentDay.isBefore(today, 'day');
 
     // openDaysListの中にiが含まれているかどうかを確認する
-    const isOpenDayList = openDaysObjList?.filter(
-      (d: any) => Number(d?.date?.integerValue) === Number(day),
-    );
+    const isOpenDayList = openDaysObjList?.filter((d: any) => Number(d?.date) === Number(day));
 
     // dayが開校日に含まれていれば、trueになる
     const isOpenDay = isOpenDayList.length > 0;
@@ -172,7 +170,7 @@ const DaysToSetOpen = ({ year, month, setOpenDay }: DaysProps) => {
       >
         {isOpenDay ? (
           <ButtonOriginal
-            variant="error"
+            variant="primary"
             onClick={() => handleDeleteOpenDate(day)}
             label={String(day)}
             className=""

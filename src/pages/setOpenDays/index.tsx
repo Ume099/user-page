@@ -70,82 +70,54 @@ export default function setOpenDays() {
     setYearOnDisplay((prev) => prev - 1);
   };
 
+  const handleNextMonth = () => {
+    if (monthOnDisplay === 12) {
+      setmonthOnDisplay(1);
+      setYearOnDisplay((prev) => prev + 1);
+    } else {
+      setmonthOnDisplay((prev) => prev + 1);
+    }
+    setErrorMonth('');
+  };
+
+  const handlePrevMonth = () => {
+    if (yearOnDisplay === currentYear && monthOnDisplay === currentMonth + 1) {
+      setErrorMonth('過去の情報は取得できません。');
+      return;
+    }
+
+    if (monthOnDisplay === 1) {
+      setmonthOnDisplay(12);
+      setYearOnDisplay((prev) => prev - 1);
+    } else {
+      setmonthOnDisplay((prev) => prev - 1);
+    }
+    setErrorMonth('');
+  };
+
   return (
     <AuthLimited>
       <div>
-        <div className="">
-          {!isOpenSetmonthAndYearOnDisplayModal ? (
-            <div className="flex gap-4">
-              <div className="mt7u-[52px] pl-12">
-                <Button
-                  variant="primary"
-                  label={String(monthOnDisplay)}
-                  onClick={() =>
-                    setIsOpenSetmonthAndYearOnDisplayModal(!isOpenSetmonthAndYearOnDisplayModal)
-                  }
-                  className="h-16 w-16"
-                  Icon={GoTriangleDown}
-                />
-              </div>
-            </div>
-          ) : (
-            // 月and年変更モーダル
-            <div className="px-auto max-w-sm lg:max-w-4xl">
-              <div className="mt-[148px]"></div>
-              <div className="fixed top-[60px] z-10 h-screen w-screen bg-gray-700 opacity-90">
-                <div className="mt-12 px-6">
-                  <div className="flex gap-x-10">
-                    <CalendarButton
-                      variant="secondary"
-                      onClick={() =>
-                        setIsOpenSetmonthAndYearOnDisplayModal(!isOpenSetmonthAndYearOnDisplayModal)
-                      }
-                      Icon={IoMdClose}
-                      className="flex h-16 w-16 items-center justify-center text-center"
-                    />
-                    <div className="flex w-1/2 justify-center">
-                      <div className="z-10 rounded-lg bg-white py-4 text-center">
-                        <div className="flex items-center justify-center  gap-x-10">
-                          <ButtonOriginal
-                            onClick={() => setYearDecremented()}
-                            label="◀"
-                            className="border-none text-4xl"
-                          />
-                          <div className="text-4xl">{yearOnDisplay}</div>
-                          <ButtonOriginal
-                            onClick={() => setYearIncremented()}
-                            label="▶"
-                            className="border-none text-4xl"
-                          />
-                        </div>
-                        <div className="mt-2 min-h-8 text-red-600">{errorYear}</div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-12 grid grid-cols-3">
-                    {MONTH_NAME.map((m, index) => (
-                      <div className="">
-                        <ul className="">
-                          <li>
-                            <CalendarButton
-                              key={index}
-                              label={m}
-                              variant="secondary"
-                              onClick={() => setMonth(index + 1)}
-                              className="w-24"
-                            />
-                          </li>
-                        </ul>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
         {/* カレンダー本体 */}
+        <div className="flex w-1/2 justify-center">
+          <div className="z-10 rounded-lg bg-white py-4 text-center">
+            <div className="flex items-center justify-center  gap-x-10">
+              <ButtonOriginal
+                onClick={() => handlePrevMonth()}
+                label="◀"
+                className="border-none text-4xl"
+              />
+              <div className="text-4xl">{yearOnDisplay}年</div>
+              <div className="text-4xl">{monthOnDisplay}月</div>
+              <ButtonOriginal
+                onClick={() => handleNextMonth()}
+                label="▶"
+                className="border-none text-4xl"
+              />
+            </div>
+            <div className="mt-2 min-h-8 text-red-600">{errorYear}</div>
+          </div>
+        </div>
         <div className="">
           <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
           <CalenderToSetOpen year={yearOnDisplay} month={monthOnDisplay} />
