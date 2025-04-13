@@ -209,7 +209,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
     }
   };
 
-  if (false) {
+  if (status === 'email') {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
@@ -236,7 +236,7 @@ const MailAndPassChangeDialog = (): JSX.Element => {
       </div>
     );
   }
-  if (true) {
+  if (status === 'password') {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-gray-300 opacity-80">
         <div className="rounded-lg border-2 border-primary bg-white px-10 py-10 shadow-lg">
