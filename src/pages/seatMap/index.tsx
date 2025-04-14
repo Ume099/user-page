@@ -9,12 +9,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { GoTriangleDown } from 'react-icons/go';
 
-type ChangeInfoState = {
-  year: number;
-  month: number;
-  day: number;
-};
-
 const date = new Date();
 const currentMonth = date.getMonth();
 const currentYear = date.getFullYear();

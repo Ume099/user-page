@@ -124,7 +124,7 @@ const InvoiceCardAll = (props: Props) => {
             </div>
             <ItemCard items={invoice.items} totalPrice={totalPrice || 0} />{' '}
             <div className="mb-10 mr-10 mt-4 flex justify-end font-bold underline">
-              合計：　￥{totalPrice.toLocaleString()}
+              合計：　￥{totalPrice.toLocaleString()}（税込）
             </div>
           </div>
         </div>

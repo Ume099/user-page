@@ -66,8 +66,8 @@ export default function SetOpenDays() {
               <li key={`${seat.id}-${index}`}>
                 <p>{seat.id === 'sat' ? '土曜' : '日曜'}</p>
                 <ul className="">
-                  {classNames.map((className) => (
-                    <li key={className} className="h-32 w-24 border p-1">
+                  {classNames.map((className, index2) => (
+                    <li key={`${className}-${index2}`} className="h-32 w-24 border p-1">
                       <p className="font-bold">{seat.data[className].length > 0 && className}</p>
                       <ul>
                         {seat.data[className]?.map((user, idx) => (
@@ -85,8 +85,8 @@ export default function SetOpenDays() {
         <div className="flex flex-col items-center px-80">
           <h2 className="mt-4 text-center">userとuidの対応</h2>
           <ul className="mt-2">
-            {displayName.map((n) => (
-              <li className="">
+            {displayName.map((n, index) => (
+              <li key={index} className="">
                 {n.uid}: {n.displayName}
               </li>
             ))}

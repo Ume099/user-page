@@ -29,8 +29,8 @@ export type BookingStatus = {
   class3: string[];
   class4: string[];
   class5: string[];
-  class6: string[];
-  class7: string[];
+  class6?: string[];
+  class7?: string[];
 };
 
 // SeatMap クラス
