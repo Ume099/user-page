@@ -72,6 +72,7 @@ const TeachingExample: NextPage = () => {
   const stage = watch('stage');
   const param = useSearchParams();
   const uidParam = param.get('uid') || '';
+  const dateTimeIndex = param.get('dateTimeIndex') || '';
 
   // useSWRを使ってテンプレートデータをフェッチ
   const { data: reportObj = DEFAULT_REPORT_OBJ, error: templateError } = useSWR<ReportObj>(
@@ -230,6 +231,7 @@ const TeachingExample: NextPage = () => {
             <DatePicker label="授業日時" register={register('date')} withDefaultValue />
             <Select<string>
               label="時間"
+              selectedIndex={Number(dateTimeIndex) ?? 0}
               className="w-full"
               register={register('classTime')}
               optionList={TIME_OPTION_LIST}

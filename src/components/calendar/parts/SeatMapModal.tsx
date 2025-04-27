@@ -14,9 +14,12 @@ type Props = {
 };
 
 // fetch済みのusersからuidを元にdisplayNameを取得する関数
-const getDisplayNameFromUsers = (uid: string, users: { uid: string; displayName: string }[]) => {
+const getDisplayNameFromUsers = (
+  uid: string,
+  users: { uid: string; displayName: string }[],
+): string => {
   const found = users.find((item) => item.uid === uid);
-  return found ? found.displayName : uid; // 見つかった場合は key1 を返し、見つからない場合は null を返す
+  return found?.displayName ?? ''; // 見つかった場合は key1 を返し、見つからない場合は null を返す
 };
 
 // 関数コンポーネント
@@ -40,35 +43,34 @@ const SeatMapModal = (props: Props) => {
       });
       const item: BookingStatus = response.data;
 
-      console.log(item);
       setBookingStatus({
-        class1: item.class1.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class1: item.class1.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class2: item.class2.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class2: item.class2.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class3: item.class3.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class3: item.class3.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class4: item.class4.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class4: item.class4.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class5: item.class5.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class5: item.class5.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class6: item.class6?.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class6: item.class6?.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
-        class7: item.class7?.map((data) => ({
-          uid: '',
-          displayName: getDisplayNameFromUsers(data, users),
+        class7: item.class7?.map((uid) => ({
+          uid,
+          displayName: getDisplayNameFromUsers(uid, users),
         })),
       });
     } catch (error) {
@@ -105,8 +107,8 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                      {st.displayName || st.uid}
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}&dateTimeIndex=0`}>
+                      {getDisplayNameFromUsers(st.uid, users) || st.uid}
                     </Link>
                   </li>
                 ))}
@@ -120,8 +122,8 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                      {st.displayName || st.uid}
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}&dateTimeIndex=1`}>
+                      {getDisplayNameFromUsers(st.uid, users) || st.uid}
                     </Link>
                   </li>
                 ))}
@@ -135,8 +137,8 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                      {st.displayName || st.uid}
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}&dateTimeIndex=2`}>
+                      {getDisplayNameFromUsers(st.uid, users) || st.uid}
                     </Link>
                   </li>
                 ))}
@@ -150,8 +152,8 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                      {st.displayName || st.uid}
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}&dateTimeIndex=3`}>
+                      {getDisplayNameFromUsers(st.uid, users) || st.uid}
                     </Link>
                   </li>
                 ))}
@@ -165,8 +167,8 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                      {st.displayName || st.uid}
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}&dateTimeIndex=4`}>
+                      {getDisplayNameFromUsers(st.uid, users) || st.uid}
                     </Link>
                   </li>
                 ))}
@@ -182,8 +184,11 @@ const SeatMapModal = (props: Props) => {
                         className="rounded-lg border bg-primary-light px-3 py-2"
                         key={`${st}_${index}`}
                       >
-                        <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                          {st.displayName || st.uid}
+                        <Link
+                          target="_blank"
+                          href={`/teachingReport?uid=${st.uid}&dateTimeIndex=5`}
+                        >
+                          {getDisplayNameFromUsers(st.uid, users) || st.uid}
                         </Link>
                       </li>
                     ),
@@ -200,8 +205,11 @@ const SeatMapModal = (props: Props) => {
                         className="rounded-lg border bg-primary-light px-3 py-2"
                         key={`${st}_${index}`}
                       >
-                        <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
-                          {st.displayName || st.uid}
+                        <Link
+                          target="_blank"
+                          href={`/teachingReport?uid=${st.uid}&dateTimeIndex=6`}
+                        >
+                          {getDisplayNameFromUsers(st.uid, users) || st.uid}
                         </Link>
                       </li>
                     ),
