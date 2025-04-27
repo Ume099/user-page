@@ -18,7 +18,7 @@ type Props = {
 const Days4SeatMap = (props: Props) => {
   const { year, month, users } = props;
   const today = dayjs();
-  const [isOpenSetClassModal, setIsOpenSetClassModal] = useState(false);
+  const [isOpenSetClassModal, setIsOpenSetClassModal] = useState(true);
   const [openDayList, setOpenDayList] = useState<OpenDayList[]>([]);
   const [day, setDay] = useState(0);
 
@@ -47,6 +47,9 @@ const Days4SeatMap = (props: Props) => {
   // month, yearが変更されてから、レンダリング前に開校日配列を取得する関数を実行する
   useEffect(() => {
     getOpenDayInfo(collectionNameInMemo);
+
+    const dayFromDate = Number(new Date().toDateString().split(' ')[2]);
+    handleSetDay(dayFromDate ?? day);
   }, [collectionNameInMemo]);
 
   // 日付ボタンをクリックした際にdayをセットする関数
@@ -54,8 +57,9 @@ const Days4SeatMap = (props: Props) => {
     setDay(day);
   };
 
-  const handleOpenSetClassModal = (day: number) => {
-    handleSetDay(day);
+  const handleOpenSetClassModal = (day?: number) => {
+    const dayFromDate = Number(new Date().toDateString().split(' ')[2]);
+    handleSetDay(dayFromDate ?? day);
     setIsOpenSetClassModal((prev) => !prev);
   };
   // dayがopenDayListに含まれているかを判定する関数
