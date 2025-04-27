@@ -19,7 +19,7 @@ import { NextPage } from 'next';
 import { useForm, Controller } from 'react-hook-form';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
-import { error } from 'console';
+import { useSearchParams } from 'next/navigation';
 
 type ReportObj = {
   stageName: string;
@@ -70,6 +70,8 @@ const TeachingExample: NextPage = () => {
   const [userInfo] = useRecoilState<UserInfo>(userInfoState);
   const toast = useToast();
   const stage = watch('stage');
+  const param = useSearchParams();
+  const uidParam = param.get('uid') || '';
 
   // useSWRを使ってテンプレートデータをフェッチ
   const { data: reportObj = DEFAULT_REPORT_OBJ, error: templateError } = useSWR<ReportObj>(
@@ -237,6 +239,7 @@ const TeachingExample: NextPage = () => {
               <SelectObject
                 selectedIndex={1}
                 register={register('studentUid')}
+                defaultValue={uidParam}
                 optionObjList={users.map((user) => ({
                   value: user.uid,
                   optionName: user.displayName as string,

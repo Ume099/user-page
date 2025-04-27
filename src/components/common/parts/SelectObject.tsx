@@ -8,6 +8,7 @@ type OptionObjList = {
 type Props = {
   label?: string;
   optionObjList: OptionObjList[];
+  defaultValue?: string;
   selectedIndex?: number;
   className?: string;
   register?: UseFormRegisterReturn<any>;
@@ -16,6 +17,7 @@ type Props = {
 const SelectObject = ({
   label,
   optionObjList,
+  defaultValue = '',
   selectedIndex = 0,
   className,
   register,
@@ -27,7 +29,7 @@ const SelectObject = ({
       </label>
       <div className="w-full">
         <select
-          defaultValue={optionObjList[selectedIndex]?.value || ''}
+          defaultValue={defaultValue || optionObjList[selectedIndex]?.value || ''}
           {...register}
           className={`text-md w-full rounded border border-gray-300 px-1 py-1 ${className}`}
         >
