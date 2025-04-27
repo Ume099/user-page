@@ -33,6 +33,21 @@ export type BookingStatus = {
   class7?: string[];
 };
 
+type ClassObj = {
+  uid: string;
+  displayName: string;
+};
+
+export type BookingStatusObj = {
+  class1: ClassObj[];
+  class2: ClassObj[];
+  class3: ClassObj[];
+  class4: ClassObj[];
+  class5: ClassObj[];
+  class6?: ClassObj[];
+  class7?: ClassObj[];
+};
+
 // SeatMap クラス
 export class SeatMap implements BookingStatus {
   class1: string[];

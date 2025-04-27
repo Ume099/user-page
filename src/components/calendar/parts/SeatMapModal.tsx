@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 
-import { BookingStatus } from '@/lib/SeatMap';
+import { BookingStatus, BookingStatusObj } from '@/lib/SeatMap';
 import { UidAndDName, UserData } from '@/lib/userSettings';
-import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
-import { useRecoilState } from 'recoil';
-import { displaNameState } from '@/hooks/atom/displayNameList';
+import { useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 type Props = {
   year: number;
@@ -23,9 +22,11 @@ const getDisplayNameFromUsers = (uid: string, users: { uid: string; displayName:
 // 関数コンポーネント
 const SeatMapModal = (props: Props) => {
   const { year, month, day, users } = props;
-  const [bookingStatus, setBookingStatus] = useState<BookingStatus | undefined>(undefined);
+  const [bookingStatus, setBookingStatus] = useState<BookingStatusObj | undefined>(undefined);
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const param = useSearchParams();
+  const dateTime = param.get('dateTime') || '';
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -41,13 +42,34 @@ const SeatMapModal = (props: Props) => {
 
       console.log(item);
       setBookingStatus({
-        class1: item.class1.map((data) => getDisplayNameFromUsers(data, users)),
-        class2: item.class2.map((data) => getDisplayNameFromUsers(data, users)),
-        class3: item.class3.map((data) => getDisplayNameFromUsers(data, users)),
-        class4: item.class4.map((data) => getDisplayNameFromUsers(data, users)),
-        class5: item.class5.map((data) => getDisplayNameFromUsers(data, users)),
-        class6: item.class6?.map((data) => getDisplayNameFromUsers(data, users)),
-        class7: item.class7?.map((data) => getDisplayNameFromUsers(data, users)),
+        class1: item.class1.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class2: item.class2.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class3: item.class3.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class4: item.class4.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class5: item.class5.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class6: item.class6?.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
+        class7: item.class7?.map((data) => ({
+          uid: '',
+          displayName: getDisplayNameFromUsers(data, users),
+        })),
       });
     } catch (error) {
       console.log(error);
@@ -83,7 +105,9 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <p>{st}</p>
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                      {st.displayName || st.uid}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -96,7 +120,9 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <p>{st}</p>
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                      {st.displayName || st.uid}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -109,7 +135,9 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <p>{st}</p>
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                      {st.displayName || st.uid}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -122,7 +150,9 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <p>{st}</p>
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                      {st.displayName || st.uid}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -135,7 +165,9 @@ const SeatMapModal = (props: Props) => {
                     className="rounded-lg border bg-primary-light px-3 py-2"
                     key={`${st}_${index}`}
                   >
-                    <p>{st}</p>
+                    <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                      {st.displayName || st.uid}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -145,12 +177,14 @@ const SeatMapModal = (props: Props) => {
               <ul className="gap flex gap-x-2">
                 {bookingStatus.class6?.map(
                   (st, index) =>
-                    st !== '' && (
+                    st.displayName !== '' && (
                       <li
                         className="rounded-lg border bg-primary-light px-3 py-2"
                         key={`${st}_${index}`}
                       >
-                        <p>{st}</p>
+                        <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                          {st.displayName || st.uid}
+                        </Link>
                       </li>
                     ),
                 )}
@@ -161,12 +195,14 @@ const SeatMapModal = (props: Props) => {
               <ul className="gap flex gap-x-2">
                 {bookingStatus.class7?.map(
                   (st, index) =>
-                    st !== '' && (
+                    st.displayName !== '' && (
                       <li
                         className="rounded-lg border bg-primary-light px-3 py-2"
                         key={`${st}_${index}`}
                       >
-                        <p>{st}</p>
+                        <Link target="_blank" href={`/teachingReport?uid=${st.uid}`}>
+                          {st.displayName || st.uid}
+                        </Link>
                       </li>
                     ),
                 )}
