@@ -3,7 +3,6 @@ import { NextSeo } from 'next-seo';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import axios from 'axios';
 import { useToast } from '@chakra-ui/react';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 

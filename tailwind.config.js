@@ -1,8 +1,12 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+import { heroui } from "@heroui/theme";
+
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   // パージの対象ファイルを設定
-  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
+  content: ['./src/pages/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}', 
+    "./node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}",],
   theme: {
     fontFamily: {
       // スプレッドで展開している前に、メインとしたいフォント名を追加する
@@ -76,7 +80,7 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [require('@tailwindcss/typography'), heroui()],
 
   variants: {
     extend: {},

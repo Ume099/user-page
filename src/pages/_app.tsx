@@ -12,6 +12,8 @@ import { AuthProvider } from '@/feature/auth/provider/AuthProvider';
 import { ChakraProvider } from '@chakra-ui/react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
+
+import {HeroUIProvider} from "@heroui/react";
 import { NextSeo } from 'next-seo';
 
 initializeFirebaseApp();
@@ -47,10 +49,12 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
       <RecoilRoot>
         <ChakraProvider>
           <AuthProvider>
+          <HeroUIProvider>
             <Header />
             <SideBar />
             <Component {...pageProps} />
             <MessageDialog />
+            </HeroUIProvider>
           </AuthProvider>
         </ChakraProvider>
       </RecoilRoot>
