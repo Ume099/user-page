@@ -14,9 +14,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const { year, month, studentId } = req.body as {
-    year: number;
+    year: number; // 例: 2025
     month: number; // 1-12
-    studentId: string; // 追加する ID
+    studentId: string; // 例: "mein0020"
   };
 
   if (!year || !month || !studentId) {
@@ -24,39 +24,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const db = admin.firestore();
-  const coll = db.collection(`openDay_${year}_${month}`); // openDay_2025_2
+  const coll = db.collection(`openDay_${year}_${month}`);
   const batch = db.batch();
 
+  /** 取得結果の型 */
+  type SnapItem = {
+    snap: admin.firestore.DocumentSnapshot;
+    ref: admin.firestore.DocumentReference;
+  };
+
   const lastDate = new Date(year, month, 0).getDate(); // その月の最終日
-  const fetches: Promise<admin.firestore.DocumentSnapshot>[] = [];
+  const fetches: Promise<SnapItem>[] = [];
 
   for (let d = 1; d <= lastDate; d++) {
     const date = new Date(year, month - 1, d);
-    if (date.getDay() !== 0) continue; // 日曜だけ
+    if (date.getDay() !== 0) continue; // 日曜のみ
 
-    const docRef = coll.doc(`day_${d}`);
-    fetches.push(docRef.get().then((snap) => ({ snap, docRef } as const)));
+    const ref = coll.doc(`day_${d}`);
+    fetches.push(ref.get().then((snap) => ({ snap, ref } as SnapItem)));
   }
 
   const results = await Promise.all(fetches);
 
-  results.forEach(({ snap, docRef }) => {
+  let updateCount = 0;
+  results.forEach(({ snap, ref }) => {
     if (snap.exists) {
-      batch.set(
-        docRef,
-        { class5: admin.firestore.FieldValue.arrayUnion(studentId) }, // 既存＋追加
-        { merge: true },
-      );
+      batch.set(ref, { class5: admin.firestore.FieldValue.arrayUnion(studentId) }, { merge: true });
+      updateCount++;
     }
   });
 
-  if (batch._ops.length === 0) {
+  if (updateCount === 0) {
     return res.status(200).json({ message: 'No existing Sunday documents to update' });
   }
 
   try {
     await batch.commit();
-    res.status(200).json({ message: 'Student added to existing Sunday class5 docs' });
+    res.status(200).json({ message: `Student added to ${updateCount} Sunday doc(s)` });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal Server Error' });
