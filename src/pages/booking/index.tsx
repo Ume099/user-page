@@ -58,7 +58,7 @@ export default function Booking() {
         if (newYear < currentYear || (newYear === currentYear && newMonth < currentMonth + 1)) {
           toast({
             title: '過去の予定は取得できません。',
-            position: 'top',
+            position: 'top-right',
             status: 'warning',
           });
           return prevMonth;
@@ -154,6 +154,22 @@ export default function Booking() {
 
   // 変更情報を更新する
   const handleSaveChange = async () => {
+    // 振り替え先の予約状況を判断し、4席なら不可とする
+    const aftChangeClass = await getBookedClassInfo(
+      bookingChange.yearAftChange,
+      bookingChange.monthAftChange,
+      bookingChange.dayAftChange,
+      getClassName(bookingChange.classAftChange),
+    );
+    if (aftChangeClass.length >= 4) {
+      toast({
+        title: '予約先のコマは満席です。別の日時を選択してください。',
+        status: 'error',
+        position: 'top-right',
+      });
+      return;
+    }
+
     // 変更前・変更後の予定どちらかが設定されていない
     if (!checkIsClassBefChangeExists() || !checkIsAftChangeInfoExists()) {
       toast({
@@ -163,7 +179,7 @@ export default function Booking() {
             : '振替先の曜日を選択してください。'
           : '',
         status: 'warning',
-        position: 'top',
+        position: 'top-right',
       });
       return;
     }
@@ -184,23 +200,16 @@ export default function Booking() {
       toast({
         title: '前日の午後10時を過ぎている予定は変更できません。',
         status: 'error',
-        position: 'top',
+        position: 'top-right',
       });
       return;
     }
-
     let isError: boolean = false;
-    const aftChangeClass = await getBookedClassInfo(
-      bookingChange.yearAftChange,
-      bookingChange.monthAftChange,
-      bookingChange.dayAftChange,
-      getClassName(bookingChange.classAftChange),
-    );
 
     setIsSaveButtonLoading(true);
     // AtfChangeを追加
     try {
-      const response = await fetch('/api/booking/updateClassChangeInfo', {
+      await fetch('/api/booking/updateClassChangeInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -230,7 +239,7 @@ export default function Booking() {
     );
 
     try {
-      const response = await fetch('/api/booking/updateClassChangeInfo', {
+      await fetch('/api/booking/updateClassChangeInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -245,6 +254,8 @@ export default function Booking() {
     } catch (e) {
       isError = true;
       console.log(e);
+      setIsSaveButtonLoading(false);
+      return;
     } finally {
       setIsSaveButtonLoading(false);
       clearClassBefChange(false);
@@ -252,7 +263,8 @@ export default function Booking() {
     await sendMailToUser();
     await sendMailToAdmin();
 
-    isError = true;
+    isError = false;
+    toast({ title: '座席の変更に成功しました!', position: 'top-right', status: 'success' });
     location.reload();
   };
 
@@ -374,7 +386,6 @@ export default function Booking() {
       dateAftChange: bookingChange.dayAftChange,
       classAftChange: bookingChange.classAftChange,
     };
-    console.log(body);
     try {
       const res = await fetch('/api/booking/sendMailToAdmin', {
         method: 'POST',
@@ -404,7 +415,7 @@ export default function Booking() {
         </div>
         <div className="w-full">
           <div className="w-full gap-4">
-            <div className="mt-5"></div>
+            <div className="mt-5" />
             <BookingInfoBefChg
               label={
                 checkIsClassBefChangeExists()
