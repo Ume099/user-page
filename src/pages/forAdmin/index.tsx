@@ -9,6 +9,7 @@ const ADMIN_PAGES = [
   { link: '/standardSeatMap', title: '基本の座席' },
   { link: '/teachingReport', title: '指導報告書作成' },
   { link: '/teachingReport/createTemplate', title: '指導報告書テンプレ作成' },
+  { link: '/userList', title: 'userList' },
 ];
 
 export const Page = () => {

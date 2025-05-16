@@ -6,7 +6,7 @@ import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
 import { getClassListFormatted, getDayOfWeekEng, OpenDayList } from '@/lib/date';
 
-import { SetStateAction, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { bookingChangeState } from '@/hooks/atom/bookingChange';
 import axios from 'axios';
@@ -14,7 +14,6 @@ import { useRecoilState } from 'recoil';
 
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
 import { getDateByUID } from '@/lib/SeatMap';
-import { BookedClassInfoListObj, packBookedClassInfo } from '@/lib/userSettings';
 import { useToast } from '@chakra-ui/react';
 import ClassSelectModalModal from './ClassSelectModal';
 
@@ -24,13 +23,14 @@ export type StudentClassInfo = {
 };
 
 type Props = {
+  uid: string;
   year: number;
   month: number;
   handleCloseModal?: () => void;
 };
 
-const Days = (props: Props) => {
-  const { year, month } = props;
+const DaysForChangeBookingAdmin = (props: Props) => {
+  const { uid, year, month } = props;
   const [openDaysObjList, setOpenDaysObjList] = useState<OpenDayList[]>([]);
   const today = dayjs();
   const firstDayOfMonth = dayjs(new Date(year, month - 1, 1));
@@ -134,7 +134,7 @@ const Days = (props: Props) => {
         params: { collectionName: collectionNameInMemo },
       });
 
-      const array = getDateByUID(response.data, userInfo.uid);
+      const array = getDateByUID(response.data, uid);
       setBookedDay(array);
     } catch (error) {
       console.log(error);
@@ -255,7 +255,7 @@ const Days = (props: Props) => {
             day={DAY}
             CLASS_LIST={classList}
             bookedClassInfoListObj={bookedClassInfoListObj}
-            uid={userInfo.uid}
+            uid={uid}
           />
         </div>
       )}
@@ -263,4 +263,4 @@ const Days = (props: Props) => {
   );
 };
 
-export default Days;
+export default DaysForChangeBookingAdmin;

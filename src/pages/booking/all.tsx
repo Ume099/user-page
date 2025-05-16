@@ -1,10 +1,6 @@
 import BookingInfoBefChg from '@/components/calendar/BookingInfoBefChg';
-import CalendarAll from '@/components/calendar/CalendarAll';
-import ChangeYearAndMonthModal from '@/components/calendar/parts/ChangeYearAndMonthModal';
-import Button from '@/components/common/parts/Button';
 import ButtonOriginal from '@/components/common/parts/ButtonOriginal';
 
-import { AuthGuard } from '@/feature/auth/component/AuthGuard/AuthGuard';
 import { bookingChangeState } from '@/hooks/atom/bookingChange';
 import { bookingChangeInfoState, BookingChangeInfoState } from '@/hooks/atom/bookingChangeInfo';
 import { UserInfo, userInfoState } from '@/hooks/atom/userInfo';
@@ -12,13 +8,12 @@ import { getClassName } from '@/lib/SeatMap';
 import { useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { GoTriangleDown } from 'react-icons/go';
 import { useRecoilState } from 'recoil';
 import useSWR from 'swr';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import SelectObj from '@/components/common/parts/SelectObj';
 import { AuthLimited } from '@/feature/auth/component/AuthGuard/AuthLimited';
-import Calendar from '@/components/calendar/Calendar';
+import CalendarAdmin from '@/components/calendar/CalendarAdmin';
 
 const MONTH_NAME: string[] = [
   '1月',
@@ -57,16 +52,12 @@ export default function Booking() {
   const {
     register,
     handleSubmit,
-    watch,
-    reset,
     formState: { errors },
   } = useForm<InputType>();
 
   const [isOpenSetmonthAndYearOnDisplayModal, setIsOpenSetmonthAndYearOnDisplayModal] =
     useState(false);
   const [yearOnDisplay, setYearOnDisplay] = useState<number>(currentYear);
-  const [errorYear, setErrorYear] = useState('');
-  const [errorMonth, setErrorMonth] = useState('');
   const [monthOnDisplay, setmonthOnDisplay] = useState(currentMonth + 1);
 
   const [bookingChange, setBookingChange] = useRecoilState(bookingChangeState);
@@ -84,45 +75,6 @@ export default function Booking() {
   const { data: users } = useSWR<UserData[]>('/api/userActions/fetchUsers', fetcher);
 
   const toast = useToast();
-
-  // 編集する月を設定する関数
-  const setMonth = (num: number) => {
-    setmonthOnDisplay(num);
-    if (yearOnDisplay === currentYear && num - 1 < currentMonth) {
-      setErrorMonth('過去の情報は取得できません。');
-      setIsOpenSetmonthAndYearOnDisplayModal(false);
-      return; //何もしない
-    } else if (yearOnDisplay < currentYear) {
-      setErrorMonth('過去の情報は取得できません。');
-      setIsOpenSetmonthAndYearOnDisplayModal(false);
-      return; //何もしない
-    }
-    setErrorMonth('');
-    setIsOpenSetmonthAndYearOnDisplayModal(false);
-  };
-
-  const handleOpenSetmonthAndYearOnDisplayModal = (): void => {
-    setIsOpenSetmonthAndYearOnDisplayModal(!isOpenSetmonthAndYearOnDisplayModal);
-  };
-
-  // 月and年変更モーダルで年を増加させる関数
-  const setYearIncremented = () => {
-    if (yearOnDisplay + 1 >= currentYear) {
-      setErrorYear('');
-    }
-    setYearOnDisplay((prev) => prev + 1);
-  };
-
-  // 月and年変更モーダルで年を減少させる関数
-  const setYearDecremented = () => {
-    if (yearOnDisplay === currentYear) {
-      setErrorYear('過去の情報は取得できません。');
-    } else if (yearOnDisplay === currentYear || monthOnDisplay === currentMonth) {
-      setErrorMonth('過去の情報は取得できません。');
-    }
-    setYearOnDisplay((prev) => prev - 1);
-  };
-
   // 変更元の授業が設定されているかを確認する関数
   const checkIsClassBefChangeExists = () => {
     return (
@@ -284,7 +236,7 @@ export default function Booking() {
     );
 
     try {
-      const response = await fetch('/api/booking/updateClassChangeInfo', {
+      await fetch('/api/booking/updateClassChangeInfo', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -371,7 +323,6 @@ export default function Booking() {
   }, [checkIsAftChangeInfoExists()]);
 
   const onSubmit: SubmitHandler<InputType> = async (data) => {
-    console.log(data.uid);
     setUid(data.uid);
   };
 
@@ -380,7 +331,13 @@ export default function Booking() {
     value: String(user.uid),
   }));
   const usersList = usersListWithNull?.filter((user) => !!user.value && !!user.name);
-  const AllowedUidList: string[] = ['KZlzeAudgBVPawzaQuT7zo4BLCH3', 'kqhxd5wy22x8', 'tfsw7nz9ovb4'];
+  const AllowedUidList: string[] = [
+    'KZlzeAudgBVPawzaQuT7zo4BLCH3',
+    'kqhxd5wy22x8',
+    'tfsw7nz9ovb4',
+    'mein0000',
+    'mein9999',
+  ];
   if (!AllowedUidList.includes(userInfo.uid)) {
     return <div>許可されていないアカウントです。</div>;
   }
@@ -440,51 +397,10 @@ export default function Booking() {
             </form>
           )}
 
-          {!isOpenSetmonthAndYearOnDisplayModal ? (
-            <div className="w-full gap-4">
-              <div className="mt-[52px] w-full pl-12">
-                <Button
-                  onClick={handleOpenSetmonthAndYearOnDisplayModal}
-                  variant="primary"
-                  label={String(monthOnDisplay)}
-                  className="h-16 w-16"
-                  Icon={GoTriangleDown}
-                />
-              </div>
-              <div className="mt-5"></div>
-              <BookingInfoBefChg
-                label={
-                  checkIsClassBefChangeExists()
-                    ? `変更前: ${bookingChange.yearBefChange}年 ${bookingChange.monthBefChange}月 ${bookingChange.dayBefChange}日 ${bookingChange.classBefChange}`
-                    : ''
-                }
-              />
-              <p className="flex items-center justify-center !text-center"> ↓</p>
-              <BookingInfoBefChg
-                label={
-                  checkIsClassAftChangeExists()
-                    ? `変更後: ${bookingChange.yearAftChange}年 ${bookingChange.monthAftChange}月 ${bookingChange.dayAftChange}日 ${bookingChange.classAftChange}`
-                    : ''
-                }
-              />
-              <div className="mb-4"></div>
-              <div className="grid grid-cols-1 gap-y-4">
-                <ButtonOriginal
-                  onClick={() => handleSaveChange(uid)}
-                  label="保存"
-                  variant="primary"
-                  disabled={isSaveButtonLoading}
-                />
-                <ButtonOriginal
-                  onClick={() => clearClassBefChange()}
-                  label="リセット"
-                  variant="error-secondary"
-                />
-              </div>
-            </div>
-          ) : (
-            uid && (
+          {isOpenSetmonthAndYearOnDisplayModal ||
+            (uid && (
               <div className="w-full">
+                <button onClick={() => console.log(uid)}>uid</button>
                 {/* header message */}
                 <div className="w-full">
                   <div className="w-full gap-4">
@@ -550,19 +466,11 @@ export default function Booking() {
                       </button>
                     </div>
                   </div>
-                  <Calendar year={yearOnDisplay} month={monthOnDisplay} />
+                  <CalendarAdmin uid={uid} year={yearOnDisplay} month={monthOnDisplay} />
                 </div>
               </div>
-            )
-          )}
+            ))}
         </div>
-        {/* カレンダー本体 */}
-        {uid && (
-          <div className="">
-            <div className="mt-2 flex justify-center text-red-500">{errorMonth}</div>
-            <CalendarAll uid={uid} year={yearOnDisplay} month={monthOnDisplay} />
-          </div>
-        )}
       </div>
     </AuthLimited>
   );
