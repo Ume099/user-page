@@ -167,6 +167,13 @@ export default function Booking() {
         status: 'error',
         position: 'top-right',
       });
+      setBookingChange((prev) => ({
+        ...prev,
+        yearAftChange: 0,
+        monthAftChange: 0,
+        dayAftChange: 0,
+        classAftChange: '',
+      }));
       return;
     }
 
