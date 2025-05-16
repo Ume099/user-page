@@ -20,7 +20,7 @@ const Days4SeatMap = (props: Props) => {
   const today = dayjs();
   const [isOpenSetClassModal, setIsOpenSetClassModal] = useState(true);
   const [openDayList, setOpenDayList] = useState<OpenDayList[]>([]);
-  const [day, setDay] = useState(0);
+  const [day, setDay] = useState(1);
 
   const collectionNameInMemo = useMemo(() => 'openDay_' + year + '_' + month, [year, month]);
 
@@ -49,17 +49,12 @@ const Days4SeatMap = (props: Props) => {
     getOpenDayInfo(collectionNameInMemo);
 
     const dayFromDate = Number(new Date().toDateString().split(' ')[2]);
-    handleSetDay(dayFromDate ?? day);
+    setDay(dayFromDate ?? day);
   }, [collectionNameInMemo]);
-
-  // 日付ボタンをクリックした際にdayをセットする関数
-  const handleSetDay = (day: number) => {
-    setDay(day);
-  };
 
   const handleOpenSetClassModal = (day?: number) => {
     const dayFromDate = Number(new Date().toDateString().split(' ')[2]);
-    handleSetDay(dayFromDate ?? day);
+    setDay(day ?? dayFromDate);
     setIsOpenSetClassModal((prev) => !prev);
   };
   // dayがopenDayListに含まれているかを判定する関数
@@ -78,9 +73,7 @@ const Days4SeatMap = (props: Props) => {
   // days配列を作成する
   const days = [];
   for (let day = 0; day < startDay; day++) {
-    days.push(
-      <div key={`empty-${day}`} className="border-b border-r border-black bg-gray-300"></div>,
-    );
+    days.push(<div key={`empty-${day}`} className="border-b border-r border-black bg-gray-300" />);
   }
 
   for (let day = 1; day <= daysInMonth; day++) {
@@ -105,7 +98,7 @@ const Days4SeatMap = (props: Props) => {
           className="flex h-24 justify-center border-b border-r border-black py-4 text-center"
         >
           <ButtonOriginal
-            variant="secondary"
+            variant="primary"
             label={String(day)}
             onClick={() => handleOpenSetClassModal(day)}
           />
@@ -142,8 +135,8 @@ const Days4SeatMap = (props: Props) => {
         </div>
       )}
       <DayOfWeek />
-
       <div className="grid grid-cols-7 border-l border-t border-black">{days}</div>
+      <button onClick={() => console.log(openDayList)}>openDayList</button>
     </>
   );
 };
