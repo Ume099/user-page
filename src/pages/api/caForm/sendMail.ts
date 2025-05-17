@@ -35,8 +35,8 @@ const sendEmail = async (req: NextApiRequest, res: NextApiResponse): Promise<voi
   // 管理人とユーザーに送信するメールの設定
   const mailData: Options = {
     from: process.env.MAIL_SENDER,
-    // フォーム回答のメールアドレスと en.prime1@gmail.com の両方に送信
-    to: `${data.email}, en.prime1@gmail.com`,
+    // フォーム回答のメールアドレスと en.prime1@gmail.com, 	ca.osumitsuki@gmail.com全てに送信
+    to: `${data.email}, en.prime1@gmail.com, 	ca.osumitsuki@gmail.com`,
     subject: `【コードアドベンチャー姪浜校】${data.studentName}様の体験会ご予定日について`,
     html: `
       <h3>この度は体験会へのご応募ありがとうございます。</h3>
