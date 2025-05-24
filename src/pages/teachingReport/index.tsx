@@ -216,7 +216,7 @@ const TeachingExample: NextPage = () => {
     console.log('Error fetching users:', usersError);
   }
 
-  const AllowedUidList: string[] = ['KZlzeAudgBVPawzaQuT7zo4BLCH3', 'kqhxd5wy22x8', 'tfsw7nz9ovb4'];
+  const AllowedUidList: string[] = ['KZlzeAudgBVPawzaQuT7zo4BLCH3', 'kqhxd5wy22x8', 'tfsw7nz9ovb4', 'coach0000',];
   if (!AllowedUidList.includes(userInfo.uid)) {
     return <div>許可されていないアカウントです。</div>;
   }

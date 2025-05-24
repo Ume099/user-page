@@ -7,7 +7,7 @@ type Props = {
   children: ReactNode;
 };
 
-const ALLOWED_UID = ['tfsw7nz9ovb4', 'KZlzeAudgBVPawzaQuT7zo4BLCH3', 'wldd9hw7f1ye'];
+const ALLOWED_UID = ['tfsw7nz9ovb4', 'KZlzeAudgBVPawzaQuT7zo4BLCH3', 'wldd9hw7f1ye', 'coach0000'];
 
 export const AuthLimited = ({ children }: Props) => {
   const { user } = useAuthContext();

@@ -337,6 +337,7 @@ export default function Booking() {
     'tfsw7nz9ovb4',
     'mein0000',
     'mein9999',
+    'coach0000',
   ];
   if (!AllowedUidList.includes(userInfo.uid)) {
     return <div>許可されていないアカウントです。</div>;
